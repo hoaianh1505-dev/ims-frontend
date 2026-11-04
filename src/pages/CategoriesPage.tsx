@@ -412,11 +412,15 @@ export const CategoriesPage: React.FC = () => {
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedCategories.map((cat) => (
                     <tr key={cat.id} className="hover:bg-[#F6FAF8] transition-colors border-l-2 border-transparent hover:border-brand-primary">
-                      <td className="py-3.5 px-5 font-bold text-slate-900 flex items-center gap-2.5">
-                        <span className="w-2 h-2 rounded-full bg-brand-primary shrink-0"></span>
-                        <span className="line-clamp-1">{cat.name}</span>
+                      <td className="py-3 px-5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center shrink-0 border border-brand-border/60">
+                            <Layers className="w-3.5 h-3.5 stroke-2" />
+                          </div>
+                          <span className="font-bold text-slate-900 line-clamp-1 text-xs">{cat.name}</span>
+                        </div>
                       </td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-4">
                         {cat.parent ? (
                           <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-brand-light text-brand-dark border border-brand-border">
                             {cat.parent.name}
@@ -583,8 +587,15 @@ export const CategoriesPage: React.FC = () => {
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedUnits.map((unit) => (
                     <tr key={unit.id} className="hover:bg-[#F6FAF8] transition-colors border-l-2 border-transparent hover:border-brand-primary">
-                      <td className="py-3.5 px-5 font-bold text-slate-900">{unit.name}</td>
-                      <td className="py-3.5 px-4">
+                      <td className="py-3 px-5">
+                        <div className="flex items-center gap-3">
+                          <div className="w-7 h-7 rounded-lg bg-brand-light text-brand-primary flex items-center justify-center shrink-0 border border-brand-border/60">
+                            <Ruler className="w-3.5 h-3.5 stroke-2" />
+                          </div>
+                          <span className="font-bold text-slate-900 line-clamp-1 text-xs">{unit.name}</span>
+                        </div>
+                      </td>
+                      <td className="py-3 px-4">
                         {unit.symbol ? (
                           <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#EAF3EE] text-[#1A4D3E] border border-[#C8E1D5]">
                             {unit.symbol}

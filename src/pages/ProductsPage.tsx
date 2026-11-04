@@ -123,39 +123,6 @@ export const ProductsPage: React.FC = () => {
     fetchProducts();
   }, [fetchProducts]);
 
-  // Executive KPI Statistics
-  const stats = useMemo(() => {
-    const totalCount = products.length;
-    let totalInventoryValue = 0;
-    let inStockCount = 0;
-    let lowStockCount = 0;
-    let outOfStockCount = 0;
-
-    products.forEach((p) => {
-      const stock = p.current_stock ?? 0;
-      const sellPrice = Number(p.selling_price || 0);
-      const threshold = p.low_stock_threshold ?? 10;
-
-      totalInventoryValue += stock * sellPrice;
-
-      if (stock <= 0) {
-        outOfStockCount++;
-      } else if (stock <= threshold) {
-        lowStockCount++;
-      } else {
-        inStockCount++;
-      }
-    });
-
-    return {
-      totalCount,
-      totalInventoryValue,
-      inStockCount,
-      lowStockCount,
-      outOfStockCount,
-    };
-  }, [products]);
-
   // Filter & Sort Products
   const filteredAndSortedProducts = useMemo(() => {
     let list = [...products];
@@ -314,26 +281,11 @@ export const ProductsPage: React.FC = () => {
         </div>
       )}
 
-      {/* RESTRAINED CLEAN HEADER */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
-        <div>
-          <div className="flex items-center gap-3">
-            <h1 className="text-xl font-bold text-slate-900 tracking-tight">
-              Danh mục hàng hóa
-            </h1>
-            <div className="flex items-center gap-2 text-xs text-slate-500">
-              <span>Tổng <strong className="text-slate-800 font-semibold">{stats.totalCount}</strong> SKU</span>
-              <span className="text-slate-300">•</span>
-              <span>Định giá tồn: <strong className="text-slate-800 font-semibold">{formatVND(stats.totalInventoryValue)}</strong></span>
-              {stats.outOfStockCount > 0 && (
-                <>
-                  <span className="text-slate-300">•</span>
-                  <span className="text-rose-600 font-semibold">{stats.outOfStockCount} hết hàng</span>
-                </>
-              )}
-            </div>
-          </div>
-        </div>
+      {/* SIMPLE CLEAN HEADER */}
+      <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-100">
+        <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+          Danh mục hàng hóa
+        </h1>
 
         <div className="flex items-center gap-2 shrink-0">
           <button
@@ -394,7 +346,7 @@ export const ProductsPage: React.FC = () => {
                 : 'hover:text-slate-900'
             }`}
           >
-            Tất cả ({products.length})
+            Tất cả
           </button>
           <button
             onClick={() => {
@@ -407,7 +359,7 @@ export const ProductsPage: React.FC = () => {
                 : 'hover:text-slate-900'
             }`}
           >
-            Đủ hàng ({stats.inStockCount})
+            Đủ hàng
           </button>
           <button
             onClick={() => {
@@ -420,7 +372,7 @@ export const ProductsPage: React.FC = () => {
                 : 'hover:text-slate-900'
             }`}
           >
-            Sắp hết ({stats.lowStockCount})
+            Sắp hết
           </button>
           <button
             onClick={() => {
@@ -433,7 +385,7 @@ export const ProductsPage: React.FC = () => {
                 : 'hover:text-slate-900'
             }`}
           >
-            Hết ({stats.outOfStockCount})
+            Hết hàng
           </button>
         </div>
 

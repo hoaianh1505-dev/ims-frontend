@@ -382,68 +382,66 @@ export const CategoriesPage: React.FC = () => {
                 <div className="text-xs text-slate-400">Nhấn "Thêm danh mục" để tạo danh mục phân loại đầu tiên.</div>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[240px]">Tên danh mục</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[200px]">Danh mục cha</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[280px]">Mô tả</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap text-right min-w-[120px]">Thao tác</th>
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
+                    <th className="py-3 px-5 w-1/3">Tên danh mục</th>
+                    <th className="py-3 px-4 w-1/4">Danh mục cha</th>
+                    <th className="py-3 px-4">Mô tả</th>
+                    <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {paginatedCategories.map((cat) => (
+                    <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3.5 px-5 font-bold text-slate-900 flex items-center gap-2.5">
+                        <span className="w-2 h-2 rounded-full bg-brand-primary shrink-0"></span>
+                        <span className="line-clamp-1">{cat.name}</span>
+                      </td>
+                      <td className="py-3.5 px-4">
+                        {cat.parent ? (
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                            {cat.parent.name}
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 italic">Cấp gốc</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-500 line-clamp-1">
+                        {cat.description || '—'}
+                      </td>
+                      <td className="py-3.5 px-5 text-right space-x-1">
+                        {isAdmin ? (
+                          <>
+                            <button
+                              onClick={() => openEditCategory(cat)}
+                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                              title="Chỉnh sửa"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() =>
+                                setDeleteTarget({
+                                  type: 'category',
+                                  id: cat.id,
+                                  name: cat.name,
+                                })
+                              }
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                              title="Xóa"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
+                        )}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {paginatedCategories.map((cat) => (
-                      <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-3.5 px-5 whitespace-nowrap font-bold text-slate-900 flex items-center gap-2.5">
-                          <span className="w-2 h-2 rounded-full bg-brand-primary"></span>
-                          <span>{cat.name}</span>
-                        </td>
-                        <td className="py-3.5 px-5 whitespace-nowrap">
-                          {cat.parent ? (
-                            <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                              {cat.parent.name}
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 italic">Cấp gốc</span>
-                          )}
-                        </td>
-                        <td className="py-3.5 px-5 text-slate-500 max-w-sm truncate">
-                          {cat.description || '—'}
-                        </td>
-                        <td className="py-3.5 px-5 text-right whitespace-nowrap space-x-1">
-                          {isAdmin ? (
-                            <>
-                              <button
-                                onClick={() => openEditCategory(cat)}
-                                className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                                title="Chỉnh sửa"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() =>
-                                  setDeleteTarget({
-                                    type: 'category',
-                                    id: cat.id,
-                                    name: cat.name,
-                                  })
-                                }
-                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                                title="Xóa"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </>
-                          ) : (
-                            <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             )}
 
             {/* Pagination Bar */}
@@ -555,65 +553,63 @@ export const CategoriesPage: React.FC = () => {
                 <div className="text-xs text-slate-400">Nhấn "Thêm đơn vị tính" để tạo đơn vị đo lường mới.</div>
               </div>
             ) : (
-              <div className="overflow-x-auto">
-                <table className="w-full text-left border-collapse text-xs">
-                  <thead>
-                    <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[200px]">Tên đơn vị</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[160px]">Ký hiệu viết tắt</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap min-w-[180px]">Ngày tạo</th>
-                      <th className="py-3.5 px-5 whitespace-nowrap text-right min-w-[120px]">Thao tác</th>
+              <table className="w-full text-left border-collapse text-xs">
+                <thead>
+                  <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
+                    <th className="py-3 px-5 w-1/3">Tên đơn vị</th>
+                    <th className="py-3 px-4 w-1/4">Ký hiệu viết tắt</th>
+                    <th className="py-3 px-4">Ngày tạo</th>
+                    <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100 text-slate-700">
+                  {paginatedUnits.map((unit) => (
+                    <tr key={unit.id} className="hover:bg-slate-50/70 transition-colors">
+                      <td className="py-3.5 px-5 font-bold text-slate-900">{unit.name}</td>
+                      <td className="py-3.5 px-4">
+                        {unit.symbol ? (
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                            {unit.symbol}
+                          </span>
+                        ) : (
+                          <span className="text-slate-400 italic">—</span>
+                        )}
+                      </td>
+                      <td className="py-3.5 px-4 text-slate-500">
+                        {new Date(unit.created_at).toLocaleDateString('vi-VN')}
+                      </td>
+                      <td className="py-3.5 px-5 text-right space-x-1">
+                        {isAdmin ? (
+                          <>
+                            <button
+                              onClick={() => openEditUnit(unit)}
+                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                              title="Chỉnh sửa"
+                            >
+                              <Edit3 className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() =>
+                                setDeleteTarget({
+                                  type: 'unit',
+                                  id: unit.id,
+                                  name: unit.name,
+                                })
+                              }
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                              title="Xóa"
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
+                        )}
+                      </td>
                     </tr>
-                  </thead>
-                  <tbody className="divide-y divide-slate-100 text-slate-700">
-                    {paginatedUnits.map((unit) => (
-                      <tr key={unit.id} className="hover:bg-slate-50/70 transition-colors">
-                        <td className="py-3.5 px-5 whitespace-nowrap font-bold text-slate-900">{unit.name}</td>
-                        <td className="py-3.5 px-5 whitespace-nowrap">
-                          {unit.symbol ? (
-                            <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
-                              {unit.symbol}
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 italic">—</span>
-                          )}
-                        </td>
-                        <td className="py-3.5 px-5 whitespace-nowrap text-slate-500">
-                          {new Date(unit.created_at).toLocaleDateString('vi-VN')}
-                        </td>
-                        <td className="py-3.5 px-5 whitespace-nowrap text-right space-x-1">
-                          {isAdmin ? (
-                            <>
-                              <button
-                                onClick={() => openEditUnit(unit)}
-                                className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                                title="Chỉnh sửa"
-                              >
-                                <Edit3 className="w-4 h-4" />
-                              </button>
-                              <button
-                                onClick={() =>
-                                  setDeleteTarget({
-                                    type: 'unit',
-                                    id: unit.id,
-                                    name: unit.name,
-                                  })
-                                }
-                                className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                                title="Xóa"
-                              >
-                                <Trash2 className="w-4 h-4" />
-                              </button>
-                            </>
-                          ) : (
-                            <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
-                          )}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
+                  ))}
+                </tbody>
+              </table>
             )}
 
             {/* Pagination Bar */}

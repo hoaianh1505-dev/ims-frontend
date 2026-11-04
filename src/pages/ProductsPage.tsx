@@ -12,7 +12,6 @@ import {
   Loader2,
   CheckCircle2,
   RefreshCw,
-  TrendingUp,
   Eye,
   ChevronLeft,
   ChevronRight,
@@ -423,127 +422,120 @@ export const ProductsPage: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse text-xs">
-              <thead>
-                <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
-                  <th className="py-3.5 px-5 whitespace-nowrap min-w-[280px]">Sản phẩm & Mã SKU</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap min-w-[150px]">Danh mục</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap min-w-[100px]">Đơn vị</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap text-right min-w-[130px]">Giá vốn</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap text-right min-w-[140px]">Giá bán</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap text-center min-w-[130px]">Cảnh báo tồn</th>
-                  <th className="py-3.5 px-5 whitespace-nowrap text-right min-w-[120px]">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 text-slate-700">
-                {paginatedProducts.map((p) => {
-                  const cost = Number(p.cost_price || 0);
-                  const sell = Number(p.selling_price || 0);
-                  const margin = calculateMargin(cost, sell);
+          <table className="w-full text-left border-collapse text-xs">
+            <thead>
+              <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
+                <th className="py-3 px-5">Sản phẩm / Quy cách</th>
+                <th className="py-3 px-4 w-44">Danh mục</th>
+                <th className="py-3 px-4 w-48 text-right">Định giá niêm yết</th>
+                <th className="py-3 px-4 w-32 text-center">Cảnh báo tồn</th>
+                <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-slate-100 text-slate-700">
+              {paginatedProducts.map((p) => {
+                const cost = Number(p.cost_price || 0);
+                const sell = Number(p.selling_price || 0);
+                const margin = calculateMargin(cost, sell);
 
-                  return (
-                    <tr
-                      key={p.id}
-                      onClick={() => setActiveDrawerProduct(p)}
-                      className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
-                    >
-                      {/* Name & SKU */}
-                      <td className="py-3.5 px-5">
-                        <div className="font-bold text-slate-900 group-hover:text-brand-primary transition-colors">
-                          {p.name}
-                        </div>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="font-mono text-[11px] font-semibold text-brand-primary bg-brand-light px-2 py-0.5 rounded border border-brand-primary/10">
-                            {p.sku}
-                          </span>
-                          {p.barcode && (
-                            <span className="font-mono text-[10px] text-slate-400">
-                              {p.barcode}
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="py-3.5 px-5 whitespace-nowrap">
-                        {p.category ? (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
-                            <Layers className="w-3 h-3 text-slate-400" />
-                            <span>{p.category.name}</span>
-                          </span>
-                        ) : (
-                          <span className="text-slate-400 italic">Chưa phân loại</span>
-                        )}
-                      </td>
-
-                      {/* Unit */}
-                      <td className="py-3.5 px-5 whitespace-nowrap">
-                        {renderUnitBadge(p.unit)}
-                      </td>
-
-                      {/* Cost Price */}
-                      <td className="py-3.5 px-5 text-right whitespace-nowrap font-medium text-slate-500">
-                        {formatVND(cost)}
-                      </td>
-
-                      {/* Selling Price & Margin */}
-                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
-                        <div className="font-bold text-slate-900">{formatVND(sell)}</div>
-                        {margin && (
-                          <div className="inline-flex items-center gap-0.5 text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.2 rounded mt-0.5">
-                            <TrendingUp className="w-2.5 h-2.5" />
-                            <span>+{margin}%</span>
-                          </div>
-                        )}
-                      </td>
-
-                      {/* Low stock threshold */}
-                      <td className="py-3.5 px-5 text-center whitespace-nowrap">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">
-                          <span>Dưới {p.low_stock_threshold ?? 10}</span>
+                return (
+                  <tr
+                    key={p.id}
+                    onClick={() => setActiveDrawerProduct(p)}
+                    className="hover:bg-slate-50/70 transition-colors group cursor-pointer"
+                  >
+                    {/* Name, SKU & Unit */}
+                    <td className="py-3.5 px-5">
+                      <div className="font-bold text-slate-900 group-hover:text-brand-primary transition-colors line-clamp-1">
+                        {p.name}
+                      </div>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="font-mono text-[11px] font-semibold text-brand-primary bg-brand-light px-1.5 py-0.5 rounded border border-brand-primary/10">
+                          {p.sku}
                         </span>
-                      </td>
+                        {p.unit && (
+                          <span className="text-[11px] text-slate-500 font-medium">
+                            • {p.unit.name}
+                          </span>
+                        )}
+                        {p.barcode && (
+                          <span className="font-mono text-[10px] text-slate-400 hidden sm:inline">
+                            • {p.barcode}
+                          </span>
+                        )}
+                      </div>
+                    </td>
 
-                      {/* Actions */}
-                      <td
-                        className="py-3.5 px-5 text-right whitespace-nowrap space-x-1"
-                        onClick={(e) => e.stopPropagation()}
+                    {/* Category */}
+                    <td className="py-3.5 px-4">
+                      {p.category ? (
+                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200 truncate max-w-[160px]">
+                          <Layers className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span className="truncate">{p.category.name}</span>
+                        </span>
+                      ) : (
+                        <span className="text-slate-400 italic">Chưa phân loại</span>
+                      )}
+                    </td>
+
+                    {/* Selling Price & Cost */}
+                    <td className="py-3.5 px-4 text-right">
+                      <div className="font-bold text-slate-900 text-xs">{formatVND(sell)}</div>
+                      <div className="flex items-center justify-end gap-1.5 text-[10px] text-slate-400 mt-0.5">
+                        <span>Vốn: {formatVND(cost)}</span>
+                        {margin && (
+                          <span className="font-bold text-emerald-700 bg-emerald-50 px-1 py-0.2 rounded">
+                            +{margin}%
+                          </span>
+                        )}
+                      </div>
+                    </td>
+
+                    {/* Low stock threshold */}
+                    <td className="py-3.5 px-4 text-center">
+                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">
+                        &lt; {p.low_stock_threshold ?? 10} {p.unit?.name || ''}
+                      </span>
+                    </td>
+
+                    {/* Actions */}
+                    <td
+                      className="py-3.5 px-5 text-right space-x-1"
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      <button
+                        onClick={() => setActiveDrawerProduct(p)}
+                        className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
+                        title="Xem chi tiết"
                       >
+                        <Eye className="w-4 h-4" />
+                      </button>
+
+                      {isManagerOrAdmin && (
                         <button
-                          onClick={() => setActiveDrawerProduct(p)}
-                          className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
-                          title="Xem chi tiết"
+                          onClick={() => openEditModal(p)}
+                          className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                          title="Chỉnh sửa sản phẩm"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Edit3 className="w-4 h-4" />
                         </button>
+                      )}
 
-                        {isManagerOrAdmin && (
-                          <button
-                            onClick={() => openEditModal(p)}
-                            className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                            title="Chỉnh sửa sản phẩm"
-                          >
-                            <Edit3 className="w-4 h-4" />
-                          </button>
-                        )}
-
-                        {isAdmin && (
-                          <button
-                            onClick={() => setDeleteTarget(p)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                            title="Xóa sản phẩm"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        )}
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
+                      {isAdmin && (
+                        <button
+                          onClick={() => setDeleteTarget(p)}
+                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                          title="Xóa sản phẩm"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         )}
 
         {/* Pagination Bar */}

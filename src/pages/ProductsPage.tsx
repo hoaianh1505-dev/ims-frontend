@@ -426,9 +426,9 @@ export const ProductsPage: React.FC = () => {
             <thead>
               <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
                 <th className="py-3 px-5">Sản phẩm / Quy cách</th>
-                <th className="py-3 px-4 w-44">Danh mục</th>
-                <th className="py-3 px-4 w-48 text-right">Định giá niêm yết</th>
-                <th className="py-3 px-4 w-32 text-center">Cảnh báo tồn</th>
+                <th className="py-3 px-4 w-40">Danh mục</th>
+                <th className="py-3 px-4 w-44 text-right">Định giá niêm yết</th>
+                <th className="py-3 px-4 w-36 text-center">Tồn kho thực tế</th>
                 <th className="py-3 px-5 w-28 text-right whitespace-nowrap">Thao tác</th>
               </tr>
             </thead>
@@ -491,11 +491,33 @@ export const ProductsPage: React.FC = () => {
                       </div>
                     </td>
 
-                    {/* Low stock threshold */}
+                    {/* Stock Quantity & Status */}
                     <td className="py-3.5 px-4 text-center whitespace-nowrap">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">
-                        &lt; {p.low_stock_threshold ?? 10} {p.unit?.name || ''}
-                      </span>
+                      {(() => {
+                        const stock = p.current_stock ?? 0;
+                        const threshold = p.low_stock_threshold ?? 10;
+                        const isOutOfStock = stock <= 0;
+                        const isLowStock = !isOutOfStock && stock <= threshold;
+
+                        return (
+                          <div className="flex flex-col items-center">
+                            <span className="font-bold text-slate-800 text-xs">
+                              {stock.toLocaleString('vi-VN')} {p.unit?.name || ''}
+                            </span>
+                            <span
+                              className={`inline-block px-2 py-0.5 rounded text-[10px] font-semibold mt-0.5 ${
+                                isOutOfStock
+                                  ? 'bg-rose-50 text-rose-700 border border-rose-200'
+                                  : isLowStock
+                                  ? 'bg-amber-50 text-amber-700 border border-amber-200'
+                                  : 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                              }`}
+                            >
+                              {isOutOfStock ? 'Hết hàng' : isLowStock ? 'Sắp hết' : 'Đủ hàng'}
+                            </span>
+                          </div>
+                        );
+                      })()}
                     </td>
 
                     {/* Actions */}
@@ -678,6 +700,12 @@ export const ProductsPage: React.FC = () => {
                     <div className="flex items-center justify-between py-2 border-b border-slate-100">
                       <span className="text-slate-500">Đơn vị đo lường</span>
                       <span>{renderUnitBadge(activeDrawerProduct.unit)}</span>
+                    </div>
+                    <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                      <span className="text-slate-500">Tồn kho toàn hệ thống</span>
+                      <span className="font-bold text-slate-900 text-sm">
+                        {(activeDrawerProduct.current_stock ?? 0).toLocaleString('vi-VN')} {activeDrawerProduct.unit?.name || ''}
+                      </span>
                     </div>
                     <div className="flex items-center justify-between py-2 border-b border-slate-100">
                       <span className="text-slate-500">Ngưỡng cảnh báo sắp hết</span>

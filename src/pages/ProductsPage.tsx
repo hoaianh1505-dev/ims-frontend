@@ -17,9 +17,6 @@ import {
   ChevronRight,
   SlidersHorizontal,
   ShieldAlert,
-  CircleDollarSign,
-  AlertOctagon,
-  Boxes,
 } from 'lucide-react';
 import { productsService } from '../services/products.service';
 import { categoriesService } from '../services/categories.service';
@@ -46,9 +43,9 @@ export const ProductsPage: React.FC = () => {
   const [stockStatusFilter, setStockStatusFilter] = useState<'all' | 'in_stock' | 'low_stock' | 'out_of_stock'>('all');
   const [sortBy, setSortBy] = useState<'newest' | 'name' | 'price_desc' | 'price_asc' | 'stock_desc'>('newest');
 
-  // Pagination State
+  // Pagination State - defaults to 15 to show full list on screen
   const [page, setPage] = useState(1);
-  const [pageSize, setPageSize] = useState(10);
+  const [pageSize, setPageSize] = useState(15);
 
   // Drawer & Modal State
   const [activeDrawerProduct, setActiveDrawerProduct] = useState<Product | null>(null);
@@ -306,11 +303,11 @@ export const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className="p-8 max-w-[1440px] mx-auto space-y-7">
+    <div className="px-6 py-4 max-w-[1440px] mx-auto space-y-3">
       {/* Toast Notification */}
       {notify && (
         <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-xl shadow-xl border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
             notify.type === 'success'
               ? 'bg-[#EAF3EE] text-[#1A4D3E] border-[#C8E1D5]'
               : 'bg-rose-50 text-rose-900 border-rose-200'
@@ -325,135 +322,91 @@ export const ProductsPage: React.FC = () => {
         </div>
       )}
 
-      {/* Hero Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
-        <div className="space-y-1">
-          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-light border border-brand-border text-[11px] font-bold text-brand-primary">
-            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary animate-pulse"></span>
-            <span>Kho vận & Định mức sản phẩm</span>
-          </div>
-          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+      {/* COMPACT HEADER WITH INLINE STAT CHIPS */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-1 border-b border-slate-200/80">
+        <div className="flex flex-wrap items-center gap-2.5">
+          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
             Danh mục hàng hóa
           </h1>
-          <p className="text-xs text-slate-500">
-            Theo dõi dữ liệu thực tế, định mức an toàn và quản lý giá niêm yết trong hệ thống kho
-          </p>
+
+          {/* Compact Inline Stat Badges */}
+          <div className="flex items-center gap-1.5 text-[11px] font-semibold">
+            <span className="px-2 py-0.5 rounded-md bg-brand-light text-brand-dark border border-brand-border">
+              {stats.totalCount} mặt hàng
+            </span>
+            <span className="px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
+              Định giá tồn: <strong className="text-brand-primary">{formatVND(stats.totalInventoryValue)}</strong>
+            </span>
+            {stats.outOfStockCount > 0 && (
+              <span className="px-2 py-0.5 rounded-md bg-rose-50 text-rose-700 border border-rose-200">
+                {stats.outOfStockCount} hết hàng
+              </span>
+            )}
+            {stats.lowStockCount > 0 && (
+              <span className="px-2 py-0.5 rounded-md bg-amber-50 text-amber-800 border border-amber-200">
+                {stats.lowStockCount} sắp hết
+              </span>
+            )}
+          </div>
         </div>
 
-        <div className="flex items-center gap-2.5">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => fetchProducts()}
-            className="p-2.5 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 hover:border-brand-border rounded-xl hover:bg-brand-light/40 transition-all shadow-2xs cursor-pointer"
+            className="p-2 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 hover:border-brand-border rounded-xl hover:bg-brand-light/40 transition-all shadow-2xs cursor-pointer"
             title="Làm mới dữ liệu từ server"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-brand-primary' : ''}`} />
+            <RefreshCw className={`w-3.5 h-3.5 ${loading ? 'animate-spin text-brand-primary' : ''}`} />
           </button>
 
           {isManagerOrAdmin && (
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-sm shadow-brand-primary/25 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
+              className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-sm shadow-brand-primary/20 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-3.5 h-3.5" />
               <span>Thêm sản phẩm</span>
             </button>
           )}
         </div>
       </div>
 
-      {/* KPI METRIC CARDS (Scandinavian Deep Forest Green Theme) */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {/* Card 1: Tổng mặt hàng */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:border-brand-border transition-all flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Tổng mặt hàng
-            </div>
-            <div className="text-2xl font-bold text-slate-900 mt-1">
-              {stats.totalCount} <span className="text-xs font-semibold text-slate-400">SKU</span>
-            </div>
-            <div className="text-[11px] font-medium text-slate-500 mt-0.5">
-              Đang kinh doanh
-            </div>
-          </div>
-          <div className="w-11 h-11 rounded-2xl bg-brand-light text-brand-primary flex items-center justify-center border border-brand-border/60">
-            <Package className="w-5 h-5 stroke-2" />
-          </div>
+      {/* SINGLE-LINE COMPACT TOOLBAR (FILTERS & SEARCH IN 1 ROW) */}
+      <div className="bg-white px-3 py-2 rounded-xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-2.5">
+        {/* Left: Search input */}
+        <div className="relative flex-1 min-w-[240px] max-w-sm">
+          <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-brand-primary/70" />
+          <input
+            type="text"
+            value={search}
+            onChange={(e) => {
+              setSearch(e.target.value);
+              setPage(1);
+            }}
+            placeholder="Tìm theo tên, SKU hoặc mã vạch..."
+            className="w-full pl-8 pr-7 py-1.5 bg-slate-50 hover:bg-slate-50/80 border border-slate-200 rounded-lg text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+          />
+          {search && (
+            <button
+              onClick={() => setSearch('')}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
+            >
+              <X className="w-3 h-3" />
+            </button>
+          )}
         </div>
 
-        {/* Card 2: Tổng giá trị định giá tồn */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:border-brand-border transition-all flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Giá trị kho ước tính
-            </div>
-            <div className="text-xl font-bold text-brand-primary mt-1">
-              {formatVND(stats.totalInventoryValue)}
-            </div>
-            <div className="text-[11px] font-medium text-slate-500 mt-0.5">
-              Tính theo giá niêm yết
-            </div>
-          </div>
-          <div className="w-11 h-11 rounded-2xl bg-brand-light text-brand-primary flex items-center justify-center border border-brand-border/60">
-            <CircleDollarSign className="w-5 h-5 stroke-2" />
-          </div>
-        </div>
-
-        {/* Card 3: Mặt hàng đủ tồn kho */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:border-brand-border transition-all flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Tồn kho an toàn
-            </div>
-            <div className="text-2xl font-bold text-emerald-800 mt-1">
-              {stats.inStockCount} <span className="text-xs font-semibold text-slate-400">mặt hàng</span>
-            </div>
-            <div className="text-[11px] font-medium text-emerald-600 mt-0.5">
-              Tồn trên ngưỡng tối thiểu
-            </div>
-          </div>
-          <div className="w-11 h-11 rounded-2xl bg-[#EAF3EE] text-[#1A4D3E] flex items-center justify-center border border-[#C8E1D5]">
-            <Boxes className="w-5 h-5 stroke-2" />
-          </div>
-        </div>
-
-        {/* Card 4: Cảnh báo cần nhập */}
-        <div className="bg-white rounded-2xl p-5 border border-slate-200/90 shadow-2xs hover:border-brand-border transition-all flex items-center justify-between">
-          <div>
-            <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-              Cần nhập thêm
-            </div>
-            <div className="text-2xl font-bold text-amber-700 mt-1">
-              {stats.lowStockCount + stats.outOfStockCount}{' '}
-              <span className="text-xs font-semibold text-slate-400">mặt hàng</span>
-            </div>
-            <div className="text-[11px] font-medium text-amber-700 mt-0.5">
-              {stats.outOfStockCount > 0 ? `${stats.outOfStockCount} hết hàng • ` : ''}
-              {stats.lowStockCount} sắp hết
-            </div>
-          </div>
-          <div className="w-11 h-11 rounded-2xl bg-[#FEF6E8] text-[#9A5B13] flex items-center justify-center border border-[#F9DFC1]">
-            <AlertOctagon className="w-5 h-5 stroke-2" />
-          </div>
-        </div>
-      </div>
-
-      {/* FILTER & CONTROL PANEL */}
-      <div className="bg-white p-3.5 rounded-2xl border border-slate-200 shadow-2xs space-y-3">
-        {/* Quick Stock Status Filter Pills */}
-        <div className="flex flex-wrap items-center gap-1.5 pb-2 border-b border-slate-100">
-          <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider mr-1">
-            Lọc theo tồn kho:
-          </span>
+        {/* Middle: Compact Status Pills */}
+        <div className="flex items-center gap-1 bg-slate-100/80 p-0.5 rounded-lg text-[11px] font-semibold">
           <button
             onClick={() => {
               setStockStatusFilter('all');
               setPage(1);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
               stockStatusFilter === 'all'
-                ? 'bg-brand-primary text-white shadow-xs'
-                : 'bg-slate-50 text-slate-600 hover:bg-slate-100'
+                ? 'bg-white text-brand-primary shadow-xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Tất cả ({products.length})
@@ -463,10 +416,10 @@ export const ProductsPage: React.FC = () => {
               setStockStatusFilter('in_stock');
               setPage(1);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
               stockStatusFilter === 'in_stock'
-                ? 'bg-emerald-800 text-white shadow-xs'
-                : 'bg-[#EAF3EE] text-[#1A4D3E] hover:bg-[#E1EFE8]'
+                ? 'bg-white text-emerald-800 shadow-xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Đủ hàng ({stats.inStockCount})
@@ -476,10 +429,10 @@ export const ProductsPage: React.FC = () => {
               setStockStatusFilter('low_stock');
               setPage(1);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
               stockStatusFilter === 'low_stock'
-                ? 'bg-amber-700 text-white shadow-xs'
-                : 'bg-amber-50 text-amber-800 hover:bg-amber-100'
+                ? 'bg-white text-amber-800 shadow-xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
             Sắp hết ({stats.lowStockCount})
@@ -489,112 +442,83 @@ export const ProductsPage: React.FC = () => {
               setStockStatusFilter('out_of_stock');
               setPage(1);
             }}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
               stockStatusFilter === 'out_of_stock'
-                ? 'bg-rose-700 text-white shadow-xs'
-                : 'bg-rose-50 text-rose-800 hover:bg-rose-100'
+                ? 'bg-white text-rose-800 shadow-xs font-bold'
+                : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            Hết hàng ({stats.outOfStockCount})
+            Hết ({stats.outOfStockCount})
           </button>
         </div>
 
-        {/* Search & Dropdown filters */}
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
-          {/* Search box */}
-          <div className="md:col-span-5 relative">
-            <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/70" />
-            <input
-              type="text"
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-                setPage(1);
-              }}
-              placeholder="Tìm theo tên sản phẩm, mã SKU hoặc mã vạch..."
-              className="w-full pl-10 pr-8 py-2.5 bg-slate-50 hover:bg-slate-50/80 border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
-            />
-            {search && (
-              <button
-                onClick={() => setSearch('')}
-                className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-              >
-                <X className="w-3.5 h-3.5" />
-              </button>
-            )}
-          </div>
-
-          {/* Category Filter */}
-          <div className="md:col-span-3">
-            <div className="relative">
-              <Filter className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <select
-                value={selectedCategory}
-                onChange={(e) => {
-                  setSelectedCategory(e.target.value);
-                  setPage(1);
-                }}
-                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all cursor-pointer"
-              >
-                <option value="">Tất cả danh mục</option>
-                {categories.map((c) => (
-                  <option key={c.id} value={c.id}>
-                    {c.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          {/* Unit Filter */}
-          <div className="md:col-span-2">
+        {/* Right: Dropdowns */}
+        <div className="flex items-center gap-2">
+          {/* Category Dropdown */}
+          <div className="relative">
+            <Filter className="w-3 h-3 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
-              value={selectedUnit}
+              value={selectedCategory}
               onChange={(e) => {
-                setSelectedUnit(e.target.value);
+                setSelectedCategory(e.target.value);
                 setPage(1);
               }}
-              className="w-full px-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all cursor-pointer"
+              className="pl-7 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
             >
-              <option value="">Tất cả đơn vị</option>
-              {units.map((u) => (
-                <option key={u.id} value={u.id}>
-                  {u.name}
+              <option value="">Tất cả danh mục</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {c.name}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* Sort By */}
-          <div className="md:col-span-2">
-            <div className="relative">
-              <SlidersHorizontal className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="w-full pl-9 pr-3 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all cursor-pointer"
-              >
-                <option value="newest">Mới nhất</option>
-                <option value="stock_desc">Tồn kho nhiều nhất</option>
-                <option value="name">Tên A-Z</option>
-                <option value="price_desc">Giá bán cao nhất</option>
-                <option value="price_asc">Giá bán thấp nhất</option>
-              </select>
-            </div>
+          {/* Unit Dropdown */}
+          <select
+            value={selectedUnit}
+            onChange={(e) => {
+              setSelectedUnit(e.target.value);
+              setPage(1);
+            }}
+            className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
+          >
+            <option value="">Tất cả đơn vị</option>
+            {units.map((u) => (
+              <option key={u.id} value={u.id}>
+                {u.name}
+              </option>
+            ))}
+          </select>
+
+          {/* Sort Dropdown */}
+          <div className="relative">
+            <SlidersHorizontal className="w-3 h-3 absolute left-2.5 top-1/2 -translate-y-1/2 text-slate-400" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="pl-7 pr-3 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all cursor-pointer"
+            >
+              <option value="newest">Mới nhất</option>
+              <option value="stock_desc">Tồn kho nhiều nhất</option>
+              <option value="name">Tên A-Z</option>
+              <option value="price_desc">Giá cao nhất</option>
+              <option value="price_asc">Giá thấp nhất</option>
+            </select>
           </div>
         </div>
       </div>
 
-      {/* ENTERPRISE DATA TABLE */}
-      <div className="bg-white rounded-2xl border border-brand-border/70 shadow-2xs overflow-hidden">
+      {/* FULL PRODUCT DATA TABLE - HIGH DENSITY DISPLAY */}
+      <div className="bg-white rounded-xl border border-brand-border/70 shadow-2xs overflow-hidden">
         {loading ? (
-          <div className="py-24 flex flex-col items-center justify-center gap-3 text-slate-400">
-            <Loader2 className="w-8 h-8 animate-spin text-brand-primary" />
+          <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400">
+            <Loader2 className="w-7 h-7 animate-spin text-brand-primary" />
             <span className="text-xs font-medium">Đang tải dữ liệu từ PostgreSQL...</span>
           </div>
         ) : paginatedProducts.length === 0 ? (
-          <div className="py-20 text-center text-slate-400 space-y-3">
-            <Package className="w-12 h-12 mx-auto text-slate-300 stroke-1" />
+          <div className="py-16 text-center text-slate-400 space-y-2">
+            <Package className="w-10 h-10 mx-auto text-slate-300 stroke-1" />
             <div className="text-sm font-semibold text-slate-700">Không tìm thấy sản phẩm nào</div>
             <p className="text-xs text-slate-400 max-w-sm mx-auto">
               Không có sản phẩm nào khớp với điều kiện lọc hiện tại. Hãy thử chọn "Tất cả" hoặc xóa tìm kiếm.
@@ -603,13 +527,12 @@ export const ProductsPage: React.FC = () => {
         ) : (
           <table className="w-full text-left border-collapse text-xs">
             <thead>
-              {/* Refined Forest Green tinted header */}
               <tr className="bg-[#F0F5F2] border-b border-brand-border/80 text-brand-dark font-bold uppercase tracking-wider text-[11px] select-none">
-                <th className="py-3.5 px-5">Sản phẩm / Quy cách</th>
-                <th className="py-3.5 px-4 w-40">Danh mục</th>
-                <th className="py-3.5 px-4 w-44 text-right">Định giá niêm yết</th>
-                <th className="py-3.5 px-4 w-40 text-center">Tồn kho thực tế</th>
-                <th className="py-3.5 px-5 w-28 text-right whitespace-nowrap">Thao tác</th>
+                <th className="py-2.5 px-4">Sản phẩm / Quy cách</th>
+                <th className="py-2.5 px-3 w-40">Danh mục</th>
+                <th className="py-2.5 px-3 w-40 text-right">Định giá niêm yết</th>
+                <th className="py-2.5 px-3 w-36 text-center">Tồn kho thực tế</th>
+                <th className="py-2.5 px-4 w-24 text-right whitespace-nowrap">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -629,16 +552,16 @@ export const ProductsPage: React.FC = () => {
                     className="hover:bg-[#F6FAF8] transition-colors group cursor-pointer border-l-2 border-transparent hover:border-brand-primary"
                   >
                     {/* Name, SKU & Unit */}
-                    <td className="py-3.5 px-5">
-                      <div className="font-bold text-slate-900 group-hover:text-brand-primary transition-colors line-clamp-1 text-[13px]">
+                    <td className="py-2 px-4">
+                      <div className="font-bold text-slate-900 group-hover:text-brand-primary transition-colors line-clamp-1 text-xs">
                         {p.name}
                       </div>
-                      <div className="flex items-center gap-2 mt-1">
-                        <span className="font-mono text-[11px] font-bold text-brand-primary bg-brand-light px-2 py-0.5 rounded-md border border-brand-border">
+                      <div className="flex items-center gap-1.5 mt-0.5">
+                        <span className="font-mono text-[10px] font-bold text-brand-primary bg-brand-light px-1.5 py-0.2 rounded border border-brand-border">
                           {p.sku}
                         </span>
                         {p.unit && (
-                          <span className="text-[11px] text-slate-500 font-medium">
+                          <span className="text-[10px] text-slate-500 font-medium">
                             • {p.unit.name}
                           </span>
                         )}
@@ -651,9 +574,9 @@ export const ProductsPage: React.FC = () => {
                     </td>
 
                     {/* Category badge */}
-                    <td className="py-3.5 px-4">
+                    <td className="py-2 px-3">
                       {p.category ? (
-                        <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] font-semibold bg-brand-light text-brand-dark border border-brand-border truncate max-w-[155px]">
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-brand-light text-brand-dark border border-brand-border truncate max-w-[150px]">
                           <Layers className="w-3 h-3 text-brand-primary shrink-0" />
                           <span className="truncate">{p.category.name}</span>
                         </span>
@@ -663,14 +586,14 @@ export const ProductsPage: React.FC = () => {
                     </td>
 
                     {/* Selling Price & Cost */}
-                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
+                    <td className="py-2 px-3 text-right whitespace-nowrap">
                       <div className="font-bold text-slate-900 text-xs">
                         {formatVND(sell)}
                       </div>
-                      <div className="flex items-center justify-end gap-1.5 text-[10px] text-slate-400 mt-0.5">
+                      <div className="flex items-center justify-end gap-1 text-[10px] text-slate-400">
                         <span>Vốn: {formatVND(cost)}</span>
                         {margin && (
-                          <span className="font-bold text-emerald-800 bg-[#EAF3EE] px-1.5 py-0.2 rounded border border-[#C8E1D5]">
+                          <span className="font-bold text-emerald-800 bg-[#EAF3EE] px-1 py-0.2 rounded border border-[#C8E1D5]">
                             +{margin}%
                           </span>
                         )}
@@ -678,13 +601,13 @@ export const ProductsPage: React.FC = () => {
                     </td>
 
                     {/* Stock Quantity & Status with live indicators */}
-                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
+                    <td className="py-2 px-3 text-center whitespace-nowrap">
                       <div className="flex flex-col items-center">
                         <span className="font-bold text-slate-900 text-xs">
                           {stock.toLocaleString('vi-VN')} {p.unit?.name || ''}
                         </span>
                         <span
-                          className={`inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-[10px] font-bold mt-1 ${
+                          className={`inline-flex items-center gap-1 px-1.5 py-0.2 rounded-full text-[9px] font-bold ${
                             isOutOfStock
                               ? 'bg-rose-50 text-rose-700 border border-rose-200'
                               : isLowStock
@@ -693,7 +616,7 @@ export const ProductsPage: React.FC = () => {
                           }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-1 h-1 rounded-full ${
                               isOutOfStock
                                 ? 'bg-rose-500'
                                 : isLowStock
@@ -708,35 +631,35 @@ export const ProductsPage: React.FC = () => {
 
                     {/* Actions */}
                     <td
-                      className="py-3.5 px-5 text-right whitespace-nowrap"
+                      className="py-2 px-4 text-right whitespace-nowrap"
                       onClick={(e) => e.stopPropagation()}
                     >
                       <div className="inline-flex items-center justify-end gap-1">
                         <button
                           onClick={() => setActiveDrawerProduct(p)}
-                          className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
+                          className="p-1 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
                           title="Xem chi tiết"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3.5 h-3.5" />
                         </button>
 
                         {isManagerOrAdmin && (
                           <button
                             onClick={() => openEditModal(p)}
-                            className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                            className="p-1 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                             title="Chỉnh sửa sản phẩm"
                           >
-                            <Edit3 className="w-4 h-4" />
+                            <Edit3 className="w-3.5 h-3.5" />
                           </button>
                         )}
 
                         {isAdmin && (
                           <button
                             onClick={() => setDeleteTarget(p)}
-                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                            className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                             title="Xóa sản phẩm"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3.5 h-3.5" />
                           </button>
                         )}
                       </div>
@@ -748,13 +671,13 @@ export const ProductsPage: React.FC = () => {
           </table>
         )}
 
-        {/* Pagination Bar */}
-        <div className="px-6 py-3.5 border-t border-slate-200 bg-[#FBFDFB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
-          <div className="flex items-center gap-4">
+        {/* Compact Pagination Bar */}
+        <div className="px-5 py-2.5 border-t border-slate-200 bg-[#FBFDFB] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+          <div className="flex items-center gap-3">
             <span>
               Hiển thị <span className="font-bold text-slate-800">{paginatedProducts.length}</span> / {totalItems} sản phẩm
             </span>
-            <div className="flex items-center gap-1.5">
+            <div className="flex items-center gap-1 text-[11px]">
               <span>Mỗi trang:</span>
               <select
                 value={pageSize}
@@ -762,45 +685,44 @@ export const ProductsPage: React.FC = () => {
                   setPageSize(Number(e.target.value));
                   setPage(1);
                 }}
-                className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 cursor-pointer focus:outline-none"
+                className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-semibold text-slate-700 cursor-pointer focus:outline-none"
               >
-                <option value={10}>10</option>
-                <option value={20}>20</option>
+                <option value={15}>15</option>
+                <option value={30}>30</option>
                 <option value={50}>50</option>
               </select>
             </div>
           </div>
 
           <div className="flex items-center gap-2">
-            <span className="text-slate-500 font-medium">
+            <span className="text-slate-500 text-[11px] font-medium">
               Trang {currentPage} / {totalPages}
             </span>
             <div className="flex items-center gap-1">
               <button
                 disabled={currentPage <= 1}
                 onClick={() => setPage((prev) => Math.max(prev - 1, 1))}
-                className="p-1.5 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 title="Trang trước"
               >
-                <ChevronLeft className="w-4 h-4" />
+                <ChevronLeft className="w-3.5 h-3.5" />
               </button>
               <button
                 disabled={currentPage >= totalPages}
                 onClick={() => setPage((prev) => Math.min(prev + 1, totalPages))}
-                className="p-1.5 border border-slate-200 bg-white rounded-lg hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
                 title="Trang tiếp"
               >
-                <ChevronRight className="w-4 h-4" />
+                <ChevronRight className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
         </div>
       </div>
 
-      {/* SLIDE-OVER DRAWER (Scandinavian Forest Green Luxe) */}
+      {/* SLIDE-OVER DRAWER */}
       {activeDrawerProduct && (
         <div className="fixed inset-0 z-50 overflow-hidden">
-          {/* Backdrop */}
           <div
             onClick={() => setActiveDrawerProduct(null)}
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
@@ -809,7 +731,7 @@ export const ProductsPage: React.FC = () => {
           <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
             <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250">
               {/* Drawer Top Banner */}
-              <div className="p-6 border-b border-brand-border/60 bg-[#F1F6F3]">
+              <div className="p-5 border-b border-brand-border/60 bg-[#F1F6F3]">
                 <div className="flex items-start justify-between">
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
@@ -822,28 +744,28 @@ export const ProductsPage: React.FC = () => {
                         </span>
                       )}
                     </div>
-                    <h3 className="text-lg font-bold text-slate-900 mt-2">
+                    <h3 className="text-base font-bold text-slate-900 mt-1">
                       {activeDrawerProduct.name}
                     </h3>
                   </div>
                   <button
                     onClick={() => setActiveDrawerProduct(null)}
-                    className="p-1.5 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                    className="p-1 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-colors cursor-pointer"
                   >
-                    <X className="w-5 h-5" />
+                    <X className="w-4 h-4" />
                   </button>
                 </div>
               </div>
 
               {/* Drawer Body */}
-              <div className="flex-1 p-6 space-y-6 overflow-y-auto text-xs">
+              <div className="flex-1 p-5 space-y-4 overflow-y-auto text-xs">
                 {/* Real-time Inventory Card */}
-                <div className="bg-brand-light/60 p-4 rounded-2xl border border-brand-border space-y-2">
-                  <div className="text-[11px] font-bold text-brand-primary uppercase tracking-wider">
+                <div className="bg-brand-light/60 p-3.5 rounded-xl border border-brand-border space-y-1.5">
+                  <div className="text-[10px] font-bold text-brand-primary uppercase tracking-wider">
                     Tồn kho khả dụng toàn hệ thống
                   </div>
                   <div className="flex items-baseline justify-between">
-                    <div className="text-2xl font-bold text-brand-dark">
+                    <div className="text-xl font-bold text-brand-dark">
                       {(activeDrawerProduct.current_stock ?? 0).toLocaleString('vi-VN')}{' '}
                       <span className="text-xs font-medium text-slate-600">
                         {activeDrawerProduct.unit?.name || 'đơn vị'}
@@ -865,26 +787,26 @@ export const ProductsPage: React.FC = () => {
                         : 'Đủ hàng'}
                     </span>
                   </div>
-                  <div className="text-[11px] text-slate-500">
+                  <div className="text-[10px] text-slate-500">
                     Ngưỡng báo động: Tồn &lt; {activeDrawerProduct.low_stock_threshold ?? 10} {activeDrawerProduct.unit?.name || ''}
                   </div>
                 </div>
 
                 {/* Financial Summary Card */}
-                <div className="bg-slate-50 p-4 rounded-2xl border border-slate-200 space-y-3">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2.5">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Thông tin định giá & tỷ suất
                   </div>
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <div className="text-slate-400 text-[11px]">Giá vốn nhập</div>
-                      <div className="text-sm font-bold text-slate-700 mt-0.5">
+                      <div className="text-slate-400 text-[10px]">Giá vốn nhập</div>
+                      <div className="text-xs font-bold text-slate-700 mt-0.5">
                         {formatVND(activeDrawerProduct.cost_price)}
                       </div>
                     </div>
                     <div>
-                      <div className="text-slate-400 text-[11px]">Giá bán niêm yết</div>
-                      <div className="text-sm font-bold text-brand-primary mt-0.5">
+                      <div className="text-slate-400 text-[10px]">Giá bán niêm yết</div>
+                      <div className="text-xs font-bold text-brand-primary mt-0.5">
                         {formatVND(activeDrawerProduct.selling_price)}
                       </div>
                     </div>
@@ -892,7 +814,7 @@ export const ProductsPage: React.FC = () => {
 
                   <div className="pt-2 border-t border-slate-200 flex items-center justify-between">
                     <span className="text-slate-500 font-medium">Lợi nhuận gộp ước tính:</span>
-                    <span className="font-bold text-brand-primary bg-brand-light px-2 py-0.5 rounded-md border border-brand-border text-xs">
+                    <span className="font-bold text-brand-primary bg-brand-light px-1.5 py-0.5 rounded border border-brand-border text-[11px]">
                       {formatVND(
                         Number(activeDrawerProduct.selling_price || 0) -
                           Number(activeDrawerProduct.cost_price || 0),
@@ -907,18 +829,18 @@ export const ProductsPage: React.FC = () => {
                 </div>
 
                 {/* Categorization Card */}
-                <div className="space-y-3">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <div className="space-y-2">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Phân loại hàng hóa
                   </div>
-                  <div className="space-y-2.5">
-                    <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                  <div className="space-y-2">
+                    <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
                       <span className="text-slate-500">Danh mục</span>
                       <span className="font-semibold text-brand-dark bg-brand-light px-2 py-0.5 rounded border border-brand-border text-[11px]">
                         {activeDrawerProduct.category?.name || 'Chưa phân loại'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between py-2 border-b border-slate-100">
+                    <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
                       <span className="text-slate-500">Đơn vị đo lường</span>
                       <span className="font-semibold text-slate-800">
                         {activeDrawerProduct.unit?.name || '—'}
@@ -928,11 +850,11 @@ export const ProductsPage: React.FC = () => {
                 </div>
 
                 {/* Description */}
-                <div className="space-y-2">
-                  <div className="text-[11px] font-bold text-slate-400 uppercase tracking-wider">
+                <div className="space-y-1.5">
+                  <div className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
                     Mô tả sản phẩm
                   </div>
-                  <div className="p-3.5 bg-slate-50 rounded-xl text-slate-700 leading-relaxed border border-slate-100">
+                  <div className="p-3 bg-slate-50 rounded-xl text-slate-700 leading-relaxed border border-slate-100">
                     {activeDrawerProduct.description || (
                       <span className="text-slate-400 italic">Chưa có thông tin mô tả chi tiết</span>
                     )}
@@ -940,7 +862,7 @@ export const ProductsPage: React.FC = () => {
                 </div>
 
                 {/* Metadata */}
-                <div className="text-[11px] text-slate-400 space-y-1 pt-4 border-t border-slate-100">
+                <div className="text-[10px] text-slate-400 space-y-1 pt-3 border-t border-slate-100">
                   <div>Mã định danh ID: {activeDrawerProduct.id}</div>
                   <div>
                     Ngày cập nhật:{' '}
@@ -950,13 +872,13 @@ export const ProductsPage: React.FC = () => {
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-4 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+              <div className="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
                 {isAdmin ? (
                   <button
                     onClick={() => {
                       setDeleteTarget(activeDrawerProduct);
                     }}
-                    className="px-4 py-2 text-rose-600 hover:bg-rose-50 rounded-xl font-semibold transition-colors cursor-pointer text-xs flex items-center gap-1.5"
+                    className="px-3 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-semibold transition-colors cursor-pointer text-xs flex items-center gap-1"
                   >
                     <Trash2 className="w-3.5 h-3.5" />
                     <span>Xóa</span>
@@ -968,7 +890,7 @@ export const ProductsPage: React.FC = () => {
                 <div className="flex items-center gap-2">
                   <button
                     onClick={() => setActiveDrawerProduct(null)}
-                    className="px-4 py-2 border border-slate-200 bg-white text-slate-700 rounded-xl font-semibold hover:bg-slate-50 transition-colors cursor-pointer text-xs"
+                    className="px-3 py-1.5 border border-slate-200 bg-white text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors cursor-pointer text-xs"
                   >
                     Đóng
                   </button>
@@ -978,7 +900,7 @@ export const ProductsPage: React.FC = () => {
                       onClick={() => {
                         openEditModal(activeDrawerProduct);
                       }}
-                      className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-primary text-white rounded-xl font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer text-xs"
+                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-primary text-white rounded-lg font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer text-xs"
                     >
                       <Edit3 className="w-3.5 h-3.5" />
                       <span>Chỉnh sửa</span>
@@ -994,29 +916,29 @@ export const ProductsPage: React.FC = () => {
       {/* CUSTOM CONFIRM MODAL FOR DELETE */}
       {deleteTarget && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-sm w-full border border-slate-100 shadow-2xl p-6 space-y-4 animate-in fade-in zoom-in-95 duration-150">
-            <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
-              <ShieldAlert className="w-6 h-6 stroke-2" />
+          <div className="bg-white rounded-2xl max-w-sm w-full border border-slate-100 shadow-2xl p-5 space-y-3.5 animate-in fade-in zoom-in-95 duration-150">
+            <div className="w-10 h-10 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center mx-auto">
+              <ShieldAlert className="w-5 h-5 stroke-2" />
             </div>
 
             <div className="text-center space-y-1">
-              <h3 className="text-base font-bold text-slate-900">Xác nhận xóa sản phẩm</h3>
+              <h3 className="text-sm font-bold text-slate-900">Xác nhận xóa sản phẩm</h3>
               <p className="text-xs text-slate-500">
                 Bạn có chắc chắn muốn xóa sản phẩm này khỏi hệ thống kho?
               </p>
             </div>
 
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-1">
+            <div className="p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-center space-y-0.5">
               <div className="font-bold text-slate-800 text-xs">{deleteTarget.name}</div>
               <div className="font-mono text-[11px] text-brand-primary font-bold">{deleteTarget.sku}</div>
             </div>
 
-            <div className="flex items-center gap-2.5 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               <button
                 type="button"
                 disabled={deleting}
                 onClick={() => setDeleteTarget(null)}
-                className="flex-1 py-2.5 px-4 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50"
+                className="flex-1 py-2 px-3 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-semibold transition-colors cursor-pointer disabled:opacity-50"
               >
                 Hủy bỏ
               </button>
@@ -1024,9 +946,9 @@ export const ProductsPage: React.FC = () => {
                 type="button"
                 disabled={deleting}
                 onClick={confirmDeleteProduct}
-                className="flex-1 py-2.5 px-4 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1.5 disabled:opacity-50"
+                className="flex-1 py-2 px-3 bg-rose-600 hover:bg-rose-700 text-white rounded-xl text-xs font-semibold shadow-xs transition-colors cursor-pointer flex items-center justify-center gap-1 disabled:opacity-50"
               >
-                {deleting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
+                {deleting && <Loader2 className="w-3 h-3 animate-spin" />}
                 <span>Xác nhận xóa</span>
               </button>
             </div>
@@ -1072,7 +994,7 @@ export const ProductsPage: React.FC = () => {
                     value={formSku}
                     onChange={(e) => setFormSku(e.target.value)}
                     placeholder="VD: LAPTOP-DELL-5520"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all font-mono"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 uppercase focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all font-mono"
                   />
                 </div>
 
@@ -1085,7 +1007,7 @@ export const ProductsPage: React.FC = () => {
                     value={formBarcode}
                     onChange={(e) => setFormBarcode(e.target.value)}
                     placeholder="VD: 8935001234567"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all font-mono"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all font-mono"
                   />
                 </div>
               </div>
@@ -1100,7 +1022,7 @@ export const ProductsPage: React.FC = () => {
                   value={formName}
                   onChange={(e) => setFormName(e.target.value)}
                   placeholder="VD: Laptop Dell Precision 5520 Core i7"
-                  className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                  className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                 />
               </div>
 
@@ -1112,7 +1034,7 @@ export const ProductsPage: React.FC = () => {
                   <select
                     value={formCategoryId}
                     onChange={(e) => setFormCategoryId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                   >
                     <option value="">— Chọn danh mục —</option>
                     {categories.map((c) => (
@@ -1130,7 +1052,7 @@ export const ProductsPage: React.FC = () => {
                   <select
                     value={formUnitId}
                     onChange={(e) => setFormUnitId(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                   >
                     <option value="">— Chọn đơn vị —</option>
                     {units.map((u) => (
@@ -1154,7 +1076,7 @@ export const ProductsPage: React.FC = () => {
                     value={formCostPrice}
                     onChange={(e) => setFormCostPrice(e.target.value)}
                     placeholder="0"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                   />
                 </div>
 
@@ -1169,7 +1091,7 @@ export const ProductsPage: React.FC = () => {
                     value={formSellingPrice}
                     onChange={(e) => setFormSellingPrice(e.target.value)}
                     placeholder="0"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                   />
                 </div>
 
@@ -1183,7 +1105,7 @@ export const ProductsPage: React.FC = () => {
                     value={formLowStockThreshold}
                     onChange={(e) => setFormLowStockThreshold(e.target.value)}
                     placeholder="10"
-                    className="w-full px-3.5 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
+                    className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary focus:bg-white transition-all"
                   />
                 </div>
               </div>
@@ -1205,14 +1127,14 @@ export const ProductsPage: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => setIsModalOpen(false)}
-                  className="px-4 py-2.5 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+                  className="px-4 py-2 text-xs font-semibold text-slate-600 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
                 >
                   Hủy
                 </button>
                 <button
                   type="submit"
                   disabled={submitting}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 bg-brand-primary text-white text-xs font-semibold rounded-xl hover:bg-brand-hover shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2 bg-brand-primary text-white text-xs font-semibold rounded-xl hover:bg-brand-hover shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                 >
                   {submitting && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
                   <span>{editingProduct ? 'Lưu thay đổi' : 'Thêm vào kho'}</span>

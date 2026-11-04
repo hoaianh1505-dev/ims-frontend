@@ -429,7 +429,7 @@ export const ProductsPage: React.FC = () => {
                 <th className="py-3 px-4 w-44">Danh mục</th>
                 <th className="py-3 px-4 w-48 text-right">Định giá niêm yết</th>
                 <th className="py-3 px-4 w-32 text-center">Cảnh báo tồn</th>
-                <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+                <th className="py-3 px-5 w-28 text-right whitespace-nowrap">Thao tác</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 text-slate-700">
@@ -479,7 +479,7 @@ export const ProductsPage: React.FC = () => {
                     </td>
 
                     {/* Selling Price & Cost */}
-                    <td className="py-3.5 px-4 text-right">
+                    <td className="py-3.5 px-4 text-right whitespace-nowrap">
                       <div className="font-bold text-slate-900 text-xs">{formatVND(sell)}</div>
                       <div className="flex items-center justify-end gap-1.5 text-[10px] text-slate-400 mt-0.5">
                         <span>Vốn: {formatVND(cost)}</span>
@@ -492,7 +492,7 @@ export const ProductsPage: React.FC = () => {
                     </td>
 
                     {/* Low stock threshold */}
-                    <td className="py-3.5 px-4 text-center">
+                    <td className="py-3.5 px-4 text-center whitespace-nowrap">
                       <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-amber-50 text-amber-800 border border-amber-200/60">
                         &lt; {p.low_stock_threshold ?? 10} {p.unit?.name || ''}
                       </span>
@@ -500,36 +500,38 @@ export const ProductsPage: React.FC = () => {
 
                     {/* Actions */}
                     <td
-                      className="py-3.5 px-5 text-right space-x-1"
+                      className="py-3.5 px-5 text-right whitespace-nowrap"
                       onClick={(e) => e.stopPropagation()}
                     >
-                      <button
-                        onClick={() => setActiveDrawerProduct(p)}
-                        className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
-                        title="Xem chi tiết"
-                      >
-                        <Eye className="w-4 h-4" />
-                      </button>
-
-                      {isManagerOrAdmin && (
+                      <div className="inline-flex items-center justify-end gap-1">
                         <button
-                          onClick={() => openEditModal(p)}
-                          className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                          title="Chỉnh sửa sản phẩm"
+                          onClick={() => setActiveDrawerProduct(p)}
+                          className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
+                          title="Xem chi tiết"
                         >
-                          <Edit3 className="w-4 h-4" />
+                          <Eye className="w-4 h-4" />
                         </button>
-                      )}
 
-                      {isAdmin && (
-                        <button
-                          onClick={() => setDeleteTarget(p)}
-                          className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                          title="Xóa sản phẩm"
-                        >
-                          <Trash2 className="w-4 h-4" />
-                        </button>
-                      )}
+                        {isManagerOrAdmin && (
+                          <button
+                            onClick={() => openEditModal(p)}
+                            className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                            title="Chỉnh sửa sản phẩm"
+                          >
+                            <Edit3 className="w-4 h-4" />
+                          </button>
+                        )}
+
+                        {isAdmin && (
+                          <button
+                            onClick={() => setDeleteTarget(p)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                            title="Xóa sản phẩm"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
                     </td>
                   </tr>
                 );

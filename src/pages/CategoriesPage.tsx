@@ -410,9 +410,9 @@ export const CategoriesPage: React.FC = () => {
                       <td className="py-3.5 px-4 text-slate-500 line-clamp-1">
                         {cat.description || '—'}
                       </td>
-                      <td className="py-3.5 px-5 text-right space-x-1">
+                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
                         {isAdmin ? (
-                          <>
+                          <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditCategory(cat)}
                               className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
@@ -433,7 +433,7 @@ export const CategoriesPage: React.FC = () => {
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
-                          </>
+                          </div>
                         ) : (
                           <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
                         )}
@@ -578,9 +578,9 @@ export const CategoriesPage: React.FC = () => {
                       <td className="py-3.5 px-4 text-slate-500">
                         {new Date(unit.created_at).toLocaleDateString('vi-VN')}
                       </td>
-                      <td className="py-3.5 px-5 text-right space-x-1">
+                      <td className="py-3.5 px-5 text-right whitespace-nowrap">
                         {isAdmin ? (
-                          <>
+                          <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditUnit(unit)}
                               className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
@@ -601,7 +601,7 @@ export const CategoriesPage: React.FC = () => {
                             >
                               <Trash2 className="w-4 h-4" />
                             </button>
-                          </>
+                          </div>
                         ) : (
                           <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
                         )}

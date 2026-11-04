@@ -1,45 +1,140 @@
-import { useState } from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { useAuthStore } from './stores/auth.store';
-import { LoginPage, DashboardPage } from './pages';
-import { Sidebar } from './components/layout/Sidebar';
-import { Header } from './components/layout/Header';
+import {
+  LoginPage,
+  DashboardPage,
+  CategoriesPage,
+  ProductsPage,
+  PlaceholderPage,
+} from './pages';
+import { AppLayout } from './components/layout/AppLayout';
+import { ProtectedRoute } from './components/common/ProtectedRoute';
+import {
+  Building2,
+  Truck,
+  ArrowLeftRight,
+  FileText,
+  User as UserIcon,
+  ShieldCheck,
+  History,
+} from 'lucide-react';
 
 export default function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
-  const [activeTab, setActiveTab] = useState('dashboard');
 
-  // Nếu chưa đăng nhập -> Tự động chuyển hướng sang màn hình Login
-  if (!isAuthenticated) {
-    return <LoginPage />;
-  }
-
-  // Đã đăng nhập -> Vào giao diện chính của hệ thống
   return (
-    <div className="h-screen bg-brand-bg flex overflow-hidden">
-      {/* Sidebar bên trái cố định */}
-      <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+    <BrowserRouter>
+      <Routes>
+        {/* Public Route */}
+        <Route
+          path="/login"
+          element={
+            isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+          }
+        />
 
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 h-screen overflow-hidden">
-        <Header breadcrumb={activeTab === 'dashboard' ? 'Tổng quan' : activeTab} />
+        {/* Protected Routes */}
+        <Route element={<ProtectedRoute />}>
+          <Route element={<AppLayout />}>
+            {/* 1. Tổng quan */}
+            <Route index element={<DashboardPage />} />
+            <Route path="dashboard" element={<Navigate to="/" replace />} />
 
-        <main className="flex-1 overflow-y-auto">
-          {activeTab === 'dashboard' && <DashboardPage />}
-          {activeTab !== 'dashboard' && (
-            <div className="p-8 text-center text-slate-400">
-              <div className="bg-white rounded-2xl p-12 border border-slate-100 max-w-lg mx-auto">
-                <h3 className="text-lg font-bold text-slate-800">Màn hình {activeTab}</h3>
-                <button
-                  onClick={() => setActiveTab('dashboard')}
-                  className="mt-4 px-4 py-2 bg-brand-primary text-white rounded-lg text-xs font-semibold hover:bg-brand-hover cursor-pointer"
-                >
-                  Quay lại Tổng quan
-                </button>
-              </div>
-            </div>
-          )}
-        </main>
-      </div>
-    </div>
+            {/* 2. Sản phẩm (Real data from PostgreSQL) */}
+            <Route path="products" element={<ProductsPage />} />
+
+            {/* 3. Danh mục & Đơn vị tính (Real data from PostgreSQL) */}
+            <Route path="categories" element={<CategoriesPage />} />
+
+            {/* 4. Tổ chức kho */}
+            <Route
+              path="warehouses"
+              element={
+                <PlaceholderPage
+                  title="Tổ chức kho hàng"
+                  description="Quản lý vị trí, sơ đồ phân khu và sức chứa của các kho"
+                  icon={Building2}
+                />
+              }
+            />
+
+            {/* 5. Nhà cung cấp */}
+            <Route
+              path="suppliers"
+              element={
+                <PlaceholderPage
+                  title="Nhà cung cấp"
+                  description="Hồ sơ đối tác cung cấp hàng hóa và lịch sử nhập kho"
+                  icon={Truck}
+                />
+              }
+            />
+
+            {/* 6. Xử lý xuất / nhập */}
+            <Route
+              path="stock-transactions"
+              element={
+                <PlaceholderPage
+                  title="Xử lý xuất / nhập kho"
+                  description="Theo dõi và tạo phiếu nhập kho, xuất kho và chuyển kho nội bộ"
+                  icon={ArrowLeftRight}
+                />
+              }
+            />
+
+            {/* 7. Phiếu của tôi */}
+            <Route
+              path="my-tasks"
+              element={
+                <PlaceholderPage
+                  title="Phiếu của tôi"
+                  description="Danh sách các phiếu kho được giao xử lý hoặc cần phê duyệt"
+                  icon={FileText}
+                />
+              }
+            />
+
+            {/* 8. Hồ sơ cá nhân */}
+            <Route
+              path="profile"
+              element={
+                <PlaceholderPage
+                  title="Hồ sơ cá nhân"
+                  description="Thông tin tài khoản, đổi mật khẩu và cài đặt bảo mật"
+                  icon={UserIcon}
+                />
+              }
+            />
+
+            {/* 9. Quản trị tài khoản & quyền */}
+            <Route
+              path="users"
+              element={
+                <PlaceholderPage
+                  title="Tài khoản & quyền"
+                  description="Quản lý danh sách người dùng và phân quyền truy cập hệ thống"
+                  icon={ShieldCheck}
+                />
+              }
+            />
+
+            {/* 10. Nhật ký hệ thống */}
+            <Route
+              path="audit-logs"
+              element={
+                <PlaceholderPage
+                  title="Nhật ký hệ thống"
+                  description="Lịch sử thao tác, truy cập và thay đổi dữ liệu của người dùng"
+                  icon={History}
+                />
+              }
+            />
+          </Route>
+        </Route>
+
+        {/* Fallback route */}
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
+    </BrowserRouter>
   );
 }

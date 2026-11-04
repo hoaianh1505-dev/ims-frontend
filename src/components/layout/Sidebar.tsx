@@ -1,7 +1,9 @@
 import React from 'react';
+import { NavLink } from 'react-router-dom';
 import {
   LayoutGrid,
   Package,
+  Layers,
   Building2,
   ArrowLeftRight,
   Truck,
@@ -15,32 +17,25 @@ import {
 import { Logo } from './Logo';
 import { useAuthStore } from '../../stores/auth.store';
 
-interface SidebarProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
-
-export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => {
+export const Sidebar: React.FC = () => {
   const { user, logout } = useAuthStore();
   const currentRole = user?.role || 'STAFF';
 
-  // Helper kiểm tra quyền
+  // Phân quyền
   const isAdmin = currentRole === 'ADMIN';
   const isManagerOrAdmin = currentRole === 'ADMIN' || currentRole === 'MANAGER';
 
-  const renderNavButton = (
-    id: string,
+  const renderNavItem = (
+    to: string,
     label: string,
     icon: React.ReactNode,
     isAllowed: boolean,
     requiredRoleLabel?: string
   ) => {
-    const isActive = activeTab === id;
-
     if (!isAllowed) {
       return (
         <div
-          key={id}
+          key={to}
           title={`Tính năng yêu cầu quyền ${requiredRoleLabel || 'Admin'}`}
           className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 bg-slate-50/50 cursor-not-allowed select-none opacity-60"
         >
@@ -54,18 +49,20 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     }
 
     return (
-      <button
-        key={id}
-        onClick={() => setActiveTab(id)}
-        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all cursor-pointer ${
-          isActive
-            ? 'bg-brand-light text-brand-primary font-semibold shadow-xs'
-            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
-        }`}
+      <NavLink
+        key={to}
+        to={to}
+        className={({ isActive }) =>
+          `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+            isActive
+              ? 'bg-brand-light text-brand-primary font-semibold shadow-xs'
+              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+          }`
+        }
       >
         {icon}
         <span>{label}</span>
-      </button>
+      </NavLink>
     );
   };
 
@@ -82,11 +79,12 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
             Quản lý
           </div>
           <div className="space-y-1">
-            {renderNavButton('dashboard', 'Tổng quan', <LayoutGrid className="w-4 h-4 shrink-0" />, true)}
-            {renderNavButton('products', 'Sản phẩm', <Package className="w-4 h-4 shrink-0" />, true)}
-            {renderNavButton('warehouses', 'Tổ chức kho', <Building2 className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
-            {renderNavButton('suppliers', 'Nhà cung cấp', <Truck className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
-            {renderNavButton('transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/', 'Tổng quan', <LayoutGrid className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/products', 'Sản phẩm', <Package className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/warehouses', 'Tổ chức kho', <Building2 className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-4 h-4 shrink-0" />, true)}
           </div>
         </div>
 
@@ -96,8 +94,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
             Cá nhân
           </div>
           <div className="space-y-1">
-            {renderNavButton('my-tasks', 'Phiếu của tôi', <FileText className="w-4 h-4 shrink-0" />, true)}
-            {renderNavButton('profile', 'Hồ sơ cá nhân', <UserIcon className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/my-tasks', 'Phiếu của tôi', <FileText className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/profile', 'Hồ sơ cá nhân', <UserIcon className="w-4 h-4 shrink-0" />, true)}
           </div>
         </div>
 
@@ -107,8 +105,8 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
             Quản trị
           </div>
           <div className="space-y-1">
-            {renderNavButton('users', 'Tài khoản & quyền', <ShieldCheck className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
-            {renderNavButton('audit-logs', 'Nhật ký hệ thống', <History className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
+            {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
+            {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
           </div>
         </div>
       </nav>
@@ -141,4 +139,3 @@ export const Sidebar: React.FC<SidebarProps> = ({ activeTab, setActiveTab }) => 
     </aside>
   );
 };
-

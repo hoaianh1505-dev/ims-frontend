@@ -24,9 +24,8 @@ export interface Product {
   name: string;
   description?: string;
   cost_price: number;
-  price: number;
-  min_stock: number;
-  max_stock: number;
+  selling_price: number;
+  low_stock_threshold: number;
   category_id?: string;
   unit_id?: string;
   supplier_id?: string;

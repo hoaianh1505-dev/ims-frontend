@@ -381,24 +381,24 @@ export const CategoriesPage: React.FC = () => {
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-slate-50/70 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px] select-none">
-                    <th className="py-2.5 px-4 w-1/3">Tên danh mục</th>
-                    <th className="py-2.5 px-3 w-1/4">Danh mục cha</th>
-                    <th className="py-2.5 px-3">Mô tả</th>
-                    <th className="py-2.5 px-4 w-24 text-right whitespace-nowrap">Thao tác</th>
+                    <th className="py-2.5 px-4 w-60 whitespace-nowrap">Tên danh mục</th>
+                    <th className="py-2.5 px-3 w-36 whitespace-nowrap">Danh mục cha</th>
+                    <th className="py-2.5 px-3 min-w-[200px]">Mô tả</th>
+                    <th className="py-2.5 px-4 w-20 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedCategories.map((cat) => (
                     <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-2.5 px-4">
+                      <td className="py-2.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
                           <div className="w-6 h-6 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 border border-slate-200/60">
                             <Layers className="w-3 h-3" />
                           </div>
-                          <span className="font-semibold text-slate-900 line-clamp-1 text-xs">{cat.name}</span>
+                          <span className="font-semibold text-slate-900 text-xs">{cat.name}</span>
                         </div>
                       </td>
-                      <td className="py-2.5 px-3 text-slate-600">
+                      <td className="py-2.5 px-3 text-slate-600 whitespace-nowrap">
                         {cat.parent ? (
                           <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">
                             {cat.parent.name}
@@ -407,8 +407,10 @@ export const CategoriesPage: React.FC = () => {
                           <span className="text-slate-400 italic">Cấp gốc</span>
                         )}
                       </td>
-                      <td className="py-2.5 px-3 text-slate-500 line-clamp-1">
-                        {cat.description || '—'}
+                      <td className="py-2.5 px-3 text-slate-600">
+                        <div className="leading-relaxed text-xs py-0.5 break-words" title={cat.description || ''}>
+                          {cat.description || <span className="text-slate-400 italic">—</span>}
+                        </div>
                       </td>
                       <td className="py-2.5 px-4 text-right whitespace-nowrap">
                         {isAdmin ? (
@@ -556,21 +558,21 @@ export const CategoriesPage: React.FC = () => {
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
                   <tr className="bg-slate-50/70 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px] select-none">
-                    <th className="py-2.5 px-4 w-1/3">Tên đơn vị</th>
-                    <th className="py-2.5 px-3 w-1/4">Ký hiệu viết tắt</th>
+                    <th className="py-2.5 px-4 w-60 whitespace-nowrap">Tên đơn vị</th>
+                    <th className="py-2.5 px-3 w-36 whitespace-nowrap">Ký hiệu viết tắt</th>
                     <th className="py-2.5 px-3">Ngày tạo</th>
-                    <th className="py-2.5 px-4 w-24 text-right whitespace-nowrap">Thao tác</th>
+                    <th className="py-2.5 px-4 w-20 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedUnits.map((unit) => (
                     <tr key={unit.id} className="hover:bg-slate-50/70 transition-colors">
-                      <td className="py-2.5 px-4">
+                      <td className="py-2.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
                           <div className="w-6 h-6 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 border border-slate-200/60">
                             <Ruler className="w-3 h-3" />
                           </div>
-                          <span className="font-semibold text-slate-900 line-clamp-1 text-xs">{unit.name}</span>
+                          <span className="font-semibold text-slate-900 text-xs">{unit.name}</span>
                         </div>
                       </td>
                       <td className="py-2.5 px-3">

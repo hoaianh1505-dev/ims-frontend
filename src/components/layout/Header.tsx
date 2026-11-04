@@ -21,7 +21,7 @@ export const Header: React.FC = () => {
   const currentTitle = routeTitleMap[location.pathname] || 'Tổng quan';
 
   return (
-    <header className="h-14 px-8 flex items-center justify-between border-b border-slate-100 bg-white/60 backdrop-blur-sm sticky top-0 z-10">
+    <header className="h-14 px-8 flex items-center justify-between border-b border-slate-100 bg-white/60 backdrop-blur-sm shrink-0 z-10">
       <div className="flex items-center gap-2 text-xs font-medium text-slate-500">
         <span className="hover:text-slate-800 cursor-pointer transition-colors">Không gian làm việc</span>
         <ChevronRight className="w-3.5 h-3.5 text-slate-400" />

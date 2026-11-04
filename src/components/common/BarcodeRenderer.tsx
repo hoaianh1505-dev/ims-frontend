@@ -61,3 +61,4 @@ export const BarcodeRenderer: React.FC<BarcodeRendererProps> = ({
     </div>
   );
 };
+

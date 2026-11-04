@@ -136,3 +136,4 @@ export function printBarcodeLabel(product: {
   `);
   printWindow.document.close();
 }
+

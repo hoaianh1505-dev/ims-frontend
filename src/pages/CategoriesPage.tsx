@@ -260,18 +260,18 @@ export const CategoriesPage: React.FC = () => {
   };
 
   return (
-    <div className="p-8 max-w-[1440px] mx-auto space-y-6">
+    <div className="p-8 max-w-[1440px] mx-auto space-y-7">
       {/* Toast Notification */}
       {notify && (
         <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-xl shadow-xl border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
+          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3 rounded-2xl shadow-xl border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
             notify.type === 'success'
-              ? 'bg-emerald-50 text-emerald-900 border-emerald-200'
+              ? 'bg-[#EAF3EE] text-[#1A4D3E] border-[#C8E1D5]'
               : 'bg-rose-50 text-rose-900 border-rose-200'
           }`}
         >
           {notify.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+            <CheckCircle2 className="w-4 h-4 text-brand-primary shrink-0" />
           ) : (
             <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
           )}
@@ -280,41 +280,59 @@ export const CategoriesPage: React.FC = () => {
       )}
 
       {/* Header & Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
-        <div>
-          <h1 className="text-2xl font-bold text-slate-800 tracking-tight">Danh mục & Đơn vị tính</h1>
-          <p className="text-xs text-slate-500 mt-1">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-1">
+        <div className="space-y-1">
+          <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-full bg-brand-light border border-brand-border text-[11px] font-bold text-brand-primary">
+            <span className="w-1.5 h-1.5 rounded-full bg-brand-primary"></span>
+            <span>Cấu trúc dữ liệu kho</span>
+          </div>
+          <h1 className="text-2xl font-bold text-slate-900 tracking-tight">
+            Danh mục & Đơn vị tính
+          </h1>
+          <p className="text-xs text-slate-500">
             Thiết lập danh mục phân loại hàng hóa và chuẩn đo lường trong toàn bộ kho
           </p>
         </div>
 
         {/* Tab switch pills */}
-        <div className="flex items-center gap-1.5 p-1 bg-slate-100 rounded-xl">
+        <div className="flex items-center gap-1.5 p-1 bg-white border border-brand-border/80 rounded-xl shadow-2xs">
           <button
             onClick={() => setActiveTab('categories')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'categories'
-                ? 'bg-white text-brand-primary shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-brand-primary text-white shadow-xs'
+                : 'text-slate-600 hover:text-brand-primary hover:bg-brand-light/50'
             }`}
           >
             <Layers className="w-4 h-4" />
             <span>Danh mục sản phẩm</span>
-            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-brand-light text-brand-primary font-bold">
+            <span
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                activeTab === 'categories'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-brand-light text-brand-primary'
+              }`}
+            >
               {categories.length}
             </span>
           </button>
           <button
             onClick={() => setActiveTab('units')}
-            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-bold transition-all cursor-pointer ${
               activeTab === 'units'
-                ? 'bg-white text-brand-primary shadow-xs'
-                : 'text-slate-600 hover:text-slate-900'
+                ? 'bg-brand-primary text-white shadow-xs'
+                : 'text-slate-600 hover:text-brand-primary hover:bg-brand-light/50'
             }`}
           >
             <Ruler className="w-4 h-4" />
             <span>Đơn vị tính</span>
-            <span className="px-1.5 py-0.5 rounded-full text-[10px] bg-brand-light text-brand-primary font-bold">
+            <span
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-bold ${
+                activeTab === 'units'
+                  ? 'bg-white/20 text-white'
+                  : 'bg-brand-light text-brand-primary'
+              }`}
+            >
               {units.length}
             </span>
           </button>
@@ -326,7 +344,7 @@ export const CategoriesPage: React.FC = () => {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/70" />
               <input
                 type="text"
                 value={catSearch}
@@ -335,7 +353,7 @@ export const CategoriesPage: React.FC = () => {
                   setCatPage(1);
                 }}
                 placeholder="Tìm kiếm danh mục theo tên..."
-                className="w-full pl-10 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                className="w-full pl-10 pr-8 py-2.5 bg-white border border-slate-200 hover:border-brand-border rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all shadow-2xs"
               />
               {catSearch && (
                 <button
@@ -350,7 +368,7 @@ export const CategoriesPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchCategories()}
-                className="p-2.5 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                className="p-2.5 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 hover:border-brand-border rounded-xl hover:bg-brand-light/40 transition-colors shadow-2xs cursor-pointer"
                 title="Làm mới"
               >
                 <RefreshCw className={`w-4 h-4 ${loadingCategories ? 'animate-spin text-brand-primary' : ''}`} />
@@ -359,7 +377,7 @@ export const CategoriesPage: React.FC = () => {
               {isAdmin && (
                 <button
                   onClick={openCreateCategory}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-sm shadow-brand-primary/25 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Thêm danh mục</span>
@@ -369,7 +387,7 @@ export const CategoriesPage: React.FC = () => {
           </div>
 
           {/* Categories Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="bg-white rounded-2xl border border-brand-border/70 shadow-2xs overflow-hidden">
             {loadingCategories ? (
               <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
                 <Loader2 className="w-7 h-7 animate-spin text-brand-primary" />
@@ -384,23 +402,23 @@ export const CategoriesPage: React.FC = () => {
             ) : (
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
-                    <th className="py-3 px-5 w-1/3">Tên danh mục</th>
-                    <th className="py-3 px-4 w-1/4">Danh mục cha</th>
-                    <th className="py-3 px-4">Mô tả</th>
-                    <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+                  <tr className="bg-[#F0F5F2] border-b border-brand-border/80 text-brand-dark font-bold uppercase tracking-wider text-[11px] select-none">
+                    <th className="py-3.5 px-5 w-1/3">Tên danh mục</th>
+                    <th className="py-3.5 px-4 w-1/4">Danh mục cha</th>
+                    <th className="py-3.5 px-4">Mô tả</th>
+                    <th className="py-3.5 px-5 w-28 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedCategories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={cat.id} className="hover:bg-[#F6FAF8] transition-colors border-l-2 border-transparent hover:border-brand-primary">
                       <td className="py-3.5 px-5 font-bold text-slate-900 flex items-center gap-2.5">
                         <span className="w-2 h-2 rounded-full bg-brand-primary shrink-0"></span>
                         <span className="line-clamp-1">{cat.name}</span>
                       </td>
                       <td className="py-3.5 px-4">
                         {cat.parent ? (
-                          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-medium bg-slate-100 text-slate-700 border border-slate-200">
+                          <span className="inline-flex items-center px-2.5 py-1 rounded-md text-[11px] font-semibold bg-brand-light text-brand-dark border border-brand-border">
                             {cat.parent.name}
                           </span>
                         ) : (
@@ -415,7 +433,7 @@ export const CategoriesPage: React.FC = () => {
                           <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditCategory(cat)}
-                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
                               title="Chỉnh sửa"
                             >
                               <Edit3 className="w-4 h-4" />
@@ -445,10 +463,10 @@ export const CategoriesPage: React.FC = () => {
             )}
 
             {/* Pagination Bar */}
-            <div className="px-6 py-3.5 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <div className="px-6 py-3.5 border-t border-slate-200 bg-[#FBFDFB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
               <div className="flex items-center gap-4">
                 <span>
-                  Hiển thị <span className="font-semibold text-slate-800">{paginatedCategories.length}</span> / {totalCatItems} danh mục
+                  Hiển thị <span className="font-bold text-slate-800">{paginatedCategories.length}</span> / {totalCatItems} danh mục
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span>Mỗi trang:</span>
@@ -497,7 +515,7 @@ export const CategoriesPage: React.FC = () => {
         <div className="space-y-4">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
             <div className="relative flex-1 max-w-md">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-brand-primary/70" />
               <input
                 type="text"
                 value={unitSearch}
@@ -506,7 +524,7 @@ export const CategoriesPage: React.FC = () => {
                   setUnitPage(1);
                 }}
                 placeholder="Tìm kiếm đơn vị tính..."
-                className="w-full pl-10 pr-8 py-2 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all"
+                className="w-full pl-10 pr-8 py-2.5 bg-white border border-slate-200 hover:border-brand-border rounded-xl text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all shadow-2xs"
               />
               {unitSearch && (
                 <button
@@ -521,7 +539,7 @@ export const CategoriesPage: React.FC = () => {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => fetchUnits()}
-                className="p-2.5 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+                className="p-2.5 text-slate-600 hover:text-brand-primary bg-white border border-slate-200 hover:border-brand-border rounded-xl hover:bg-brand-light/40 transition-colors shadow-2xs cursor-pointer"
                 title="Làm mới"
               >
                 <RefreshCw className={`w-4 h-4 ${loadingUnits ? 'animate-spin text-brand-primary' : ''}`} />
@@ -530,7 +548,7 @@ export const CategoriesPage: React.FC = () => {
               {isAdmin && (
                 <button
                   onClick={openCreateUnit}
-                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-brand-primary text-white rounded-xl text-xs font-semibold hover:bg-brand-hover shadow-sm shadow-brand-primary/25 transition-all cursor-pointer hover:scale-[1.01] active:scale-[0.99]"
                 >
                   <Plus className="w-4 h-4" />
                   <span>Thêm đơn vị tính</span>
@@ -540,7 +558,7 @@ export const CategoriesPage: React.FC = () => {
           </div>
 
           {/* Units Table */}
-          <div className="bg-white rounded-2xl border border-slate-200 shadow-2xs overflow-hidden">
+          <div className="bg-white rounded-2xl border border-brand-border/70 shadow-2xs overflow-hidden">
             {loadingUnits ? (
               <div className="py-20 flex flex-col items-center justify-center gap-3 text-slate-400">
                 <Loader2 className="w-7 h-7 animate-spin text-brand-primary" />
@@ -555,20 +573,20 @@ export const CategoriesPage: React.FC = () => {
             ) : (
               <table className="w-full text-left border-collapse text-xs">
                 <thead>
-                  <tr className="bg-slate-50/90 border-b border-slate-200 text-slate-600 font-semibold uppercase tracking-wider select-none">
-                    <th className="py-3 px-5 w-1/3">Tên đơn vị</th>
-                    <th className="py-3 px-4 w-1/4">Ký hiệu viết tắt</th>
-                    <th className="py-3 px-4">Ngày tạo</th>
-                    <th className="py-3 px-5 w-28 text-right">Thao tác</th>
+                  <tr className="bg-[#F0F5F2] border-b border-brand-border/80 text-brand-dark font-bold uppercase tracking-wider text-[11px] select-none">
+                    <th className="py-3.5 px-5 w-1/3">Tên đơn vị</th>
+                    <th className="py-3.5 px-4 w-1/4">Ký hiệu viết tắt</th>
+                    <th className="py-3.5 px-4">Ngày tạo</th>
+                    <th className="py-3.5 px-5 w-28 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-100 text-slate-700">
                   {paginatedUnits.map((unit) => (
-                    <tr key={unit.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={unit.id} className="hover:bg-[#F6FAF8] transition-colors border-l-2 border-transparent hover:border-brand-primary">
                       <td className="py-3.5 px-5 font-bold text-slate-900">{unit.name}</td>
                       <td className="py-3.5 px-4">
                         {unit.symbol ? (
-                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200">
+                          <span className="inline-flex items-center px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-[#EAF3EE] text-[#1A4D3E] border border-[#C8E1D5]">
                             {unit.symbol}
                           </span>
                         ) : (
@@ -583,7 +601,7 @@ export const CategoriesPage: React.FC = () => {
                           <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditUnit(unit)}
-                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-brand-primary hover:bg-brand-light rounded-lg transition-colors cursor-pointer"
                               title="Chỉnh sửa"
                             >
                               <Edit3 className="w-4 h-4" />
@@ -613,10 +631,10 @@ export const CategoriesPage: React.FC = () => {
             )}
 
             {/* Pagination Bar */}
-            <div className="px-6 py-3.5 border-t border-slate-200 bg-slate-50/60 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
+            <div className="px-6 py-3.5 border-t border-slate-200 bg-[#FBFDFB] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-500">
               <div className="flex items-center gap-4">
                 <span>
-                  Hiển thị <span className="font-semibold text-slate-800">{paginatedUnits.length}</span> / {totalUnitItems} đơn vị
+                  Hiển thị <span className="font-bold text-slate-800">{paginatedUnits.length}</span> / {totalUnitItems} đơn vị
                 </span>
                 <div className="flex items-center gap-1.5">
                   <span>Mỗi trang:</span>
@@ -708,16 +726,16 @@ export const CategoriesPage: React.FC = () => {
       {isCatModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-md w-full border border-slate-100 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="px-6 py-4 border-b border-brand-border/60 flex items-center justify-between bg-[#F1F6F3]">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>
+                <h3 className="text-sm font-bold text-brand-dark">
                   {editingCategory ? 'Chỉnh sửa danh mục' : 'Thêm mới danh mục'}
                 </h3>
               </div>
               <button
                 onClick={() => setIsCatModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -804,16 +822,16 @@ export const CategoriesPage: React.FC = () => {
       {isUnitModalOpen && (
         <div className="fixed inset-0 z-50 bg-slate-900/50 backdrop-blur-xs flex items-center justify-center p-4">
           <div className="bg-white rounded-2xl max-w-sm w-full border border-slate-100 shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-            <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/50">
+            <div className="px-6 py-4 border-b border-brand-border/60 flex items-center justify-between bg-[#F1F6F3]">
               <div className="flex items-center gap-2">
-                <div className="w-2 h-2 rounded-full bg-brand-primary"></div>
-                <h3 className="text-sm font-bold text-slate-900">
+                <div className="w-2.5 h-2.5 rounded-full bg-brand-primary"></div>
+                <h3 className="text-sm font-bold text-brand-dark">
                   {editingUnit ? 'Chỉnh sửa đơn vị tính' : 'Thêm mới đơn vị tính'}
                 </h3>
               </div>
               <button
                 onClick={() => setIsUnitModalOpen(false)}
-                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-slate-100 transition-colors"
+                className="text-slate-400 hover:text-slate-600 p-1.5 rounded-lg hover:bg-white transition-colors"
               >
                 <X className="w-4 h-4" />
               </button>

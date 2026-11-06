@@ -8,20 +8,16 @@ import {
   ArrowLeftRight,
   Truck,
   FileText,
-  User as UserIcon,
   ShieldCheck,
   History,
-  LogOut,
   Lock,
   ChevronRight,
 } from 'lucide-react';
 import { Logo } from './Logo';
-import { UserAvatar } from '../common/UserAvatar';
 import { useAuthStore } from '../../stores/auth.store';
-import { showToast } from '../../utils/toast.util';
 
 export const Sidebar: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user } = useAuthStore();
   const currentRole = user?.role || 'STAFF';
 
   const isAdmin = currentRole === 'ADMIN';
@@ -128,39 +124,11 @@ export const Sidebar: React.FC = () => {
             Hệ thống & Phân quyền
           </div>
           <div className="space-y-1">
-            {renderNavItem('/profile', 'Hồ sơ cá nhân', <UserIcon className="w-4 h-4 shrink-0" />, true)}
             {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-4 h-4 shrink-0" />, isAdmin, false, 'Admin')}
             {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-4 h-4 shrink-0" />, isAdmin, false, 'Admin')}
           </div>
         </div>
       </nav>
-
-      {/* User Info & Logout Button */}
-      <div className="p-3 border-t border-[#262E38] space-y-2 bg-[#171C23]">
-        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#202731] border border-[#2B3542]">
-          <UserAvatar size="sm" variant="dark" alt={user?.username || 'User'} />
-          <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-white truncate">
-              {user?.full_name || user?.username || 'Administrator'}
-            </div>
-            <div className="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-              {user?.role || 'ADMIN'}
-            </div>
-          </div>
-        </div>
-
-        <button
-          onClick={async () => {
-            await logout();
-            showToast.info('Đã đăng xuất khỏi hệ thống thành công');
-          }}
-          className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
-        >
-          <LogOut className="w-3.5 h-3.5 shrink-0" />
-          <span>Đăng xuất</span>
-        </button>
-      </div>
     </aside>
   );
 };

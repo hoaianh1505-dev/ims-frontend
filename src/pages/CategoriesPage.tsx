@@ -260,7 +260,7 @@ export const CategoriesPage: React.FC = () => {
   };
 
   return (
-    <div className="px-6 py-4 max-w-[1440px] mx-auto space-y-3">
+    <div className="flex-1 flex flex-col min-h-0 px-6 sm:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
       {/* Toast Notification */}
       {notify && (
         <div
@@ -279,136 +279,159 @@ export const CategoriesPage: React.FC = () => {
         </div>
       )}
 
-      {/* Header & Tabs */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100">
+      {/* PAGE HEADER */}
+      <div className="shrink-0 flex items-center justify-between gap-4 pb-2 border-b border-slate-100 min-h-[52px]">
         <div>
-          <h1 className="text-xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Danh mục & Đơn vị tính
           </h1>
-          <p className="text-xs text-slate-500">
+          <p className="text-sm font-medium text-slate-500 mt-0.5">
             Phân loại hàng hóa và thiết lập chuẩn đơn vị đo lường trong kho
           </p>
         </div>
 
+        <div className="flex items-center gap-2.5 shrink-0">
+          <button
+            onClick={() => (activeTab === 'categories' ? fetchCategories() : fetchUnits())}
+            className="p-2.5 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            title="Làm mới dữ liệu từ server"
+          >
+            <RefreshCw
+              className={`w-4 h-4 ${
+                (activeTab === 'categories' ? loadingCategories : loadingUnits)
+                  ? 'animate-spin text-slate-600'
+                  : ''
+              }`}
+            />
+          </button>
+
+          {isAdmin && (
+            <button
+              onClick={activeTab === 'categories' ? openCreateCategory : openCreateUnit}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            >
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>{activeTab === 'categories' ? 'Thêm danh mục' : 'Thêm đơn vị tính'}</span>
+            </button>
+          )}
+        </div>
+      </div>
+
+      {/* TOOLBAR */}
+      <div className="shrink-0 bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3 min-h-[58px]">
+        {/* Search */}
+        <div className="relative flex-1 min-w-[260px] max-w-sm">
+          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
+          <input
+            type="text"
+            value={activeTab === 'categories' ? catSearch : unitSearch}
+            onChange={(e) => {
+              if (activeTab === 'categories') {
+                setCatSearch(e.target.value);
+                setCatPage(1);
+              } else {
+                setUnitSearch(e.target.value);
+                setUnitPage(1);
+              }
+            }}
+            placeholder={activeTab === 'categories' ? 'Tìm kiếm danh mục...' : 'Tìm kiếm đơn vị tính...'}
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+          />
+          {((activeTab === 'categories' ? catSearch : unitSearch)) && (
+            <button
+              onClick={() => {
+                if (activeTab === 'categories') {
+                  setCatSearch('');
+                  setCatPage(1);
+                } else {
+                  setUnitSearch('');
+                  setUnitPage(1);
+                }
+              }}
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-1"
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          )}
+        </div>
+
         {/* Tab switch pills */}
-        <div className="flex items-center gap-1 p-0.5 bg-slate-100 rounded-lg">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-sm font-medium text-slate-600">
           <button
             onClick={() => setActiveTab('categories')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-150 active:scale-95 cursor-pointer ${
               activeTab === 'categories'
-                ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Layers className="w-3.5 h-3.5" />
+            <Layers className="w-4 h-4 text-[#EE3D43]" />
             <span>Danh mục ({categories.length})</span>
           </button>
           <button
             onClick={() => setActiveTab('units')}
-            className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-medium transition-all cursor-pointer ${
+            className={`flex items-center gap-2 px-3 py-1.5 rounded-lg transition-all duration-150 active:scale-95 cursor-pointer ${
               activeTab === 'units'
-                ? 'bg-white text-slate-900 font-semibold shadow-xs'
+                ? 'bg-white text-slate-900 shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Ruler className="w-3.5 h-3.5" />
+            <Ruler className="w-4 h-4 text-blue-500" />
             <span>Đơn vị tính ({units.length})</span>
           </button>
         </div>
       </div>
 
-      {/* TAB 1: DANH MỤC */}
-      {activeTab === 'categories' && (
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-            <div className="relative flex-1 max-w-xs">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={catSearch}
-                onChange={(e) => {
-                  setCatSearch(e.target.value);
-                  setCatPage(1);
-                }}
-                placeholder="Tìm kiếm danh mục..."
-                className="w-full pl-8 pr-7 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-400 transition-all shadow-2xs"
-              />
-              {catSearch && (
-                <button
-                  onClick={() => setCatSearch('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => fetchCategories()}
-                className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-                title="Làm mới"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingCategories ? 'animate-spin text-slate-600' : ''}`} />
-              </button>
-
-              {isAdmin && (
-                <button
-                  onClick={openCreateCategory}
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-brand-primary text-white rounded-lg text-xs font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Thêm danh mục</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Categories Table */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-            {loadingCategories ? (
-              <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400">
+      {/* REUSED TABLE CARD CONTAINER */}
+      <div className="flex-1 min-h-[480px] bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+        <div className="flex-1 min-h-0 overflow-auto">
+          {activeTab === 'categories' ? (
+            /* CATEGORIES VIEW */
+            loadingCategories && categories.length === 0 ? (
+              <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400 h-full">
                 <Loader2 className="w-6 h-6 animate-spin text-slate-600" />
-                <span className="text-xs font-medium">Đang tải danh mục...</span>
+                <span className="text-sm font-medium">Đang tải danh mục...</span>
               </div>
             ) : paginatedCategories.length === 0 ? (
-              <div className="py-16 text-center text-slate-400 space-y-2">
+              <div className="py-16 text-center text-slate-400 space-y-2 h-full flex flex-col items-center justify-center">
                 <Layers className="w-10 h-10 mx-auto text-slate-300 stroke-1" />
-                <div className="text-sm font-semibold text-slate-700">Chưa có danh mục nào</div>
+                <div className="text-sm font-medium text-slate-700">Chưa có danh mục nào</div>
                 <div className="text-xs text-slate-400">Nhấn "Thêm danh mục" để tạo danh mục đầu tiên.</div>
               </div>
             ) : (
-              <table className="w-full text-left border-collapse text-xs">
+              <table className="w-full text-left border-collapse text-sm animate-tab-enter">
                 <thead>
-                  <tr className="bg-slate-50/70 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px] select-none">
-                    <th className="py-2.5 px-4 w-60 whitespace-nowrap">Tên danh mục</th>
-                    <th className="py-2.5 px-3 w-36 whitespace-nowrap">Danh mục cha</th>
-                    <th className="py-2.5 px-3 min-w-[200px]">Mô tả</th>
-                    <th className="py-2.5 px-4 w-20 text-right whitespace-nowrap">Thao tác</th>
+                  <tr className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs select-none shadow-2xs">
+                    <th className="py-2.5 px-4 w-64 whitespace-nowrap">Tên danh mục</th>
+                    <th className="py-2.5 px-4 w-40 whitespace-nowrap">Danh mục cha</th>
+                    <th className="py-2.5 px-4 min-w-[200px]">Mô tả</th>
+                    <th className="py-2.5 px-4 w-24 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tbody key={`${activeTab}-${currentCatPage}`} className="divide-y divide-slate-100 text-slate-700 animate-tab-enter">
                   {paginatedCategories.map((cat) => (
-                    <tr key={cat.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={cat.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-6 h-6 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 border border-slate-200/60">
-                            <Layers className="w-3 h-3" />
+                          <div className="w-7 h-7 rounded-lg bg-red-50 text-[#EE3D43] flex items-center justify-center shrink-0 border border-red-100">
+                            <Layers className="w-3.5 h-3.5" />
                           </div>
-                          <span className="font-semibold text-slate-900 text-xs">{cat.name}</span>
+                          <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                            {cat.name}
+                          </span>
                         </div>
                       </td>
-                      <td className="py-2.5 px-3 text-slate-600 whitespace-nowrap">
+                      <td className="py-2.5 px-4 text-slate-600 whitespace-nowrap">
                         {cat.parent ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
                             {cat.parent.name}
                           </span>
                         ) : (
-                          <span className="text-slate-400 italic">Cấp gốc</span>
+                          <span className="text-slate-400 italic text-sm">Cấp gốc</span>
                         )}
                       </td>
-                      <td className="py-2.5 px-3 text-slate-600">
-                        <div className="leading-relaxed text-xs py-0.5 break-words" title={cat.description || ''}>
+                      <td className="py-2.5 px-4 text-slate-600">
+                        <div className="leading-relaxed text-sm py-0.5 break-words line-clamp-1" title={cat.description || ''}>
                           {cat.description || <span className="text-slate-400 italic">—</span>}
                         </div>
                       </td>
@@ -417,10 +440,10 @@ export const CategoriesPage: React.FC = () => {
                           <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditCategory(cat)}
-                              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                               title="Chỉnh sửa"
                             >
-                              <Edit3 className="w-3.5 h-3.5" />
+                              <Edit3 className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() =>
@@ -430,161 +453,67 @@ export const CategoriesPage: React.FC = () => {
                                   name: cat.name,
                                 })
                               }
-                              className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                               title="Xóa"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
+                          <span className="text-xs text-slate-400 font-medium">Chỉ xem</span>
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            )}
-
-            {/* Pagination Bar */}
-            <div className="px-5 py-2.5 border-t border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-              <div className="flex items-center gap-3">
-                <span>
-                  Hiển thị <span className="font-semibold text-slate-800">{paginatedCategories.length}</span> / {totalCatItems} danh mục
-                </span>
-                <div className="flex items-center gap-1 text-[11px]">
-                  <span>Mỗi trang:</span>
-                  <select
-                    value={catPageSize}
-                    onChange={(e) => {
-                      setCatPageSize(Number(e.target.value));
-                      setCatPage(1);
-                    }}
-                    className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 cursor-pointer focus:outline-none"
-                  >
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-2">
-                <span className="text-slate-500 text-[11px]">
-                  Trang {currentCatPage} / {totalCatPages}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    disabled={currentCatPage <= 1}
-                    onClick={() => setCatPage((prev) => Math.max(prev - 1, 1))}
-                    className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    disabled={currentCatPage >= totalCatPages}
-                    onClick={() => setCatPage((prev) => Math.min(prev + 1, totalCatPages))}
-                    className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
-
-      {/* TAB 2: ĐƠN VỊ TÍNH */}
-      {activeTab === 'units' && (
-        <div className="space-y-3">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
-            <div className="relative flex-1 max-w-xs">
-              <Search className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-              <input
-                type="text"
-                value={unitSearch}
-                onChange={(e) => {
-                  setUnitSearch(e.target.value);
-                  setUnitPage(1);
-                }}
-                placeholder="Tìm kiếm đơn vị tính..."
-                className="w-full pl-8 pr-7 py-1.5 bg-white border border-slate-200 rounded-lg text-xs font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:border-slate-400 transition-all shadow-2xs"
-              />
-              {unitSearch && (
-                <button
-                  onClick={() => setUnitSearch('')}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 p-0.5"
-                >
-                  <X className="w-3 h-3" />
-                </button>
-              )}
-            </div>
-
-            <div className="flex items-center gap-2">
-              <button
-                onClick={() => fetchUnits()}
-                className="p-2 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-lg hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
-                title="Làm mới"
-              >
-                <RefreshCw className={`w-3.5 h-3.5 ${loadingUnits ? 'animate-spin text-slate-600' : ''}`} />
-              </button>
-
-              {isAdmin && (
-                <button
-                  onClick={openCreateUnit}
-                  className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 bg-brand-primary text-white rounded-lg text-xs font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer"
-                >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Thêm đơn vị tính</span>
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* Units Table */}
-          <div className="bg-white rounded-xl border border-slate-200 shadow-2xs overflow-hidden">
-            {loadingUnits ? (
-              <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400">
+            )
+          ) : (
+            /* UNITS VIEW */
+            loadingUnits && units.length === 0 ? (
+              <div className="py-20 flex flex-col items-center justify-center gap-2 text-slate-400 h-full">
                 <Loader2 className="w-6 h-6 animate-spin text-slate-600" />
-                <span className="text-xs font-medium">Đang tải đơn vị tính...</span>
+                <span className="text-sm font-medium">Đang tải đơn vị tính...</span>
               </div>
             ) : paginatedUnits.length === 0 ? (
-              <div className="py-16 text-center text-slate-400 space-y-2">
+              <div className="py-16 text-center text-slate-400 space-y-2 h-full flex flex-col items-center justify-center">
                 <Ruler className="w-10 h-10 mx-auto text-slate-300 stroke-1" />
-                <div className="text-sm font-semibold text-slate-700">Chưa có đơn vị tính nào</div>
+                <div className="text-sm font-medium text-slate-700">Chưa có đơn vị tính nào</div>
                 <div className="text-xs text-slate-400">Nhấn "Thêm đơn vị tính" để tạo đơn vị mới.</div>
               </div>
             ) : (
-              <table className="w-full text-left border-collapse text-xs">
+              <table className="w-full text-left border-collapse text-sm animate-tab-enter">
                 <thead>
-                  <tr className="bg-slate-50/70 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-[11px] select-none">
-                    <th className="py-2.5 px-4 w-60 whitespace-nowrap">Tên đơn vị</th>
-                    <th className="py-2.5 px-3 w-36 whitespace-nowrap">Ký hiệu viết tắt</th>
-                    <th className="py-2.5 px-3">Ngày tạo</th>
-                    <th className="py-2.5 px-4 w-20 text-right whitespace-nowrap">Thao tác</th>
+                  <tr className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs select-none shadow-2xs">
+                    <th className="py-2.5 px-4 w-64 whitespace-nowrap">Tên đơn vị</th>
+                    <th className="py-2.5 px-4 w-40 whitespace-nowrap">Ký hiệu viết tắt</th>
+                    <th className="py-2.5 px-4 min-w-[200px]">Ngày tạo</th>
+                    <th className="py-2.5 px-4 w-24 text-right whitespace-nowrap">Thao tác</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-slate-100 text-slate-700">
+                <tbody key={`${activeTab}-${currentUnitPage}`} className="divide-y divide-slate-100 text-slate-700 animate-tab-enter">
                   {paginatedUnits.map((unit) => (
-                    <tr key={unit.id} className="hover:bg-slate-50/70 transition-colors">
+                    <tr key={unit.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
                         <div className="flex items-center gap-2.5">
-                          <div className="w-6 h-6 rounded-md bg-slate-100 text-slate-600 flex items-center justify-center shrink-0 border border-slate-200/60">
-                            <Ruler className="w-3 h-3" />
+                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
+                            <Ruler className="w-3.5 h-3.5" />
                           </div>
-                          <span className="font-semibold text-slate-900 text-xs">{unit.name}</span>
+                          <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                            {unit.name}
+                          </span>
                         </div>
                       </td>
-                      <td className="py-2.5 px-3">
+                      <td className="py-2.5 px-4">
                         {unit.symbol ? (
-                          <span className="inline-flex items-center px-2 py-0.5 rounded text-[11px] font-medium bg-slate-100 text-slate-700">
+                          <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-slate-100 text-slate-700">
                             {unit.symbol}
                           </span>
                         ) : (
-                          <span className="text-slate-400 italic">—</span>
+                          <span className="text-slate-400 italic text-sm">—</span>
                         )}
                       </td>
-                      <td className="py-2.5 px-3 text-slate-500">
+                      <td className="py-2.5 px-4 text-slate-500 text-sm">
                         {new Date(unit.created_at).toLocaleDateString('vi-VN')}
                       </td>
                       <td className="py-2.5 px-4 text-right whitespace-nowrap">
@@ -592,10 +521,10 @@ export const CategoriesPage: React.FC = () => {
                           <div className="inline-flex items-center justify-end gap-1">
                             <button
                               onClick={() => openEditUnit(unit)}
-                              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                               title="Chỉnh sửa"
                             >
-                              <Edit3 className="w-3.5 h-3.5" />
+                              <Edit3 className="w-4 h-4" />
                             </button>
                             <button
                               onClick={() =>
@@ -605,69 +534,101 @@ export const CategoriesPage: React.FC = () => {
                                   name: unit.name,
                                 })
                               }
-                              className="p-1 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-md transition-colors cursor-pointer"
+                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                               title="Xóa"
                             >
-                              <Trash2 className="w-3.5 h-3.5" />
+                              <Trash2 className="w-4 h-4" />
                             </button>
                           </div>
                         ) : (
-                          <span className="text-[11px] text-slate-400 font-medium">Chỉ xem</span>
+                          <span className="text-xs text-slate-400 font-medium">Chỉ xem</span>
                         )}
                       </td>
                     </tr>
                   ))}
                 </tbody>
               </table>
-            )}
+            )
+          )}
+        </div>
 
-            {/* Pagination Bar */}
-            <div className="px-5 py-2.5 border-t border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
-              <div className="flex items-center gap-3">
-                <span>
-                  Hiển thị <span className="font-semibold text-slate-800">{paginatedUnits.length}</span> / {totalUnitItems} đơn vị
-                </span>
-                <div className="flex items-center gap-1 text-[11px]">
-                  <span>Mỗi trang:</span>
-                  <select
-                    value={unitPageSize}
-                    onChange={(e) => {
-                      setUnitPageSize(Number(e.target.value));
+          {/* Compact Pagination Bar */}
+          <div className="px-5 py-2.5 border-t border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+            <div className="flex items-center gap-3">
+              <span>
+                Hiển thị{' '}
+                <span className="font-semibold text-slate-800">
+                  {activeTab === 'categories' ? paginatedCategories.length : paginatedUnits.length}
+                </span>{' '}
+                / {activeTab === 'categories' ? totalCatItems : totalUnitItems}{' '}
+                {activeTab === 'categories' ? 'danh mục' : 'đơn vị'}
+              </span>
+              <div className="flex items-center gap-1 text-[11px]">
+                <span>Mỗi trang:</span>
+                <select
+                  value={activeTab === 'categories' ? catPageSize : unitPageSize}
+                  onChange={(e) => {
+                    const val = Number(e.target.value);
+                    if (activeTab === 'categories') {
+                      setCatPageSize(val);
+                      setCatPage(1);
+                    } else {
+                      setUnitPageSize(val);
                       setUnitPage(1);
-                    }}
-                    className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 cursor-pointer focus:outline-none"
-                  >
-                    <option value={10}>10</option>
-                    <option value={20}>20</option>
-                  </select>
-                </div>
+                    }
+                  }}
+                  className="px-1.5 py-0.5 bg-white border border-slate-200 rounded text-[11px] font-medium text-slate-700 cursor-pointer focus:outline-none"
+                >
+                  <option value={10}>10</option>
+                  <option value={20}>20</option>
+                </select>
               </div>
+            </div>
 
-              <div className="flex items-center gap-2">
-                <span className="text-slate-500 text-[11px]">
-                  Trang {currentUnitPage} / {totalUnitPages}
-                </span>
-                <div className="flex items-center gap-1">
-                  <button
-                    disabled={currentUnitPage <= 1}
-                    onClick={() => setUnitPage((prev) => Math.max(prev - 1, 1))}
-                    className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronLeft className="w-3.5 h-3.5" />
-                  </button>
-                  <button
-                    disabled={currentUnitPage >= totalUnitPages}
-                    onClick={() => setUnitPage((prev) => Math.min(prev + 1, totalUnitPages))}
-                    className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-                  >
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
+            <div className="flex items-center gap-2">
+              <span className="text-slate-500 text-[11px]">
+                Trang {activeTab === 'categories' ? currentCatPage : currentUnitPage} /{' '}
+                {activeTab === 'categories' ? totalCatPages : totalUnitPages}
+              </span>
+              <div className="flex items-center gap-1">
+                <button
+                  disabled={
+                    activeTab === 'categories' ? currentCatPage <= 1 : currentUnitPage <= 1
+                  }
+                  onClick={() => {
+                    if (activeTab === 'categories') {
+                      setCatPage((prev) => Math.max(prev - 1, 1));
+                    } else {
+                      setUnitPage((prev) => Math.max(prev - 1, 1));
+                    }
+                  }}
+                  className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Trang trước"
+                >
+                  <ChevronLeft className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  disabled={
+                    activeTab === 'categories'
+                      ? currentCatPage >= totalCatPages
+                      : currentUnitPage >= totalUnitPages
+                  }
+                  onClick={() => {
+                    if (activeTab === 'categories') {
+                      setCatPage((prev) => Math.min(prev + 1, totalCatPages));
+                    } else {
+                      setUnitPage((prev) => Math.min(prev + 1, totalUnitPages));
+                    }
+                  }}
+                  className="p-1 border border-slate-200 bg-white rounded-md hover:bg-slate-50 text-slate-600 disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                  title="Trang tiếp"
+                >
+                  <ChevronRight className="w-3.5 h-3.5" />
+                </button>
               </div>
             </div>
           </div>
         </div>
-      )}
 
       {/* CUSTOM CONFIRM MODAL FOR DELETE */}
       {deleteTarget && (

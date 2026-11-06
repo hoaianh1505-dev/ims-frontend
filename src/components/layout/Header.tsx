@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Plus,
   History,
-  Search,
   Bell,
   Settings,
   HelpCircle,
@@ -14,6 +13,7 @@ import {
   ArrowUpRight,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
+import { UserAvatar } from '../common/UserAvatar';
 
 export const Header: React.FC = () => {
   const { user } = useAuthStore();
@@ -23,14 +23,14 @@ export const Header: React.FC = () => {
 
   return (
     <header className="h-16 sm:h-[68px] px-6 sm:px-8 flex items-center justify-between border-b border-slate-200 bg-white sticky top-0 z-10 shadow-2xs">
-      {/* LEFT: Quick Action + History + Search Input */}
-      <div className="flex items-center gap-4 flex-1 max-w-xl">
+      {/* LEFT: Quick Action + History */}
+      <div className="flex items-center gap-3">
         {/* Quick Add Button (+) with Popover Menu */}
         <div className="relative">
           <button
             onClick={() => setShowQuickAdd(!showQuickAdd)}
             title="Thao tác nhanh"
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-transform active:scale-95 shadow-xs cursor-pointer"
+            className="w-9 h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
           >
             <Plus className="w-5 h-5 stroke-[2.5]" />
           </button>
@@ -80,18 +80,8 @@ export const Header: React.FC = () => {
           title="Lịch sử thao tác"
           className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
         >
-          <History className="w-4 h-4 sm:w-5 sm:h-5" />
+          <History className="w-5 h-5" />
         </Link>
-
-        {/* Pill Search Input */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Tìm kiếm sản phẩm, mã vạch, kho hàng..."
-            className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-full text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-slate-300 focus:ring-2 focus:ring-[#EE3D43]/15 transition-all"
-          />
-        </div>
       </div>
 
       {/* RIGHT: Branch Switcher + Actions + Profile */}
@@ -170,11 +160,13 @@ export const Header: React.FC = () => {
         </button>
 
         {/* User Avatar */}
-        <div className="flex items-center gap-2 pl-1 cursor-pointer">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-sm font-bold text-slate-700 shadow-2xs">
-            {user?.username?.substring(0, 2).toUpperCase() || 'AD'}
-          </div>
-        </div>
+        <Link
+          to="/profile"
+          title={user?.full_name || user?.username || 'Hồ sơ tài khoản'}
+          className="flex items-center gap-2 pl-1 cursor-pointer group"
+        >
+          <UserAvatar size="lg" alt={user?.username || 'User'} className="group-hover:border-slate-400 transition-colors" />
+        </Link>
       </div>
     </header>
   );

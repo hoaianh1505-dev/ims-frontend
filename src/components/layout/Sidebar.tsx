@@ -16,6 +16,7 @@ import {
   ChevronRight,
 } from 'lucide-react';
 import { Logo } from './Logo';
+import { UserAvatar } from '../common/UserAvatar';
 import { useAuthStore } from '../../stores/auth.store';
 import { showToast } from '../../utils/toast.util';
 
@@ -137,9 +138,7 @@ export const Sidebar: React.FC = () => {
       {/* User Info & Logout Button */}
       <div className="p-3 border-t border-[#262E38] space-y-2 bg-[#171C23]">
         <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#202731] border border-[#2B3542]">
-          <div className="w-7 h-7 rounded-md bg-[#EE3D43] text-white flex items-center justify-center text-xs font-bold uppercase shrink-0 shadow-xs">
-            {user?.username?.substring(0, 2) || 'AD'}
-          </div>
+          <UserAvatar size="sm" variant="dark" alt={user?.username || 'User'} />
           <div className="flex-1 min-w-0">
             <div className="text-xs font-bold text-white truncate">
               {user?.full_name || user?.username || 'Administrator'}

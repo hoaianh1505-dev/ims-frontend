@@ -7,6 +7,7 @@ import {
   CategoriesPage,
   ProductsPage,
   WarehousesPage,
+  UsersPage,
   PlaceholderPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
@@ -16,7 +17,6 @@ import {
   ArrowLeftRight,
   FileText,
   User as UserIcon,
-  ShieldCheck,
   History,
 } from 'lucide-react';
 
@@ -25,7 +25,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
-      <Toaster richColors position="top-right" closeButton duration={4000} />
+      <Toaster position="top-right" duration={3500} />
       <Routes>
         {/* Public Route */}
         <Route
@@ -100,16 +100,7 @@ export default function App() {
             />
 
             {/* 9. Quản trị tài khoản & quyền */}
-            <Route
-              path="users"
-              element={
-                <PlaceholderPage
-                  title="Tài khoản & quyền"
-                  description="Quản lý danh sách người dùng và phân quyền truy cập hệ thống"
-                  icon={ShieldCheck}
-                />
-              }
-            />
+            <Route path="users" element={<UsersPage />} />
 
             {/* 10. Nhật ký hệ thống */}
             <Route

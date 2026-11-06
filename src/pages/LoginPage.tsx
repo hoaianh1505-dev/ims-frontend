@@ -49,30 +49,66 @@ export const LoginPage: React.FC = () => {
       {/* FLOATING SPLIT CARD */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(15,23,42,0.25)] border border-slate-300/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[660px]">
         {/* ========================================================
-            LEFT COLUMN: Solid Dark Minimal (~55% width)
-            - Completely minimal, spacious typography, zero clutter
+            LEFT COLUMN: Modern Enterprise Visual (~55% width)
+            - Authentic warehouse backdrop with dark gradient overlay
+            - Real ERP operational data & system status, zero AI clichés
            ======================================================== */}
-        <div className="lg:col-span-7 bg-[#161B22] text-white p-10 sm:p-14 lg:p-16 flex flex-col justify-between">
-          {/* Top Logo */}
-          <div>
+        <div className="relative lg:col-span-7 bg-[#0D1117] text-white p-10 sm:p-14 lg:p-16 flex flex-col justify-between overflow-hidden">
+          {/* Background Image with Dark Moody Overlay */}
+          <div className="absolute inset-0 z-0 pointer-events-none">
+            <img
+              src="/images/warehouse-login-hero.jpg"
+              alt="IMS Warehouse Logistics"
+              className="w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117] via-[#0D1117]/90 to-[#0D1117]/80" />
+            <div className="absolute inset-0 bg-[#0D1117]/30" />
+          </div>
+
+          {/* Top Logo & System Tag */}
+          <div className="relative z-10 flex items-center justify-between">
             <Logo variant="dark" size="lg" />
+            <div className="hidden sm:inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/10 text-xs text-slate-300">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              <span className="font-mono text-[11px] tracking-wide">v2.4.0 • ENTERPRISE</span>
+            </div>
           </div>
 
-          {/* Center Minimal Typography */}
-          <div className="py-12 my-auto space-y-4">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-white leading-[1.12] tracking-tight">
-              Quản trị Kho bãi. <br />
-              <span className="text-[#EE3D43]">Vận hành Chuẩn xác.</span>
-            </h1>
+          {/* Center Enterprise Operations Info */}
+          <div className="relative z-10 py-10 my-auto space-y-6">
+            <div className="space-y-3">
+              <div className="text-xs font-semibold text-rose-400 uppercase tracking-widest">
+                Phần mềm Quản lý Kho Doanh nghiệp
+              </div>
+              <h1 className="text-3xl sm:text-4xl lg:text-[42px] font-bold text-white leading-[1.2] tracking-tight">
+                Hệ thống điều hành tồn kho & chuỗi cung ứng
+              </h1>
+              <p className="text-sm sm:text-base text-slate-300 font-normal leading-relaxed max-w-lg">
+                Nền tảng kiểm soát luân chuyển hàng hóa, quản lý vị trí kho bãi đa chi nhánh và tự động hóa quy trình xuất - nhập.
+              </p>
+            </div>
 
-            <p className="text-base sm:text-lg text-slate-400 font-normal leading-relaxed max-w-md pt-2">
-              Hệ thống kiểm soát tồn kho, định vị vị trí kệ và quản trị chuỗi cung ứng doanh nghiệp thời gian thực.
-            </p>
+            {/* Real operational indicators */}
+            <div className="grid grid-cols-3 gap-3 pt-2">
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                <div className="text-[11px] text-slate-400 font-medium">Chi nhánh kho</div>
+                <div className="text-base sm:text-lg font-bold text-white mt-1">4 Điểm kho</div>
+              </div>
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                <div className="text-[11px] text-slate-400 font-medium">Đồng bộ tồn</div>
+                <div className="text-base sm:text-lg font-bold text-emerald-400 mt-1">Thời gian thực</div>
+              </div>
+              <div className="p-3.5 rounded-xl bg-white/5 border border-white/10 backdrop-blur-xs">
+                <div className="text-[11px] text-slate-400 font-medium">Phân quyền</div>
+                <div className="text-base sm:text-lg font-bold text-white mt-1">RBAC 3 Cấp</div>
+              </div>
+            </div>
           </div>
 
-          {/* Bottom subtle note */}
-          <div className="text-xs text-slate-400">
-            Hệ thống Quản lý Kho Doanh nghiệp IMS
+          {/* Bottom Security & Compliance */}
+          <div className="relative z-10 flex items-center justify-between text-xs text-slate-400 border-t border-white/10 pt-4">
+            <span>Bảo mật dữ liệu chuẩn Doanh nghiệp</span>
+            <span className="font-mono text-[11px] text-slate-500">SLA 99.9% Uptime</span>
           </div>
         </div>
 

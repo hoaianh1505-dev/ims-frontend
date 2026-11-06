@@ -6,14 +6,21 @@ export const showToast = {
       (id) => (
         <div
           onClick={() => toast.dismiss(id)}
-          className="flex items-center gap-3.5 px-4 py-3.5 bg-white rounded-md shadow-[0_6px_20px_rgba(0,0,0,0.14)] border-l-[5px] border-[#48BB78] cursor-pointer hover:shadow-lg transition-all min-w-[280px] max-w-md pointer-events-auto border-y border-r border-slate-100"
+          className="flex items-center gap-3 px-4 py-3 bg-white rounded-[4px] shadow-[0_3px_12px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] border-l-[5px] border-[#6EC058] cursor-pointer hover:shadow-[0_6px_18px_rgba(0,0,0,0.15)] transition-shadow min-w-[270px] max-w-sm select-none pointer-events-auto"
         >
-          <div className="w-5 h-5 rounded-full bg-[#48BB78] text-white flex items-center justify-center shrink-0 shadow-2xs">
-            <svg className="w-3.5 h-3.5 stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-[22px] h-[22px] rounded-full bg-[#6EC058] text-white flex items-center justify-center shrink-0">
+            <svg
+              className="w-3.5 h-3.5 stroke-[3.5]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
           </div>
-          <span className="text-sm font-semibold text-slate-800 leading-snug">{message}</span>
+          <span className="text-[14.5px] font-medium text-[#2E384D] leading-snug">
+            {message}
+          </span>
         </div>
       ),
       { duration }
@@ -25,14 +32,21 @@ export const showToast = {
       (id) => (
         <div
           onClick={() => toast.dismiss(id)}
-          className="flex items-center gap-3.5 px-4 py-3.5 bg-white rounded-md shadow-[0_6px_20px_rgba(0,0,0,0.14)] border-l-[5px] border-[#E53E3E] cursor-pointer hover:shadow-lg transition-all min-w-[280px] max-w-md pointer-events-auto border-y border-r border-slate-100"
+          className="flex items-center gap-3 px-4 py-3 bg-white rounded-[4px] shadow-[0_3px_12px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] border-l-[5px] border-[#D14343] cursor-pointer hover:shadow-[0_6px_18px_rgba(0,0,0,0.15)] transition-shadow min-w-[270px] max-w-sm select-none pointer-events-auto"
         >
-          <div className="w-5 h-5 rounded-full bg-[#E53E3E] text-white flex items-center justify-center shrink-0 shadow-2xs">
-            <svg className="w-3 h-3 stroke-[3.5]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <div className="w-[22px] h-[22px] rounded-full bg-[#D14343] text-white flex items-center justify-center shrink-0">
+            <svg
+              className="w-3 h-3 stroke-[3.5]"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </div>
-          <span className="text-sm font-semibold text-slate-800 leading-snug">{message}</span>
+          <span className="text-[14.5px] font-medium text-[#2E384D] leading-snug">
+            {message}
+          </span>
         </div>
       ),
       { duration }
@@ -44,12 +58,14 @@ export const showToast = {
       (id) => (
         <div
           onClick={() => toast.dismiss(id)}
-          className="flex items-center gap-3.5 px-4 py-3.5 bg-white rounded-md shadow-[0_6px_20px_rgba(0,0,0,0.14)] border-l-[5px] border-[#3182CE] cursor-pointer hover:shadow-lg transition-all min-w-[280px] max-w-md pointer-events-auto border-y border-r border-slate-100"
+          className="flex items-center gap-3 px-4 py-3 bg-white rounded-[4px] shadow-[0_3px_12px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] border-l-[5px] border-[#1070CA] cursor-pointer hover:shadow-[0_6px_18px_rgba(0,0,0,0.15)] transition-shadow min-w-[270px] max-w-sm select-none pointer-events-auto"
         >
-          <div className="w-5 h-5 rounded-full bg-[#3182CE] text-white flex items-center justify-center shrink-0 text-xs font-bold font-serif italic shadow-2xs">
+          <div className="w-[22px] h-[22px] rounded-full bg-[#1070CA] text-white flex items-center justify-center shrink-0 text-xs font-serif font-bold italic">
             i
           </div>
-          <span className="text-sm font-semibold text-slate-800 leading-snug">{message}</span>
+          <span className="text-[14.5px] font-medium text-[#2E384D] leading-snug">
+            {message}
+          </span>
         </div>
       ),
       { duration }
@@ -61,12 +77,14 @@ export const showToast = {
       (id) => (
         <div
           onClick={() => toast.dismiss(id)}
-          className="flex items-center gap-3.5 px-4 py-3.5 bg-white rounded-md shadow-[0_6px_20px_rgba(0,0,0,0.14)] border-l-[5px] border-[#ECC94B] cursor-pointer hover:shadow-lg transition-all min-w-[280px] max-w-md pointer-events-auto border-y border-r border-slate-100"
+          className="flex items-center gap-3 px-4 py-3 bg-white rounded-[4px] shadow-[0_3px_12px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] border-l-[5px] border-[#F5A623] cursor-pointer hover:shadow-[0_6px_18px_rgba(0,0,0,0.15)] transition-shadow min-w-[270px] max-w-sm select-none pointer-events-auto"
         >
-          <div className="w-5 h-5 rounded-full bg-[#ECC94B] text-white flex items-center justify-center shrink-0 text-xs font-black font-mono shadow-2xs">
+          <div className="w-[22px] h-[22px] rounded-full bg-[#F5A623] text-white flex items-center justify-center shrink-0 text-xs font-bold leading-none">
             !
           </div>
-          <span className="text-sm font-semibold text-slate-800 leading-snug">{message}</span>
+          <span className="text-[14.5px] font-medium text-[#2E384D] leading-snug">
+            {message}
+          </span>
         </div>
       ),
       { duration }
@@ -77,10 +95,12 @@ export const showToast = {
     return toast.custom((id) => (
       <div
         onClick={() => toast.dismiss(id)}
-        className="flex items-center gap-3.5 px-4 py-3.5 bg-white rounded-md shadow-[0_6px_20px_rgba(0,0,0,0.14)] border-l-[5px] border-[#3182CE] cursor-pointer hover:shadow-lg transition-all min-w-[280px] max-w-md pointer-events-auto border-y border-r border-slate-100"
+        className="flex items-center gap-3 px-4 py-3 bg-white rounded-[4px] shadow-[0_3px_12px_rgba(0,0,0,0.12),0_1px_3px_rgba(0,0,0,0.08)] border-l-[5px] border-[#1070CA] cursor-pointer hover:shadow-[0_6px_18px_rgba(0,0,0,0.15)] transition-shadow min-w-[270px] max-w-sm select-none pointer-events-auto"
       >
-        <div className="w-5 h-5 rounded-full border-2 border-slate-200 border-t-[#3182CE] animate-spin shrink-0" />
-        <span className="text-sm font-semibold text-slate-800 leading-snug">{message}</span>
+        <div className="w-[20px] h-[20px] rounded-full border-2 border-transparent border-t-[#1070CA] border-b-[#1070CA] animate-spin shrink-0" />
+        <span className="text-[14.5px] font-medium text-[#2E384D] leading-snug">
+          {message}
+        </span>
       </div>
     ));
   },

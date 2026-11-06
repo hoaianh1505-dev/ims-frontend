@@ -50,17 +50,17 @@ export const LoginPage: React.FC = () => {
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(15,23,42,0.25)] border border-slate-300/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[660px]">
         {/* ========================================================
             LEFT COLUMN: Pure Cinematic Warehouse Visual (~55% width)
-            - Clean visual background, zero text clutter
+            - Dimmed, subtle warehouse backdrop faded into dark background
            ======================================================== */}
-        <div className="relative lg:col-span-7 bg-[#0D1117] p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden min-h-[260px] lg:min-h-full">
-          {/* Background Image with Cinematic Overlay */}
-          <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="relative lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden min-h-[260px] lg:min-h-full">
+          {/* Subtle Faded Background Image */}
+          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img
               src="/images/warehouse-login-hero.jpg"
               alt="IMS Warehouse Logistics"
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center opacity-25 mix-blend-luminosity scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0D1117]/90 via-[#0D1117]/30 to-[#0D1117]/60" />
+            <div className="absolute inset-0 bg-gradient-to-t from-[#0E131B] via-[#0E131B]/60 to-[#0E131B]/85" />
           </div>
 
           {/* Top Logo */}

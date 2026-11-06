@@ -7,9 +7,9 @@ import {
   ShieldAlert,
   X,
 } from 'lucide-react';
-import { toast } from 'sonner';
 import { Logo } from '../components/layout/Logo';
 import { useAuthStore } from '../stores/auth.store';
+import { showToast } from '../utils/toast.util';
 
 export const LoginPage: React.FC = () => {
   const [username, setUsername] = useState('');
@@ -25,21 +25,15 @@ export const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username.trim() || !password.trim()) {
-      toast.warning('Thiếu thông tin đăng nhập', {
-        description: 'Vui lòng nhập tên tài khoản hoặc email và mật khẩu.',
-      });
+      showToast.warn('Vui lòng nhập tên tài khoản và mật khẩu.');
       return;
     }
 
     const success = await login({ username: username.trim(), password });
     if (success) {
-      toast.success('Đăng nhập thành công!', {
-        description: 'Đang chuyển hướng tới cổng làm việc...',
-      });
+      showToast.success('Đăng nhập thành công! Đang chuyển hướng...');
     } else {
-      toast.error('Đăng nhập không thành công', {
-        description: 'Tên tài khoản hoặc mật khẩu không chính xác. Vui lòng thử lại.',
-      });
+      showToast.error('Tên tài khoản hoặc mật khẩu không chính xác.');
     }
   };
 
@@ -47,9 +41,7 @@ export const LoginPage: React.FC = () => {
     e.preventDefault();
     if (!forgotEmail.trim()) return;
     setForgotSuccess(true);
-    toast.success('Yêu cầu đã được gửi', {
-      description: 'Quản trị viên sẽ liên hệ với bạn trong thời gian sớm nhất.',
-    });
+    showToast.info('Yêu cầu hỗ trợ đã được gửi tới Quản trị viên.');
   };
 
   return (

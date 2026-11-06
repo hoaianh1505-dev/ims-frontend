@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   X,
   Loader2,
-  CheckCircle2,
   RefreshCw,
   Eye,
   ChevronLeft,
@@ -27,6 +26,7 @@ import { unitsService } from '../services/units.service';
 import { Product } from '../types/product.types';
 import { Category, Unit } from '../types/category.types';
 import { useAuthStore } from '../stores/auth.store';
+import { showToast } from '../utils/toast.util';
 
 export const ProductsPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -72,12 +72,12 @@ export const ProductsPage: React.FC = () => {
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Toast Notification
-  const [notify, setNotify] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-
   const showNotify = (type: 'success' | 'error', message: string) => {
-    setNotify({ type, message });
-    setTimeout(() => setNotify(null), 4000);
+    if (type === 'success') {
+      showToast.success(message);
+    } else {
+      showToast.error(message);
+    }
   };
 
   // Currency Formatter
@@ -267,23 +267,6 @@ export const ProductsPage: React.FC = () => {
 
   return (
     <div className="px-6 py-4 max-w-[1440px] mx-auto space-y-3">
-      {/* Toast Notification */}
-      {notify && (
-        <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-xl shadow-lg border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
-            notify.type === 'success'
-              ? 'bg-slate-900 text-white border-slate-800'
-              : 'bg-rose-50 text-rose-900 border-rose-200'
-          }`}
-        >
-          {notify.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-          ) : (
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-          )}
-          <span>{notify.message}</span>
-        </div>
-      )}
 
       {/* SIMPLE CLEAN HEADER */}
       <div className="flex items-center justify-between gap-3 pb-2 border-b border-slate-100">
@@ -646,90 +629,93 @@ export const ProductsPage: React.FC = () => {
           />
 
           <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-            <div className="w-screen max-w-md bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250">
+            <div className="w-screen max-w-2xl lg:max-w-3xl bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250">
               {/* Drawer Top Banner */}
-              <div className="p-5 border-b border-slate-100 bg-slate-50/60">
-                <div className="flex items-start justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2">
-                      <span className="font-mono text-xs font-semibold px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200">
+              <div className="p-6 sm:p-7 border-b border-slate-200 bg-slate-50/70">
+                <div className="flex items-start justify-between gap-4">
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2.5">
+                      <span className="font-mono text-xs sm:text-sm font-bold px-3 py-1 rounded-lg bg-slate-200/80 text-slate-800 border border-slate-300">
                         {activeDrawerProduct.sku}
                       </span>
                       {activeDrawerProduct.barcode && (
-                        <span className="font-mono text-[11px] text-slate-400">
+                        <span className="font-mono text-xs sm:text-sm font-semibold text-slate-500 bg-white px-2.5 py-1 rounded-lg border border-slate-200">
                           {activeDrawerProduct.barcode}
                         </span>
                       )}
                     </div>
-                    <h3 className="text-base font-bold text-slate-900 mt-1">
+                    <h3 className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight leading-snug">
                       {activeDrawerProduct.name}
                     </h3>
                   </div>
                   <button
                     onClick={() => setActiveDrawerProduct(null)}
-                    className="p-1 text-slate-400 hover:text-slate-600 hover:bg-white rounded-lg transition-colors cursor-pointer"
+                    className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer shrink-0"
+                    title="Đóng cửa sổ"
                   >
-                    <X className="w-4 h-4" />
+                    <X className="w-5 h-5" />
                   </button>
                 </div>
               </div>
 
               {/* Drawer Body */}
-              <div className="flex-1 p-5 space-y-4 overflow-y-auto text-xs">
+              <div className="flex-1 p-6 sm:p-7 space-y-6 overflow-y-auto text-sm">
                 {/* Barcode & Print Section */}
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200/80 space-y-2">
+                <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3">
                   <div className="flex items-center justify-between">
-                    <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                      Mã vạch (Barcode)
+                    <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                      Mã vạch định danh (EAN-13)
                     </div>
                     <button
                       onClick={() => printBarcodeLabel(activeDrawerProduct)}
-                      className="inline-flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-brand-primary bg-brand-light/70 hover:bg-brand-light rounded-lg transition-colors cursor-pointer border border-brand-primary/20"
+                      className="inline-flex items-center gap-2 px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-slate-700 bg-white hover:bg-slate-100 rounded-xl transition-colors cursor-pointer border border-slate-200 shadow-2xs"
                       title="In tem mã vạch sản phẩm"
                     >
-                      <Printer className="w-3.5 h-3.5" />
+                      <Printer className="w-4 h-4 text-slate-600" />
                       <span>In tem mã vạch</span>
                     </button>
                   </div>
-                  <BarcodeRenderer
-                    value={activeDrawerProduct.barcode || activeDrawerProduct.sku}
-                    height={44}
-                  />
+                  <div className="bg-white p-3 rounded-xl border border-slate-200/60 flex justify-center">
+                    <BarcodeRenderer
+                      value={activeDrawerProduct.barcode || activeDrawerProduct.sku}
+                      height={58}
+                    />
+                  </div>
                 </div>
 
                 {/* Real-time Inventory Card */}
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-1">
-                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
+                <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-2">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                     Tồn kho toàn hệ thống
                   </div>
-                  <div className="flex items-baseline justify-between">
-                    <div className="text-xl font-bold text-slate-900">
+                  <div className="flex items-baseline justify-between flex-wrap gap-2 pt-1">
+                    <div className="text-3xl sm:text-4xl font-black text-slate-900 font-mono">
                       {(activeDrawerProduct.current_stock ?? 0).toLocaleString('vi-VN')}{' '}
-                      <span className="text-xs font-normal text-slate-500">
+                      <span className="text-base font-bold text-slate-500">
                         {activeDrawerProduct.unit?.name || 'đơn vị'}
                       </span>
                     </div>
-                    <span className="text-xs text-slate-500">
+                    <span className="text-xs sm:text-sm font-semibold text-amber-700 bg-amber-50 px-3 py-1 rounded-lg border border-amber-200">
                       Ngưỡng báo động: &lt; {activeDrawerProduct.low_stock_threshold ?? 10}
                     </span>
                   </div>
                 </div>
 
                 {/* Financial Summary Card */}
-                <div className="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-2">
-                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                    Thông tin giá
+                <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Thông tin định giá
                   </div>
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <div className="text-slate-400 text-[10px]">Giá vốn nhập</div>
-                      <div className="text-xs font-semibold text-slate-700 mt-0.5">
+                  <div className="grid grid-cols-2 gap-4 pt-1">
+                    <div className="bg-white p-4 rounded-xl border border-slate-200/80">
+                      <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Giá vốn nhập</div>
+                      <div className="text-lg sm:text-xl font-bold text-slate-700 mt-1 font-mono">
                         {formatVND(activeDrawerProduct.cost_price)}
                       </div>
                     </div>
-                    <div>
-                      <div className="text-slate-400 text-[10px]">Giá bán niêm yết</div>
-                      <div className="text-xs font-bold text-slate-900 mt-0.5">
+                    <div className="bg-white p-4 rounded-xl border border-slate-200/80">
+                      <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Giá bán niêm yết</div>
+                      <div className="text-xl sm:text-2xl font-black text-[#EE3D43] mt-1 font-mono">
                         {formatVND(activeDrawerProduct.selling_price)}
                       </div>
                     </div>
@@ -737,20 +723,20 @@ export const ProductsPage: React.FC = () => {
                 </div>
 
                 {/* Categorization Card */}
-                <div className="space-y-2">
-                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                    Phân loại
+                <div className="space-y-3">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Phân loại & Đơn vị tính
                   </div>
-                  <div className="space-y-1.5">
-                    <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                      <span className="text-slate-500">Danh mục</span>
-                      <span className="font-medium text-slate-800">
+                  <div className="bg-slate-50 rounded-2xl border border-slate-200/90 divide-y divide-slate-100 overflow-hidden">
+                    <div className="flex items-center justify-between p-4">
+                      <span className="text-slate-500 font-medium">Danh mục hàng</span>
+                      <span className="font-bold text-slate-900 text-base">
                         {activeDrawerProduct.category?.name || 'Chưa phân loại'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-between py-1.5 border-b border-slate-100">
-                      <span className="text-slate-500">Đơn vị đo lường</span>
-                      <span className="font-medium text-slate-800">
+                    <div className="flex items-center justify-between p-4">
+                      <span className="text-slate-500 font-medium">Đơn vị đo lường</span>
+                      <span className="font-bold text-slate-900 text-base">
                         {activeDrawerProduct.unit?.name || '—'}
                       </span>
                     </div>
@@ -758,47 +744,47 @@ export const ProductsPage: React.FC = () => {
                 </div>
 
                 {/* Description */}
-                <div className="space-y-1">
-                  <div className="text-[10px] font-semibold text-slate-400 uppercase tracking-wider">
-                    Mô tả
+                <div className="space-y-2">
+                  <div className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                    Mô tả sản phẩm
                   </div>
-                  <div className="p-3 bg-slate-50 rounded-xl text-slate-700 leading-relaxed border border-slate-100">
+                  <div className="p-4 bg-slate-50 rounded-2xl text-slate-700 leading-relaxed border border-slate-200/90 text-sm">
                     {activeDrawerProduct.description || (
-                      <span className="text-slate-400 italic">Chưa có thông tin mô tả</span>
+                      <span className="text-slate-400 italic">Chưa có thông tin mô tả chi tiết cho sản phẩm này.</span>
                     )}
                   </div>
                 </div>
 
                 {/* Metadata */}
-                <div className="text-[10px] text-slate-400 space-y-1 pt-3 border-t border-slate-100">
-                  <div>Mã ID: {activeDrawerProduct.id}</div>
+                <div className="text-xs text-slate-400 space-y-1.5 pt-4 border-t border-slate-200">
+                  <div>Mã ID hệ thống: <span className="font-mono text-slate-600 font-medium">{activeDrawerProduct.id}</span></div>
                   <div>
                     Ngày cập nhật:{' '}
-                    {new Date(activeDrawerProduct.updated_at || activeDrawerProduct.created_at).toLocaleString('vi-VN')}
+                    <span className="text-slate-600 font-medium">{new Date(activeDrawerProduct.updated_at || activeDrawerProduct.created_at).toLocaleString('vi-VN')}</span>
                   </div>
                 </div>
               </div>
 
               {/* Drawer Footer */}
-              <div className="p-3.5 border-t border-slate-100 bg-slate-50 flex items-center justify-between gap-3">
+              <div className="p-4 sm:p-5 border-t border-slate-200 bg-slate-50 flex items-center justify-between gap-4">
                 {isAdmin ? (
                   <button
                     onClick={() => {
                       setDeleteTarget(activeDrawerProduct);
                     }}
-                    className="px-3 py-1.5 text-rose-600 hover:bg-rose-50 rounded-lg font-semibold transition-colors cursor-pointer text-xs flex items-center gap-1"
+                    className="px-4 py-2.5 text-rose-600 hover:bg-rose-50 rounded-xl font-bold transition-colors cursor-pointer text-sm flex items-center gap-1.5"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Xóa</span>
+                    <Trash2 className="w-4 h-4" />
+                    <span>Xóa sản phẩm</span>
                   </button>
                 ) : (
                   <div></div>
                 )}
 
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-3">
                   <button
                     onClick={() => setActiveDrawerProduct(null)}
-                    className="px-3 py-1.5 border border-slate-200 bg-white text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors cursor-pointer text-xs"
+                    className="px-5 py-2.5 border border-slate-300 bg-white text-slate-700 rounded-xl font-bold hover:bg-slate-100 transition-colors cursor-pointer text-sm"
                   >
                     Đóng
                   </button>
@@ -808,10 +794,10 @@ export const ProductsPage: React.FC = () => {
                       onClick={() => {
                         openEditModal(activeDrawerProduct);
                       }}
-                      className="inline-flex items-center gap-1 px-3 py-1.5 bg-brand-primary text-white rounded-lg font-semibold hover:bg-brand-hover shadow-xs transition-colors cursor-pointer text-xs"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-bold shadow-xs transition-colors cursor-pointer text-sm"
                     >
-                      <Edit3 className="w-3.5 h-3.5" />
-                      <span>Chỉnh sửa</span>
+                      <Edit3 className="w-4 h-4" />
+                      <span>Chỉnh sửa sản phẩm</span>
                     </button>
                   )}
                 </div>

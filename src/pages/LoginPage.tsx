@@ -8,8 +8,6 @@ import {
   Lock,
   User,
   ShieldAlert,
-  ArrowRight,
-  CheckCircle,
 } from 'lucide-react';
 import { Logo } from '../components/layout/Logo';
 import { useAuthStore } from '../stores/auth.store';
@@ -76,7 +74,7 @@ export const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#EBF0F4] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans text-slate-800 selection:bg-[#EE3D43]/20 selection:text-[#EE3D43]">
+    <div className="min-h-screen w-full bg-[#CBD5E1] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans text-slate-800">
       {/* FLOATING TOAST POPUP NOTIFICATION (Top-right anchor) */}
       {toast && (
         <div className="fixed top-6 right-6 z-50 max-w-sm w-full animate-in slide-in-from-top-4 fade-in duration-200">
@@ -113,97 +111,69 @@ export const LoginPage: React.FC = () => {
         </div>
       )}
 
-      {/* MAIN CONTAINER: Floating Split-Screen Card (Inspired by TuneGO layout, Red & Black theme) */}
-      <div className="w-full max-w-5xl bg-white rounded-3xl shadow-[0_25px_60px_-15px_rgba(20,28,38,0.18)] border border-slate-200/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[640px]">
+      {/* FLOATING SPLIT CARD */}
+      <div className="w-full max-w-5xl bg-white rounded-2xl shadow-[0_20px_50px_-12px_rgba(15,23,42,0.25)] border border-slate-300/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[560px]">
         {/* ========================================================
-            LEFT COLUMN: Dark Charcoal & Red Accent (~58% width)
+            LEFT COLUMN: Solid Dark Minimal (~55% width)
+            - No blobs, no badges, no lists, just clean typography
            ======================================================== */}
-        <div className="lg:col-span-7 bg-[#181D24] text-white p-8 sm:p-12 xl:p-14 flex flex-col justify-between relative overflow-hidden">
-          {/* Subtle geometric background accents */}
-          <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#EE3D43_1px,transparent_1px)] [background-size:24px_24px]" />
-          <div className="absolute -left-20 -bottom-20 w-80 h-80 rounded-full bg-[#EE3D43]/10 blur-3xl pointer-events-none" />
-
-          {/* Top Brand Logo */}
-          <div className="relative z-10">
+        <div className="lg:col-span-7 bg-[#1A1F26] text-white p-8 sm:p-12 lg:p-14 flex flex-col justify-between">
+          {/* Top Logo */}
+          <div>
             <Logo variant="dark" size="lg" />
           </div>
 
-          {/* Center Powerful Slogan & Description */}
-          <div className="relative z-10 py-10 my-auto space-y-6">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EE3D43]/15 border border-[#EE3D43]/30 text-[#EE3D43] text-xs font-bold uppercase tracking-wider">
-              <span className="w-2 h-2 rounded-full bg-[#EE3D43] animate-pulse" />
-              Hệ thống Quản trị Kho vận 2.0
-            </div>
-
-            <h1 className="text-3xl sm:text-4xl xl:text-5xl font-black text-white leading-[1.18] tracking-tight">
-              Kho hàng chuẩn hóa. <br />
-              <span className="text-[#EE3D43]">Vận hành bứt phá.</span>
+          {/* Center Minimal Typography */}
+          <div className="py-12 my-auto space-y-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-black text-white leading-tight tracking-tight">
+              Quản trị Kho bãi. <br />
+              <span className="text-[#EE3D43]">Vận hành Chuẩn xác.</span>
             </h1>
 
-            <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-lg">
-              Kiểm soát tồn kho đa điểm thời gian thực, tự động hóa định vị vị trí kệ và tối ưu hóa toàn diện chuỗi cung ứng doanh nghiệp.
+            <p className="text-base sm:text-lg text-slate-300 font-normal leading-relaxed max-w-md pt-2">
+              Hệ thống kiểm soát tồn kho, định vị vị trí kệ và quản trị chuỗi cung ứng nội bộ.
             </p>
-
-            <div className="grid grid-cols-2 gap-4 pt-2">
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                <CheckCircle className="w-4 h-4 text-[#EE3D43]" />
-                <span>Định vị vị trí kệ chính xác</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                <CheckCircle className="w-4 h-4 text-[#EE3D43]" />
-                <span>Mã vạch chuẩn EAN-13</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                <CheckCircle className="w-4 h-4 text-[#EE3D43]" />
-                <span>Cảnh báo tồn kho tự động</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-semibold text-slate-300">
-                <CheckCircle className="w-4 h-4 text-[#EE3D43]" />
-                <span>Phân quyền RBAC đa cấp</span>
-              </div>
-            </div>
           </div>
 
-          {/* Bottom Security Footer */}
-          <div className="relative z-10 pt-6 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
-            <span>Bảo mật kết nối SSL/TLS 256-bit</span>
-            <span>Uptime máy chủ 99.98%</span>
+          {/* Bottom subtle note */}
+          <div className="text-xs text-slate-400">
+            Hệ thống Quản lý Kho Doanh nghiệp IMS
           </div>
         </div>
 
         {/* ========================================================
-            RIGHT COLUMN: Clean White Form (~42% width)
+            RIGHT COLUMN: Clean White Form (~45% width)
            ======================================================== */}
         <div className="lg:col-span-5 bg-white p-8 sm:p-12 flex flex-col justify-between">
-          {/* Top spacer & version tag */}
-          <div className="flex justify-between items-center pb-4">
+          {/* Top Version */}
+          <div className="flex justify-between items-center pb-2">
             <div className="lg:hidden">
               <Logo size="md" />
             </div>
-            <span className="text-xs font-bold text-slate-400 ml-auto uppercase tracking-wider">
-              Phiên bản v2.0
+            <span className="text-xs font-semibold text-slate-400 ml-auto">
+              Phiên bản 2.0
             </span>
           </div>
 
-          {/* Form Content */}
+          {/* Form */}
           <div className="my-auto py-4 space-y-6">
             <div>
-              <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+              <h2 className="text-2xl sm:text-3xl font-bold text-slate-900 tracking-tight">
                 Đăng nhập
               </h2>
-              <p className="text-sm sm:text-base text-slate-500 mt-1.5 font-medium">
-                Nhập tài khoản để truy cập cổng vận hành
+              <p className="text-sm sm:text-base text-slate-500 mt-1">
+                Nhập tài khoản để tiếp tục
               </p>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Username Input */}
               <div>
-                <label className="block text-sm sm:text-base font-bold text-slate-800 mb-2">
+                <label className="block text-sm sm:text-base font-semibold text-slate-800 mb-2">
                   Tài khoản hoặc Email
                 </label>
                 <div className="relative">
-                  <User className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <User className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     type="text"
                     required
@@ -215,7 +185,7 @@ export const LoginPage: React.FC = () => {
                       if (error) clearError();
                     }}
                     placeholder="Nhập tên đăng nhập hoặc email..."
-                    className="w-full pl-12 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
+                    className="w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
                   />
                 </div>
               </div>
@@ -223,7 +193,7 @@ export const LoginPage: React.FC = () => {
               {/* Password Input */}
               <div>
                 <div className="flex justify-between items-center mb-2">
-                  <label className="text-sm sm:text-base font-bold text-slate-800">
+                  <label className="text-sm sm:text-base font-semibold text-slate-800">
                     Mật khẩu
                   </label>
                   <button
@@ -239,7 +209,7 @@ export const LoginPage: React.FC = () => {
                   </button>
                 </div>
                 <div className="relative">
-                  <Lock className="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
+                  <Lock className="w-5 h-5 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none" />
                   <input
                     type={showPassword ? 'text' : 'password'}
                     required
@@ -251,12 +221,12 @@ export const LoginPage: React.FC = () => {
                       if (error) clearError();
                     }}
                     placeholder="Nhập mật khẩu..."
-                    className="w-full pl-12 pr-12 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
+                    className="w-full pl-11 pr-11 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1.5 cursor-pointer rounded"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-700 p-1 cursor-pointer rounded"
                     title={showPassword ? 'Ẩn mật khẩu' : 'Hiện mật khẩu'}
                   >
                     {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
@@ -265,7 +235,7 @@ export const LoginPage: React.FC = () => {
               </div>
 
               {/* Remember Me */}
-              <div className="flex items-center justify-between pt-1">
+              <div className="flex items-center justify-between pt-0.5">
                 <label className="flex items-center gap-2.5 cursor-pointer select-none text-slate-600 font-medium text-sm sm:text-base">
                   <input
                     type="checkbox"
@@ -281,7 +251,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 py-3.5 sm:py-4 px-6 bg-[#EE3D43] hover:bg-[#D9343A] text-white font-bold rounded-xl text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2.5 cursor-pointer disabled:opacity-60 active:scale-[0.99]"
+                className="w-full mt-2 py-3.5 px-6 bg-[#EE3D43] hover:bg-[#D9343A] text-white font-bold rounded-xl text-base sm:text-lg transition-all shadow-sm hover:shadow flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 active:scale-[0.99]"
               >
                 {isLoading ? (
                   <>
@@ -289,18 +259,15 @@ export const LoginPage: React.FC = () => {
                     <span>Đang xác thực...</span>
                   </>
                 ) : (
-                  <>
-                    <span>Đăng nhập hệ thống</span>
-                    <ArrowRight className="w-5 h-5" />
-                  </>
+                  <span>Đăng nhập</span>
                 )}
               </button>
             </form>
           </div>
 
-          {/* Footer note */}
-          <div className="text-center text-xs text-slate-400 pt-4">
-            Hệ thống Quản lý Kho Nội bộ IMS · Bản quyền © 2026
+          {/* Simple Bottom Note */}
+          <div className="text-center text-xs text-slate-400 pt-2">
+            Bảo mật phiên đăng nhập SSL 256-bit
           </div>
         </div>
       </div>

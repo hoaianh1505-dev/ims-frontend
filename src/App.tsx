@@ -5,12 +5,12 @@ import {
   DashboardPage,
   CategoriesPage,
   ProductsPage,
+  WarehousesPage,
   PlaceholderPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import {
-  Building2,
   Truck,
   ArrowLeftRight,
   FileText,
@@ -46,17 +46,8 @@ export default function App() {
             {/* 3. Danh mục & Đơn vị tính (Real data from PostgreSQL) */}
             <Route path="categories" element={<CategoriesPage />} />
 
-            {/* 4. Tổ chức kho */}
-            <Route
-              path="warehouses"
-              element={
-                <PlaceholderPage
-                  title="Tổ chức kho hàng"
-                  description="Quản lý vị trí, sơ đồ phân khu và sức chứa của các kho"
-                  icon={Building2}
-                />
-              }
-            />
+            {/* 4. Tổ chức kho hàng & Vị trí kệ */}
+            <Route path="warehouses" element={<WarehousesPage />} />
 
             {/* 5. Nhà cung cấp */}
             <Route

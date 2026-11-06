@@ -247,7 +247,7 @@ export const LoginPage: React.FC = () => {
                       if (toast) setToast(null);
                       if (error) clearError();
                     }}
-                    placeholder="admin hoặc admin@ims.com"
+                    placeholder="Nhập tên đăng nhập hoặc email..."
                     className="w-full pl-11 pr-4 py-3 bg-slate-50/70 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-brand-primary focus:bg-white focus:ring-4 focus:ring-brand-primary/10 transition-all shadow-2xs"
                   />
                 </div>
@@ -379,7 +379,7 @@ export const LoginPage: React.FC = () => {
                     required
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
-                    placeholder="VD: admin@ims.com hoặc staff_hn01"
+                    placeholder="Nhập tên tài khoản hoặc email của bạn..."
                     className="w-full px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-xs text-slate-900 focus:outline-none focus:border-brand-primary focus:bg-white"
                   />
                 </div>

@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuthStore } from '../../stores/auth.store';
+import { toast } from 'sonner';
 
 export const Sidebar: React.FC = () => {
   const { user, logout } = useAuthStore();
@@ -151,7 +152,12 @@ export const Sidebar: React.FC = () => {
         </div>
 
         <button
-          onClick={logout}
+          onClick={async () => {
+            await logout();
+            toast.info('Đã đăng xuất', {
+              description: 'Phiên làm việc đã kết thúc an toàn.',
+            });
+          }}
           className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5 shrink-0" />

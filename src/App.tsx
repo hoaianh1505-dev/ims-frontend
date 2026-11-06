@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'sonner';
 import { useAuthStore } from './stores/auth.store';
 import {
   LoginPage,
@@ -24,6 +25,7 @@ export default function App() {
 
   return (
     <BrowserRouter>
+      <Toaster richColors position="top-right" closeButton duration={4000} />
       <Routes>
         {/* Public Route */}
         <Route

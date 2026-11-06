@@ -51,8 +51,9 @@ export const LoginPage: React.FC = () => {
         {/* ========================================================
             LEFT COLUMN: Pure Cinematic Warehouse Visual (~55% width)
             - Dimmed, subtle warehouse backdrop faded into dark background
+            - Live operational mini card showcase (human, ERP-grade)
            ======================================================== */}
-        <div className="relative lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-16 flex flex-col justify-between overflow-hidden min-h-[260px] lg:min-h-full">
+        <div className="relative lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-14 flex flex-col justify-between overflow-hidden min-h-[300px] lg:min-h-full">
           {/* Subtle Faded Background Image */}
           <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
             <img
@@ -63,13 +64,93 @@ export const LoginPage: React.FC = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-[#0E131B] via-[#0E131B]/60 to-[#0E131B]/85" />
           </div>
 
-          {/* Top Logo */}
-          <div className="relative z-10">
+          {/* Top Logo & Version */}
+          <div className="relative z-10 flex items-center justify-between">
             <Logo variant="dark" size="lg" />
+            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-slate-400">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+              v2.4.0
+            </span>
           </div>
 
-          {/* Spacer */}
-          <div className="relative z-10" />
+          {/* Center: Live Operational Preview Card */}
+          <div className="relative z-10 my-auto py-6">
+            <div className="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 p-5 sm:p-6 shadow-2xl space-y-4 max-w-md">
+              {/* Card Header */}
+              <div className="flex items-center justify-between pb-3 border-b border-white/10">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+                  <div>
+                    <div className="text-xs font-bold text-white tracking-wide">
+                      Kho Tổng Tân Tạo (TP.HCM)
+                    </div>
+                    <div className="text-[10px] text-slate-400">
+                      Vận hành trực tiếp • Đồng bộ 1 phút trước
+                    </div>
+                  </div>
+                </div>
+                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
+                  WH-HCM-01
+                </span>
+              </div>
+
+              {/* Card Metrics */}
+              <div className="grid grid-cols-2 gap-3">
+                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
+                    Tồn kho khả dụng
+                  </span>
+                  <div className="flex items-baseline gap-1.5 mt-1">
+                    <span className="text-lg sm:text-xl font-bold text-white">128,450</span>
+                    <span className="text-[10px] text-emerald-400 font-semibold">+12%</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500">Sản phẩm lưu kho</span>
+                </div>
+
+                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
+                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
+                    Lấp đầy dãy kệ
+                  </span>
+                  <div className="flex items-baseline gap-1.5 mt-1">
+                    <span className="text-lg sm:text-xl font-bold text-white">86.4%</span>
+                    <span className="text-[10px] text-slate-400 font-medium">14/16 Kệ</span>
+                  </div>
+                  <span className="text-[10px] text-slate-500">Sức chứa tối đa</span>
+                </div>
+              </div>
+
+              {/* Live Activities */}
+              <div className="space-y-2 pt-1">
+                <div className="flex items-center justify-between text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                    <span className="font-mono text-slate-400">#NK-8821</span>
+                    <span className="truncate max-w-[140px] sm:max-w-[180px]">Lô phụ tùng điện máy</span>
+                  </div>
+                  <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
+                    Đã nhập kho
+                  </span>
+                </div>
+
+                <div className="flex items-center justify-between text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
+                  <div className="flex items-center gap-2 text-slate-300">
+                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                    <span className="font-mono text-slate-400">#XK-3409</span>
+                    <span className="truncate max-w-[140px] sm:max-w-[180px]">Xuất chi nhánh Đà Nẵng</span>
+                  </div>
+                  <span className="text-[10px] font-medium text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded">
+                    Đang bốc dỡ
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Bottom Footer */}
+          <div className="relative z-10 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-white/5">
+            <span>Hệ thống Quản lý Kho Doanh nghiệp</span>
+            <span className="font-mono text-[11px]">SLA 99.9%</span>
+          </div>
         </div>
 
         {/* ========================================================

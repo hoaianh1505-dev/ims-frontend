@@ -48,108 +48,49 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen w-full bg-[#CBD5E1] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans text-slate-800">
       {/* FLOATING SPLIT CARD */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(15,23,42,0.25)] border border-slate-300/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[660px]">
-        {/* ========================================================
-            LEFT COLUMN: Pure Cinematic Warehouse Visual (~55% width)
-            - Dimmed, subtle warehouse backdrop faded into dark background
-            - Live operational mini card showcase (human, ERP-grade)
-           ======================================================== */}
+        {/* LEFT COLUMN: warehouse photo + internal portal info */}
         <div className="relative lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-14 flex flex-col justify-between overflow-hidden min-h-[300px] lg:min-h-full">
-          {/* Subtle Faded Background Image */}
-          <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <div className="absolute inset-0 z-0 pointer-events-none">
             <img
               src="/images/warehouse-login-hero.jpg"
-              alt="IMS Warehouse Logistics"
-              className="w-full h-full object-cover object-center opacity-25 mix-blend-luminosity scale-105"
+              alt=""
+              className="w-full h-full object-cover object-center opacity-40 grayscale"
             />
-            <div className="absolute inset-0 bg-gradient-to-t from-[#0E131B] via-[#0E131B]/60 to-[#0E131B]/85" />
+            <div className="absolute inset-0 bg-gradient-to-b from-[#0E131B]/70 via-[#0E131B]/40 to-[#0E131B]" />
           </div>
 
-          {/* Top Logo & Version */}
-          <div className="relative z-10 flex items-center justify-between">
+          <div className="relative z-10">
             <Logo variant="dark" size="lg" />
-            <span className="hidden sm:inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/5 border border-white/10 text-[11px] font-mono text-slate-400">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
-              v2.4.0
-            </span>
           </div>
 
-          {/* Center: Live Operational Preview Card */}
-          <div className="relative z-10 my-auto py-6">
-            <div className="bg-slate-900/60 backdrop-blur-md rounded-2xl border border-white/10 p-5 sm:p-6 shadow-2xl space-y-4 max-w-md">
-              {/* Card Header */}
-              <div className="flex items-center justify-between pb-3 border-b border-white/10">
-                <div className="flex items-center gap-2.5">
-                  <div className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
-                  <div>
-                    <div className="text-xs font-bold text-white tracking-wide">
-                      Kho Tổng Tân Tạo (TP.HCM)
-                    </div>
-                    <div className="text-[10px] text-slate-400">
-                      Vận hành trực tiếp • Đồng bộ 1 phút trước
-                    </div>
-                  </div>
-                </div>
-                <span className="text-[10px] font-mono px-2 py-0.5 rounded bg-white/10 text-slate-300 border border-white/10">
-                  WH-HCM-01
-                </span>
+          <div className="relative z-10 text-slate-300">
+            <p className="text-2xl sm:text-[28px] font-semibold text-white leading-snug max-w-md">
+              Cổng nội bộ dành cho nhân viên kho và bộ phận quản lý.
+            </p>
+            <p className="mt-3 text-sm text-slate-400 max-w-md leading-relaxed">
+              Tài khoản do quản trị viên cấp. Nếu chưa có tài khoản hoặc bị khóa,
+              vui lòng liên hệ bộ phận IT.
+            </p>
+
+            <dl className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-y-4 gap-x-8 text-sm">
+              <div>
+                <dt className="text-slate-500 text-xs">Hotline IT</dt>
+                <dd className="mt-0.5 text-slate-200 font-medium">1900 6868</dd>
               </div>
-
-              {/* Card Metrics */}
-              <div className="grid grid-cols-2 gap-3">
-                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
-                    Tồn kho khả dụng
-                  </span>
-                  <div className="flex items-baseline gap-1.5 mt-1">
-                    <span className="text-lg sm:text-xl font-bold text-white">128,450</span>
-                    <span className="text-[10px] text-emerald-400 font-semibold">+12%</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Sản phẩm lưu kho</span>
-                </div>
-
-                <div className="p-3 rounded-xl bg-white/5 border border-white/5">
-                  <span className="text-[10px] font-medium text-slate-400 uppercase tracking-wider block">
-                    Lấp đầy dãy kệ
-                  </span>
-                  <div className="flex items-baseline gap-1.5 mt-1">
-                    <span className="text-lg sm:text-xl font-bold text-white">86.4%</span>
-                    <span className="text-[10px] text-slate-400 font-medium">14/16 Kệ</span>
-                  </div>
-                  <span className="text-[10px] text-slate-500">Sức chứa tối đa</span>
-                </div>
+              <div>
+                <dt className="text-slate-500 text-xs">Email hỗ trợ</dt>
+                <dd className="mt-0.5 text-slate-200 font-medium">it@ims.com.vn</dd>
               </div>
-
-              {/* Live Activities */}
-              <div className="space-y-2 pt-1">
-                <div className="flex items-center justify-between text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
-                    <span className="font-mono text-slate-400">#NK-8821</span>
-                    <span className="truncate max-w-[140px] sm:max-w-[180px]">Lô phụ tùng điện máy</span>
-                  </div>
-                  <span className="text-[10px] font-medium text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded">
-                    Đã nhập kho
-                  </span>
-                </div>
-
-                <div className="flex items-center justify-between text-[11px] p-2 rounded-lg bg-white/5 border border-white/5">
-                  <div className="flex items-center gap-2 text-slate-300">
-                    <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
-                    <span className="font-mono text-slate-400">#XK-3409</span>
-                    <span className="truncate max-w-[140px] sm:max-w-[180px]">Xuất chi nhánh Đà Nẵng</span>
-                  </div>
-                  <span className="text-[10px] font-medium text-amber-300 bg-amber-500/10 px-1.5 py-0.5 rounded">
-                    Đang bốc dỡ
-                  </span>
-                </div>
+              <div>
+                <dt className="text-slate-500 text-xs">Giờ làm việc</dt>
+                <dd className="mt-0.5 text-slate-200 font-medium">T2 – T7, 7:30 – 17:30</dd>
               </div>
+            </dl>
+
+            <div className="mt-8 pt-4 border-t border-white/10 flex items-center justify-between text-xs text-slate-500">
+              <span>© 2026 IMS</span>
+              <span>Phiên bản 2.4.0</span>
             </div>
-          </div>
-
-          {/* Bottom Footer */}
-          <div className="relative z-10 flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-white/5">
-            <span>Hệ thống Quản lý Kho Doanh nghiệp</span>
-            <span className="font-mono text-[11px]">SLA 99.9%</span>
           </div>
         </div>
 

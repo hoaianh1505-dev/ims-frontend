@@ -13,6 +13,7 @@ import {
   History,
   LogOut,
   Lock,
+  ChevronRight,
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuthStore } from '../../stores/auth.store';
@@ -21,7 +22,6 @@ export const Sidebar: React.FC = () => {
   const { user, logout } = useAuthStore();
   const currentRole = user?.role || 'STAFF';
 
-  // Phân quyền
   const isAdmin = currentRole === 'ADMIN';
   const isManagerOrAdmin = currentRole === 'ADMIN' || currentRole === 'MANAGER';
 
@@ -30,6 +30,7 @@ export const Sidebar: React.FC = () => {
     label: string,
     icon: React.ReactNode,
     isAllowed: boolean,
+    hasSubmenu: boolean = false,
     requiredRoleLabel?: string
   ) => {
     if (!isAllowed) {
@@ -37,13 +38,13 @@ export const Sidebar: React.FC = () => {
         <div
           key={to}
           title={`Tính năng yêu cầu quyền ${requiredRoleLabel || 'Admin'}`}
-          className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-sm font-medium text-slate-300 bg-slate-50/50 cursor-not-allowed select-none opacity-60"
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-500 cursor-not-allowed select-none opacity-50"
         >
           <div className="flex items-center gap-3">
-            {icon}
+            <span className="text-slate-500">{icon}</span>
             <span>{label}</span>
           </div>
-          <Lock className="w-3.5 h-3.5 text-slate-400" />
+          <Lock className="w-3.5 h-3.5 text-slate-500" />
         </div>
       );
     }
@@ -53,76 +54,97 @@ export const Sidebar: React.FC = () => {
         key={to}
         to={to}
         className={({ isActive }) =>
-          `w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all ${
+          `w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all group ${
             isActive
-              ? 'bg-brand-light text-brand-primary font-semibold shadow-xs'
-              : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+              ? 'bg-[#EE3D43] text-white font-semibold shadow-xs'
+              : 'text-slate-300 hover:bg-white/5 hover:text-white'
           }`
         }
       >
-        {icon}
-        <span>{label}</span>
+        {({ isActive }) => (
+          <>
+            <div className="flex items-center gap-3">
+              <span className={isActive ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}>
+                {icon}
+              </span>
+              <span>{label}</span>
+            </div>
+            {hasSubmenu && (
+              <ChevronRight
+                className={`w-3.5 h-3.5 transition-transform ${
+                  isActive ? 'text-white/80' : 'text-slate-500 group-hover:text-slate-300'
+                }`}
+              />
+            )}
+          </>
+        )}
       </NavLink>
     );
   };
 
   return (
-    <aside className="w-64 bg-white border-r border-slate-100 h-full flex flex-col shrink-0 z-20">
-      <div className="p-6 pb-4">
-        <Logo />
+    <aside className="w-64 bg-[#1B2129] border-r border-[#262E38] h-full flex flex-col shrink-0 z-20 select-none">
+      {/* Brand Header */}
+      <div className="p-5 pb-4 border-b border-[#262E38]/80">
+        <Logo variant="dark" />
       </div>
 
-      <nav className="flex-1 px-4 py-2 space-y-6 overflow-y-auto">
-        {/* Nhóm QUẢN LÝ */}
+      {/* Navigation List */}
+      <nav className="flex-1 px-3 py-3 space-y-5 overflow-y-auto custom-scrollbar">
+        {/* Core Nav */}
+        <div className="space-y-1">
+          {renderNavItem('/', 'Dashboard', <LayoutGrid className="w-4 h-4 shrink-0" />, true)}
+        </div>
+
+        {/* Nhóm KHO HÀNG & SẢN PHẨM */}
         <div>
-          <div className="px-3 mb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Quản lý
+          <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Kho hàng & Sản phẩm
           </div>
           <div className="space-y-1">
-            {renderNavItem('/', 'Tổng quan', <LayoutGrid className="w-4 h-4 shrink-0" />, true)}
-            {renderNavItem('/products', 'Sản phẩm', <Package className="w-4 h-4 shrink-0" />, true)}
-            {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
-            {renderNavItem('/warehouses', 'Tổ chức kho', <Building2 className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
-            {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-4 h-4 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
-            {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/products', 'Sản phẩm', <Package className="w-4 h-4 shrink-0" />, true, true)}
+            {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
+            {renderNavItem('/warehouses', 'Tổ chức kho hàng', <Building2 className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
+            {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
           </div>
         </div>
 
-        {/* Nhóm CÁ NHÂN */}
+        {/* Nhóm XUẤT NHẬP & VẬN HÀNH */}
         <div>
-          <div className="px-3 mb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Cá nhân
+          <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Xuất nhập & Bán hàng
           </div>
           <div className="space-y-1">
+            {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-4 h-4 shrink-0" />, true, true)}
             {renderNavItem('/my-tasks', 'Phiếu của tôi', <FileText className="w-4 h-4 shrink-0" />, true)}
-            {renderNavItem('/profile', 'Hồ sơ cá nhân', <UserIcon className="w-4 h-4 shrink-0" />, true)}
           </div>
         </div>
 
-        {/* Nhóm QUẢN TRỊ */}
+        {/* Nhóm HỆ THỐNG */}
         <div>
-          <div className="px-3 mb-2 text-[11px] font-bold text-slate-400 uppercase tracking-wider">
-            Quản trị
+          <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+            Hệ thống & Phân quyền
           </div>
           <div className="space-y-1">
-            {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
-            {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-4 h-4 shrink-0" />, isAdmin, 'Admin')}
+            {renderNavItem('/profile', 'Hồ sơ cá nhân', <UserIcon className="w-4 h-4 shrink-0" />, true)}
+            {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-4 h-4 shrink-0" />, isAdmin, false, 'Admin')}
+            {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-4 h-4 shrink-0" />, isAdmin, false, 'Admin')}
           </div>
         </div>
       </nav>
 
       {/* User Info & Logout Button */}
-      <div className="p-3 border-t border-slate-100 space-y-2">
-        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-xl bg-slate-50 border border-slate-100">
-          <div className="w-8 h-8 rounded-lg bg-brand-primary text-white flex items-center justify-center text-xs font-bold uppercase shrink-0 shadow-xs">
+      <div className="p-3 border-t border-[#262E38] space-y-2 bg-[#171C23]">
+        <div className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg bg-[#202731] border border-[#2B3542]">
+          <div className="w-7 h-7 rounded-md bg-[#EE3D43] text-white flex items-center justify-center text-xs font-bold uppercase shrink-0 shadow-xs">
             {user?.username?.substring(0, 2) || 'AD'}
           </div>
           <div className="flex-1 min-w-0">
-            <div className="text-xs font-bold text-slate-800 truncate">
+            <div className="text-xs font-bold text-white truncate">
               {user?.full_name || user?.username || 'Administrator'}
             </div>
             <div className="text-[10px] text-slate-400 font-medium truncate flex items-center gap-1">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
               {user?.role || 'ADMIN'}
             </div>
           </div>
@@ -130,7 +152,7 @@ export const Sidebar: React.FC = () => {
 
         <button
           onClick={logout}
-          className="w-full flex items-center gap-2 px-3 py-2 text-xs font-medium text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+          className="w-full flex items-center gap-2 px-3 py-1.5 text-xs font-medium text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 rounded-lg transition-colors cursor-pointer"
         >
           <LogOut className="w-3.5 h-3.5 shrink-0" />
           <span>Đăng xuất</span>

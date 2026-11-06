@@ -5,7 +5,7 @@ import { Header } from './Header';
 
 export const AppLayout: React.FC = () => {
   return (
-    <div className="h-full w-full bg-brand-bg flex overflow-hidden">
+    <div className="h-full w-full bg-[#F4F5F7] flex overflow-hidden">
       {/* Sidebar cố định */}
       <Sidebar />
 

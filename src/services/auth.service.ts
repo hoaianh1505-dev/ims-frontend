@@ -3,8 +3,8 @@ import { ApiResponse, LoginPayload, LoginData, User } from '../types/auth.types'
 
 export const authService = {
   login: async (payload: LoginPayload): Promise<LoginData> => {
-    const res = await apiClient.post<ApiResponse<LoginData>>('/auth/login', payload);
-    return res.data.data;
+    const res = await apiClient.post<any>('/auth/login', payload);
+    return res.data?.data || res.data;
   },
 
   logout: async (): Promise<void> => {

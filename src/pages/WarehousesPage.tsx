@@ -1023,3 +1023,4 @@ export const WarehousesPage: React.FC = () => {
     </div>
   );
 };
+

@@ -8,12 +8,12 @@ import {
   ProductsPage,
   WarehousesPage,
   UsersPage,
+  SuppliersPage,
   PlaceholderPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import {
-  Truck,
   ArrowLeftRight,
   FileText,
   User as UserIcon,
@@ -51,17 +51,8 @@ export default function App() {
             {/* 4. Tổ chức kho hàng & Vị trí kệ */}
             <Route path="warehouses" element={<WarehousesPage />} />
 
-            {/* 5. Nhà cung cấp */}
-            <Route
-              path="suppliers"
-              element={
-                <PlaceholderPage
-                  title="Nhà cung cấp"
-                  description="Hồ sơ đối tác cung cấp hàng hóa và lịch sử nhập kho"
-                  icon={Truck}
-                />
-              }
-            />
+            {/* 5. Nhà cung cấp (Real data from PostgreSQL) */}
+            <Route path="suppliers" element={<SuppliersPage />} />
 
             {/* 6. Xử lý xuất / nhập */}
             <Route

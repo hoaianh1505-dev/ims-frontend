@@ -9,7 +9,6 @@ import {
   AlertTriangle,
   X,
   Loader2,
-  CheckCircle2,
   ShieldAlert,
   ChevronLeft,
   ChevronRight,
@@ -19,6 +18,7 @@ import { categoriesService } from '../services/categories.service';
 import { unitsService } from '../services/units.service';
 import { Category, Unit } from '../types/category.types';
 import { useAuthStore } from '../stores/auth.store';
+import { showToast } from '../utils/toast.util';
 
 export const CategoriesPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -70,14 +70,6 @@ export const CategoriesPage: React.FC = () => {
   } | null>(null);
   const [deleting, setDeleting] = useState(false);
 
-  // Notification message
-  const [notify, setNotify] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
-
-  const showNotify = (type: 'success' | 'error', message: string) => {
-    setNotify({ type, message });
-    setTimeout(() => setNotify(null), 4000);
-  };
-
   // Fetch Categories
   const fetchCategories = useCallback(async () => {
     setLoadingCategories(true);
@@ -86,7 +78,7 @@ export const CategoriesPage: React.FC = () => {
       setCategories(res.data || []);
     } catch (err: any) {
       console.error(err);
-      showNotify('error', 'Không thể tải danh sách danh mục');
+      showToast.error('Không thể tải danh sách danh mục');
     } finally {
       setLoadingCategories(false);
     }
@@ -100,7 +92,7 @@ export const CategoriesPage: React.FC = () => {
       setUnits(res.data || []);
     } catch (err: any) {
       console.error(err);
-      showNotify('error', 'Không thể tải danh sách đơn vị tính');
+      showToast.error('Không thể tải danh sách đơn vị tính');
     } finally {
       setLoadingUnits(false);
     }
@@ -166,14 +158,14 @@ export const CategoriesPage: React.FC = () => {
           description: catDesc.trim() || undefined,
           parent_id: catParentId || null,
         });
-        showNotify('success', 'Cập nhật danh mục thành công');
+        showToast.success('Cập nhật danh mục thành công');
       } else {
         await categoriesService.create({
           name: catName.trim(),
           description: catDesc.trim() || undefined,
           parent_id: catParentId || null,
         });
-        showNotify('success', 'Thêm mới danh mục thành công');
+        showToast.success('Thêm mới danh mục thành công');
       }
       setIsCatModalOpen(false);
       fetchCategories();
@@ -216,13 +208,13 @@ export const CategoriesPage: React.FC = () => {
           name: unitName.trim(),
           symbol: unitSymbol.trim() || undefined,
         });
-        showNotify('success', 'Cập nhật đơn vị tính thành công');
+        showToast.success('Cập nhật đơn vị tính thành công');
       } else {
         await unitsService.create({
           name: unitName.trim(),
           symbol: unitSymbol.trim() || undefined,
         });
-        showNotify('success', 'Thêm mới đơn vị tính thành công');
+        showToast.success('Thêm mới đơn vị tính thành công');
       }
       setIsUnitModalOpen(false);
       fetchUnits();
@@ -241,11 +233,11 @@ export const CategoriesPage: React.FC = () => {
     try {
       if (deleteTarget.type === 'category') {
         await categoriesService.delete(deleteTarget.id);
-        showNotify('success', `Đã xóa danh mục "${deleteTarget.name}"`);
+        showToast.success(`Đã xóa danh mục "${deleteTarget.name}"`);
         fetchCategories();
       } else {
         await unitsService.delete(deleteTarget.id);
-        showNotify('success', `Đã xóa đơn vị "${deleteTarget.name}"`);
+        showToast.success(`Đã xóa đơn vị "${deleteTarget.name}"`);
         fetchUnits();
       }
       setDeleteTarget(null);
@@ -253,7 +245,7 @@ export const CategoriesPage: React.FC = () => {
       const msg =
         err.response?.data?.message ||
         'Không thể xóa mục này (có thể do đang chứa dữ liệu liên kết)';
-      showNotify('error', msg);
+      showToast.error(msg);
     } finally {
       setDeleting(false);
     }
@@ -261,24 +253,6 @@ export const CategoriesPage: React.FC = () => {
 
   return (
     <div className="flex-1 flex flex-col min-h-0 px-6 sm:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
-      {/* Toast Notification */}
-      {notify && (
-        <div
-          className={`fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-2.5 rounded-xl shadow-lg border text-xs font-semibold animate-in slide-in-from-bottom-3 duration-200 ${
-            notify.type === 'success'
-              ? 'bg-slate-900 text-white border-slate-800'
-              : 'bg-rose-50 text-rose-900 border-rose-200'
-          }`}
-        >
-          {notify.type === 'success' ? (
-            <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
-          ) : (
-            <AlertTriangle className="w-4 h-4 text-rose-600 shrink-0" />
-          )}
-          <span>{notify.message}</span>
-        </div>
-      )}
-
       {/* PAGE HEADER */}
       <div className="shrink-0 flex items-center justify-between gap-4 pb-2 border-b border-slate-100 min-h-[52px]">
         <div>
@@ -412,14 +386,9 @@ export const CategoriesPage: React.FC = () => {
                   {paginatedCategories.map((cat) => (
                     <tr key={cat.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-red-50 text-[#EE3D43] flex items-center justify-center shrink-0 border border-red-100">
-                            <Layers className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
-                            {cat.name}
-                          </span>
-                        </div>
+                        <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                          {cat.name}
+                        </span>
                       </td>
                       <td className="py-2.5 px-4 text-slate-600 whitespace-nowrap">
                         {cat.parent ? (
@@ -495,14 +464,9 @@ export const CategoriesPage: React.FC = () => {
                   {paginatedUnits.map((unit) => (
                     <tr key={unit.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
-                        <div className="flex items-center gap-2.5">
-                          <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
-                            <Ruler className="w-3.5 h-3.5" />
-                          </div>
-                          <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
-                            {unit.name}
-                          </span>
-                        </div>
+                        <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                          {unit.name}
+                        </span>
                       </td>
                       <td className="py-2.5 px-4">
                         {unit.symbol ? (

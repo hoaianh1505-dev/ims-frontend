@@ -436,18 +436,13 @@ export const WarehousesPage: React.FC = () => {
                 >
                     {/* Warehouse Info */}
                     <td className="py-2.5 px-4">
-                      <div className="flex items-center gap-2.5">
-                        <div className="w-7 h-7 rounded-lg bg-red-50 text-[#EE3D43] flex items-center justify-center shrink-0 border border-red-100">
-                          <Building2 className="w-3.5 h-3.5" />
+                      <div>
+                        <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                          {wh.name}
                         </div>
-                        <div>
-                          <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
-                            {wh.name}
-                          </div>
-                          <span className="font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/80 inline-block mt-0.5">
-                            {wh.code}
-                          </span>
-                        </div>
+                        <span className="font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/80 inline-block mt-0.5">
+                          {wh.code}
+                        </span>
                       </div>
                     </td>
 

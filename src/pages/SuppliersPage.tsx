@@ -85,22 +85,27 @@ export const SuppliersPage: React.FC = () => {
   };
 
   const handleToggleStatus = async (s: Supplier) => {
+    const nextStatus = !s.is_active;
     try {
       const updated = await suppliersService.update(s.id, {
-        is_active: !s.is_active,
+        is_active: nextStatus,
       });
-      setSuppliers((prev) => prev.map((item) => (item.id === s.id ? updated : item)));
+      const resolvedSupplier = { ...s, ...updated, is_active: nextStatus };
+      setSuppliers((prev) =>
+        prev.map((item) => (item.id === s.id ? resolvedSupplier : item))
+      );
       if (activeDrawerSupplier?.id === s.id) {
-        setActiveDrawerSupplier(updated);
+        setActiveDrawerSupplier(resolvedSupplier);
       }
       showToast.success(
-        updated.is_active
+        nextStatus
           ? `Đã kích hoạt hợp tác với "${s.name}"`
           : `Đã tạm ngưng hợp tác với "${s.name}"`
       );
     } catch (err: any) {
       console.error(err);
       showToast.error('Không thể thay đổi trạng thái nhà cung cấp');
+      fetchSuppliers();
     }
   };
 
@@ -274,3 +279,4 @@ export const SuppliersPage: React.FC = () => {
     </div>
   );
 };
+

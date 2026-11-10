@@ -160,3 +160,4 @@ export const SupplierTable: React.FC<SupplierTableProps> = ({
     </table>
   );
 };
+

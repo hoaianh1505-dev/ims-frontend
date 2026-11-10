@@ -237,3 +237,4 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
     </div>
   );
 };
+

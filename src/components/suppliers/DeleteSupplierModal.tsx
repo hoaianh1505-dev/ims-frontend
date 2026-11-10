@@ -82,3 +82,4 @@ export const DeleteSupplierModal: React.FC<DeleteSupplierModalProps> = ({
     </div>
   );
 };
+

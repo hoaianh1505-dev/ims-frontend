@@ -39,3 +39,4 @@ export interface PaginatedSuppliersResponse {
     totalPages: number;
   };
 }
+

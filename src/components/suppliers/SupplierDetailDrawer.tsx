@@ -188,3 +188,4 @@ export const SupplierDetailDrawer: React.FC<SupplierDetailDrawerProps> = ({
     </div>
   );
 };
+

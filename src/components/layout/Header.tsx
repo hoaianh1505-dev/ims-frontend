@@ -64,7 +64,7 @@ export const Header: React.FC = () => {
                   <span>Thêm sản phẩm mới</span>
                 </Link>
                 <Link
-                  to="/stock-transactions"
+                  to="/stock-transactions?action=import"
                   onClick={() => setShowQuickAdd(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium"
                 >
@@ -72,7 +72,7 @@ export const Header: React.FC = () => {
                   <span>Tạo phiếu nhập kho</span>
                 </Link>
                 <Link
-                  to="/stock-transactions"
+                  to="/stock-transactions?action=export"
                   onClick={() => setShowQuickAdd(false)}
                   className="flex items-center gap-3 px-4 py-2.5 text-slate-700 hover:bg-slate-50 hover:text-slate-900 font-medium"
                 >

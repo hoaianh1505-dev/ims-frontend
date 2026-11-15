@@ -1,0 +1,827 @@
+import React, { useState, useEffect, useMemo } from 'react';
+import {
+  X,
+  Plus,
+  Trash2,
+  Loader2,
+  ArrowDownLeft,
+  ArrowUpRight,
+  ArrowLeftRight,
+  ClipboardCheck,
+} from 'lucide-react';
+import {
+  StockTransactionType,
+} from '../../types/stock-transaction.types';
+import { Warehouse, WarehouseLocation } from '../../types/warehouse.types';
+import { Supplier } from '../../types/supplier.types';
+import { Product } from '../../types/product.types';
+import {
+  stockTransactionsService,
+  WarehouseInventoryRecord,
+} from '../../services/stock-transactions.service';
+import { warehousesService } from '../../services/warehouses.service';
+import { showToast } from '../../utils/toast.util';
+
+interface StockTransactionFormModalProps {
+  isOpen: boolean;
+  initialType: StockTransactionType;
+  initialSupplierId?: string;
+  warehouses: Warehouse[];
+  suppliers: Supplier[];
+  products: Product[];
+  isManagerOrAdmin: boolean;
+  onClose: () => void;
+  onSuccess: () => void;
+}
+
+interface FormRowItem {
+  key: string;
+  product_id: string;
+  location_id: string;
+  target_location_id: string;
+  quantity: number;
+  counted_quantity: number;
+  unit_price: number;
+}
+
+const createEmptyRow = (): FormRowItem => ({
+  key: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+  product_id: '',
+  location_id: '',
+  target_location_id: '',
+  quantity: 1,
+  counted_quantity: 0,
+  unit_price: 0,
+});
+
+const formatCurrency = (val: number) =>
+  new Intl.NumberFormat('vi-VN', {
+    style: 'currency',
+    currency: 'VND',
+    maximumFractionDigits: 0,
+  }).format(val || 0);
+
+export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps> = ({
+  isOpen,
+  initialType,
+  initialSupplierId,
+  warehouses,
+  suppliers,
+  products,
+  isManagerOrAdmin,
+  onClose,
+  onSuccess,
+}) => {
+  const [txType, setTxType] = useState<StockTransactionType>(initialType);
+  const [warehouseId, setWarehouseId] = useState('');
+  const [targetWarehouseId, setTargetWarehouseId] = useState('');
+  const [supplierId, setSupplierId] = useState('');
+  const [referenceNo, setReferenceNo] = useState('');
+  const [note, setNote] = useState('');
+  const [rows, setRows] = useState<FormRowItem[]>([createEmptyRow()]);
+  const [submitting, setSubmitting] = useState(false);
+
+  // Locations & inventory for selected warehouse
+  const [sourceLocations, setSourceLocations] = useState<WarehouseLocation[]>([]);
+  const [targetLocations, setTargetLocations] = useState<WarehouseLocation[]>([]);
+  const [warehouseInventory, setWarehouseInventory] = useState<WarehouseInventoryRecord[]>([]);
+
+  // Reset form when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      setTxType(initialType);
+      const defaultWh = warehouses[0]?.id || '';
+      setWarehouseId(defaultWh);
+      setTargetWarehouseId(warehouses[1]?.id || '');
+      setSupplierId(initialSupplierId || '');
+      setReferenceNo('');
+      setNote('');
+      setRows([createEmptyRow()]);
+    }
+  }, [isOpen, initialType, initialSupplierId, warehouses]);
+
+  // Fetch source warehouse locations & inventory when warehouseId changes
+  useEffect(() => {
+    if (!isOpen || !warehouseId) {
+      setSourceLocations([]);
+      setWarehouseInventory([]);
+      return;
+    }
+
+    let cancelled = false;
+    const loadSourceData = async () => {
+      try {
+        const [locRes, invRes] = await Promise.all([
+          warehousesService.getLocations(warehouseId).catch(() => []),
+          stockTransactionsService.getWarehouseInventory(warehouseId).catch(() => []),
+        ]);
+        if (!cancelled) {
+          const locs = Array.isArray((locRes as any)?.data)
+            ? (locRes as any).data
+            : Array.isArray(locRes)
+            ? locRes
+            : [];
+          setSourceLocations(locs);
+          setWarehouseInventory(invRes);
+        }
+      } catch {
+        if (!cancelled) {
+          setSourceLocations([]);
+          setWarehouseInventory([]);
+        }
+      }
+    };
+    loadSourceData();
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, warehouseId]);
+
+  // Fetch target warehouse locations when targetWarehouseId changes (for TRANSFER)
+  useEffect(() => {
+    if (!isOpen || txType !== 'TRANSFER' || !targetWarehouseId) {
+      setTargetLocations([]);
+      return;
+    }
+
+    let cancelled = false;
+    warehousesService
+      .getLocations(targetWarehouseId)
+      .then((res: any) => {
+        if (!cancelled) {
+          const locs = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+          setTargetLocations(locs);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) setTargetLocations([]);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [isOpen, txType, targetWarehouseId]);
+
+  // Helper to get current stock in selected warehouse (and location if chosen)
+  const getCurrentStock = (productId: string, locationId?: string): number => {
+    if (!productId) return 0;
+    if (locationId) {
+      const match = warehouseInventory.find(
+        (r) => r.product_id === productId && r.location_id === locationId
+      );
+      return match ? match.quantity : 0;
+    }
+    return warehouseInventory
+      .filter((r) => r.product_id === productId)
+      .reduce((sum, r) => sum + r.quantity, 0);
+  };
+
+  const handleProductChange = (index: number, productId: string) => {
+    const product = products.find((p) => p.id === productId);
+    const currentStock = getCurrentStock(productId, rows[index]?.location_id);
+    setRows((prev) =>
+      prev.map((row, idx) => {
+        if (idx !== index) return row;
+        return {
+          ...row,
+          product_id: productId,
+          unit_price:
+            txType === 'EXPORT'
+              ? Number(product?.selling_price || 0)
+              : Number(product?.cost_price || 0),
+          counted_quantity: currentStock,
+        };
+      })
+    );
+  };
+
+  const handleRowChange = (index: number, field: keyof FormRowItem, value: any) => {
+    setRows((prev) =>
+      prev.map((row, idx) => {
+        if (idx !== index) return row;
+        const nextRow = { ...row, [field]: value };
+        if (field === 'location_id' && nextRow.product_id && txType === 'ADJUSTMENT') {
+          nextRow.counted_quantity = getCurrentStock(nextRow.product_id, value);
+        }
+        return nextRow;
+      })
+    );
+  };
+
+  const handleAddRow = () => {
+    setRows((prev) => [...prev, createEmptyRow()]);
+  };
+
+  const handleRemoveRow = (index: number) => {
+    if (rows.length <= 1) return;
+    setRows((prev) => prev.filter((_, idx) => idx !== index));
+  };
+
+  const totalAmount = useMemo(() => {
+    if (txType === 'TRANSFER' || txType === 'ADJUSTMENT') return 0;
+    return rows.reduce(
+      (sum, r) => sum + Number(r.quantity || 0) * Number(r.unit_price || 0),
+      0
+    );
+  }, [rows, txType]);
+
+  if (!isOpen) return null;
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    if (!warehouseId) {
+      showToast.error('Vui lòng chọn kho vận hành');
+      return;
+    }
+
+    if (txType === 'TRANSFER') {
+      if (!targetWarehouseId) {
+        showToast.error('Vui lòng chọn kho nhận hàng');
+        return;
+      }
+      if (warehouseId === targetWarehouseId) {
+        showToast.error('Kho xuất và kho nhận không được trùng nhau');
+        return;
+      }
+    }
+
+    const validRows = rows.filter((r) => r.product_id);
+    if (validRows.length === 0) {
+      showToast.error('Vui lòng chọn ít nhất 1 sản phẩm trong phiếu');
+      return;
+    }
+
+    for (const r of validRows) {
+      if (txType !== 'ADJUSTMENT' && (!r.quantity || r.quantity < 1)) {
+        showToast.error('Số lượng sản phẩm phải lớn hơn hoặc bằng 1');
+        return;
+      }
+      if (txType === 'ADJUSTMENT' && r.counted_quantity < 0) {
+        showToast.error('Số lượng thực đếm không được nhỏ hơn 0');
+        return;
+      }
+    }
+
+    setSubmitting(true);
+    try {
+      const cleanRef = referenceNo.trim() || undefined;
+      const cleanNote = note.trim() || undefined;
+
+      if (txType === 'IMPORT') {
+        await stockTransactionsService.createImport({
+          warehouse_id: warehouseId,
+          supplier_id: supplierId || undefined,
+          reference_no: cleanRef,
+          note: cleanNote,
+          items: validRows.map((r) => ({
+            product_id: r.product_id,
+            location_id: r.location_id || undefined,
+            quantity: Number(r.quantity),
+            unit_price: Number(r.unit_price),
+          })),
+        });
+        showToast.success('Đã tạo phiếu nhập kho và cộng tồn kho thành công');
+      } else if (txType === 'EXPORT') {
+        await stockTransactionsService.createExport({
+          warehouse_id: warehouseId,
+          reference_no: cleanRef,
+          note: cleanNote,
+          items: validRows.map((r) => ({
+            product_id: r.product_id,
+            location_id: r.location_id || undefined,
+            quantity: Number(r.quantity),
+            unit_price: Number(r.unit_price),
+          })),
+        });
+        showToast.success('Đã tạo phiếu xuất kho và trừ tồn kho thành công');
+      } else if (txType === 'TRANSFER') {
+        await stockTransactionsService.createTransfer({
+          warehouse_id: warehouseId,
+          target_warehouse_id: targetWarehouseId,
+          reference_no: cleanRef,
+          note: cleanNote,
+          items: validRows.map((r) => ({
+            product_id: r.product_id,
+            location_id: r.location_id || undefined,
+            target_location_id: r.target_location_id || undefined,
+            quantity: Number(r.quantity),
+          })),
+        });
+        showToast.success('Đã tạo phiếu điều chuyển kho thành công');
+      } else if (txType === 'ADJUSTMENT') {
+        await stockTransactionsService.createAdjustment({
+          warehouse_id: warehouseId,
+          reference_no: cleanRef,
+          note: cleanNote,
+          items: validRows.map((r) => ({
+            product_id: r.product_id,
+            location_id: r.location_id || undefined,
+            counted_quantity: Number(r.counted_quantity),
+          })),
+        });
+        showToast.success('Đã cân bằng tồn kho theo biên bản kiểm kê');
+      }
+
+      onSuccess();
+      onClose();
+    } catch (err: any) {
+      const msg =
+        err?.response?.data?.message ||
+        'Không thể tạo phiếu giao dịch kho. Vui lòng kiểm tra lại tồn kho.';
+      showToast.error(Array.isArray(msg) ? msg[0] : msg);
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
+  const activeSuppliers = suppliers.filter((s) => s.is_active !== false);
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-[1px] animate-in fade-in duration-150">
+      <div className="fixed inset-0" onClick={() => !submitting && onClose()} />
+
+      <div className="relative z-10 bg-white w-full max-w-5xl max-h-[92vh] rounded-2xl shadow-2xl border border-slate-200 flex flex-col overflow-hidden animate-in zoom-in-95 duration-150">
+        {/* Modal Header */}
+        <div className="px-6 py-4 border-b border-slate-100 flex items-center justify-between bg-slate-50/70">
+          <div>
+            <h2 className="text-lg font-black text-slate-900">
+              Lập phiếu giao dịch kho
+            </h2>
+            <p className="text-xs text-slate-500 mt-0.5">
+              Tồn kho sẽ được cập nhật tự động theo thời gian thực ngay sau khi lưu phiếu
+            </p>
+          </div>
+
+          <button
+            type="button"
+            disabled={submitting}
+            onClick={onClose}
+            className="p-1.5 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-xl transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Transaction Type Selector Tabs */}
+        <div className="px-6 pt-3 pb-2 bg-slate-50/40 border-b border-slate-100 flex items-center gap-2 overflow-x-auto">
+          <button
+            type="button"
+            onClick={() => setTxType('IMPORT')}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              txType === 'IMPORT'
+                ? 'bg-emerald-600 text-white shadow-xs'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <ArrowDownLeft className="w-4 h-4" />
+            <span>Phiếu nhập kho</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setTxType('EXPORT')}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              txType === 'EXPORT'
+                ? 'bg-[#EE3D43] text-white shadow-xs'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <ArrowUpRight className="w-4 h-4" />
+            <span>Phiếu xuất kho</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setTxType('TRANSFER')}
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              txType === 'TRANSFER'
+                ? 'bg-blue-600 text-white shadow-xs'
+                : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+            }`}
+          >
+            <ArrowLeftRight className="w-4 h-4" />
+            <span>Chuyển kho nội bộ</span>
+          </button>
+
+          {isManagerOrAdmin && (
+            <button
+              type="button"
+              onClick={() => setTxType('ADJUSTMENT')}
+              className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                txType === 'ADJUSTMENT'
+                  ? 'bg-amber-600 text-white shadow-xs'
+                  : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
+              }`}
+            >
+              <ClipboardCheck className="w-4 h-4" />
+              <span>Điều chỉnh kiểm kê</span>
+            </button>
+          )}
+        </div>
+
+        {/* Form Body */}
+        <form onSubmit={handleSubmit} className="flex-1 overflow-y-auto p-6 space-y-5 custom-scrollbar">
+          {/* General Voucher Metadata */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {/* Source / Main Warehouse */}
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                {txType === 'IMPORT'
+                  ? 'Kho nhập hàng'
+                  : txType === 'TRANSFER'
+                  ? 'Kho xuất đi'
+                  : txType === 'EXPORT'
+                  ? 'Kho xuất hàng'
+                  : 'Kho kiểm kê'}{' '}
+                <span className="text-rose-500">*</span>
+              </label>
+              <select
+                value={warehouseId}
+                onChange={(e) => setWarehouseId(e.target.value)}
+                required
+                className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 bg-white"
+              >
+                <option value="">-- Chọn kho hàng --</option>
+                {warehouses.map((w) => (
+                  <option key={w.id} value={w.id}>
+                    {w.name} ({w.code})
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Second dynamic column: Supplier (if IMPORT), Target Warehouse (if TRANSFER), or Reference Code */}
+            {txType === 'IMPORT' ? (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Nhà cung cấp đối tác
+                </label>
+                <select
+                  value={supplierId}
+                  onChange={(e) => setSupplierId(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 bg-white"
+                >
+                  <option value="">-- Không chọn / Nhập lẻ --</option>
+                  {activeSuppliers.map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.name} {s.code ? `(${s.code})` : ''}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : txType === 'TRANSFER' ? (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Kho tiếp nhận <span className="text-rose-500">*</span>
+                </label>
+                <select
+                  value={targetWarehouseId}
+                  onChange={(e) => setTargetWarehouseId(e.target.value)}
+                  required
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 bg-white"
+                >
+                  <option value="">-- Chọn kho đích --</option>
+                  {warehouses
+                    .filter((w) => w.id !== warehouseId)
+                    .map((w) => (
+                      <option key={w.id} value={w.id}>
+                        {w.name} ({w.code})
+                      </option>
+                    ))}
+                </select>
+              </div>
+            ) : (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Mã chứng từ (Tùy chọn)
+                </label>
+                <input
+                  type="text"
+                  value={referenceNo}
+                  onChange={(e) => setReferenceNo(e.target.value)}
+                  placeholder="Để trống tự sinh mã..."
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
+                />
+              </div>
+            )}
+
+            {/* Third column: Reference No (for IMPORT/TRANSFER) or Note */}
+            {txType === 'IMPORT' || txType === 'TRANSFER' ? (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Mã chứng từ (Tùy chọn)
+                </label>
+                <input
+                  type="text"
+                  value={referenceNo}
+                  onChange={(e) => setReferenceNo(e.target.value)}
+                  placeholder="Để trống tự sinh mã..."
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm font-mono text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
+                />
+              </div>
+            ) : (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Ghi chú phiếu
+                </label>
+                <input
+                  type="text"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Nhập lý do xuất kho, số hóa đơn..."
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
+                />
+              </div>
+            )}
+          </div>
+
+          {(txType === 'IMPORT' || txType === 'TRANSFER') && (
+            <div>
+              <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                Ghi chú chứng từ / Hóa đơn đính kèm
+              </label>
+              <input
+                type="text"
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder="Ví dụ: Nhập hàng theo PO #2026-11, biển số xe giao hàng..."
+                className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
+              />
+            </div>
+          )}
+
+          {/* Line Items Section */}
+          <div className="space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="text-xs font-bold text-slate-800 uppercase tracking-wider">
+                Chi tiết danh mục sản phẩm ({rows.length} dòng)
+              </div>
+              <button
+                type="button"
+                onClick={handleAddRow}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
+              >
+                <Plus className="w-3.5 h-3.5" />
+                <span>Thêm dòng sản phẩm</span>
+              </button>
+            </div>
+
+            <div className="border border-slate-200 rounded-2xl overflow-x-auto bg-white">
+              <table className="w-full text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr className="bg-slate-50 border-b border-slate-200 text-slate-500 font-semibold uppercase text-[11px] tracking-wider">
+                    <th className="py-2.5 px-3 w-10 text-center">#</th>
+                    <th className="py-2.5 px-3 min-w-[230px]">Sản phẩm</th>
+                    <th className="py-2.5 px-3 w-40">
+                      {txType === 'TRANSFER' ? 'Vị trí kệ xuất' : 'Vị trí kệ'}
+                    </th>
+                    {txType === 'TRANSFER' && (
+                      <th className="py-2.5 px-3 w-40">Vị trí kệ nhận</th>
+                    )}
+                    <th className="py-2.5 px-3 w-28 text-center">Tồn hiện tại</th>
+                    <th className="py-2.5 px-3 w-32 text-right">
+                      {txType === 'ADJUSTMENT' ? 'SL thực đếm' : 'Số lượng'}
+                    </th>
+                    {(txType === 'IMPORT' || txType === 'EXPORT') && (
+                      <>
+                        <th className="py-2.5 px-3 w-36 text-right">Đơn giá (VND)</th>
+                        <th className="py-2.5 px-3 w-36 text-right">Thành tiền</th>
+                      </>
+                    )}
+                    {txType === 'ADJUSTMENT' && (
+                      <th className="py-2.5 px-3 w-28 text-right">Chênh lệch</th>
+                    )}
+                    <th className="py-2.5 px-3 w-12 text-center" />
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  {rows.map((row, index) => {
+                    const currentStock = getCurrentStock(row.product_id, row.location_id);
+                    const diff = Number(row.counted_quantity || 0) - currentStock;
+
+                    return (
+                      <tr key={row.key} className="hover:bg-slate-50/40">
+                        <td className="py-2.5 px-3 text-center font-mono text-xs text-slate-400">
+                          {index + 1}
+                        </td>
+
+                        {/* Product Select */}
+                        <td className="py-2.5 px-3">
+                          <select
+                            value={row.product_id}
+                            onChange={(e) => handleProductChange(index, e.target.value)}
+                            required
+                            className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs sm:text-sm text-slate-800 focus:outline-none focus:border-slate-400 bg-white"
+                          >
+                            <option value="">-- Chọn sản phẩm --</option>
+                            {products.map((p) => (
+                              <option key={p.id} value={p.id}>
+                                [{p.sku}] {p.name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+
+                        {/* Source Location Select */}
+                        <td className="py-2.5 px-3">
+                          <select
+                            value={row.location_id}
+                            onChange={(e) =>
+                              handleRowChange(index, 'location_id', e.target.value)
+                            }
+                            className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none focus:border-slate-400 bg-white"
+                          >
+                            <option value="">Mặc định</option>
+                            {sourceLocations.map((loc) => (
+                              <option key={loc.id} value={loc.id}>
+                                {loc.code} - {loc.name}
+                              </option>
+                            ))}
+                          </select>
+                        </td>
+
+                        {/* Target Location Select (TRANSFER only) */}
+                        {txType === 'TRANSFER' && (
+                          <td className="py-2.5 px-3">
+                            <select
+                              value={row.target_location_id}
+                              onChange={(e) =>
+                                handleRowChange(index, 'target_location_id', e.target.value)
+                              }
+                              className="w-full px-2.5 py-1.5 border border-slate-200 rounded-lg text-xs text-slate-700 focus:outline-none focus:border-slate-400 bg-white"
+                            >
+                              <option value="">Mặc định</option>
+                              {targetLocations.map((loc) => (
+                                <option key={loc.id} value={loc.id}>
+                                  {loc.code} - {loc.name}
+                                </option>
+                              ))}
+                            </select>
+                          </td>
+                        )}
+
+                        {/* Current Stock in Warehouse */}
+                        <td className="py-2.5 px-3 text-center font-mono text-xs">
+                          {row.product_id ? (
+                            <span
+                              className={`px-2 py-0.5 rounded font-semibold ${
+                                currentStock > 0
+                                  ? 'bg-slate-100 text-slate-800'
+                                  : 'bg-rose-50 text-rose-600'
+                              }`}
+                            >
+                              {currentStock}
+                            </span>
+                          ) : (
+                            <span className="text-slate-300">-</span>
+                          )}
+                        </td>
+
+                        {/* Quantity or Counted Quantity */}
+                        <td className="py-2.5 px-3 text-right">
+                          {txType === 'ADJUSTMENT' ? (
+                            <input
+                              type="number"
+                              min={0}
+                              value={row.counted_quantity}
+                              onChange={(e) =>
+                                handleRowChange(
+                                  index,
+                                  'counted_quantity',
+                                  Math.max(0, parseInt(e.target.value || '0', 10))
+                                )
+                              }
+                              className="w-24 px-2.5 py-1.5 border border-slate-200 rounded-lg text-right font-mono font-bold text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400"
+                            />
+                          ) : (
+                            <input
+                              type="number"
+                              min={1}
+                              value={row.quantity}
+                              onChange={(e) =>
+                                handleRowChange(
+                                  index,
+                                  'quantity',
+                                  Math.max(1, parseInt(e.target.value || '1', 10))
+                                )
+                              }
+                              className="w-24 px-2.5 py-1.5 border border-slate-200 rounded-lg text-right font-mono font-bold text-slate-900 text-xs sm:text-sm focus:outline-none focus:border-slate-400"
+                            />
+                          )}
+                        </td>
+
+                        {/* Unit Price & Row Total (IMPORT / EXPORT) */}
+                        {(txType === 'IMPORT' || txType === 'EXPORT') && (
+                          <>
+                            <td className="py-2.5 px-3 text-right">
+                              <input
+                                type="number"
+                                min={0}
+                                step="1000"
+                                value={row.unit_price}
+                                onChange={(e) =>
+                                  handleRowChange(
+                                    index,
+                                    'unit_price',
+                                    Math.max(0, parseFloat(e.target.value || '0'))
+                                  )
+                                }
+                                className="w-32 px-2.5 py-1.5 border border-slate-200 rounded-lg text-right font-mono text-slate-800 text-xs sm:text-sm focus:outline-none focus:border-slate-400"
+                              />
+                            </td>
+                            <td className="py-2.5 px-3 text-right font-mono font-semibold text-slate-900 whitespace-nowrap">
+                              {formatCurrency(
+                                Number(row.quantity || 0) * Number(row.unit_price || 0)
+                              )}
+                            </td>
+                          </>
+                        )}
+
+                        {/* Discrepancy preview (ADJUSTMENT) */}
+                        {txType === 'ADJUSTMENT' && (
+                          <td className="py-2.5 px-3 text-right font-mono font-bold text-xs">
+                            {row.product_id ? (
+                              <span
+                                className={
+                                  diff > 0
+                                    ? 'text-emerald-600'
+                                    : diff < 0
+                                    ? 'text-rose-600'
+                                    : 'text-slate-400'
+                                }
+                              >
+                                {diff > 0 ? `+${diff}` : diff}
+                              </span>
+                            ) : (
+                              '-'
+                            )}
+                          </td>
+                        )}
+
+                        {/* Delete Row Button */}
+                        <td className="py-2.5 px-2 text-center">
+                          <button
+                            type="button"
+                            disabled={rows.length <= 1}
+                            onClick={() => handleRemoveRow(index)}
+                            className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 disabled:opacity-30 rounded-lg transition-colors cursor-pointer"
+                            title="Xóa dòng"
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Total Summary Bar */}
+            {(txType === 'IMPORT' || txType === 'EXPORT') && (
+              <div className="flex items-center justify-end gap-4 px-4 py-3 bg-slate-50 rounded-xl border border-slate-200/80">
+                <span className="text-xs font-bold uppercase text-slate-500">
+                  Tổng giá trị chứng từ:
+                </span>
+                <span className="text-base font-black font-mono text-[#EE3D43]">
+                  {formatCurrency(totalAmount)}
+                </span>
+              </div>
+            )}
+          </div>
+
+          {/* Modal Footer */}
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-end gap-2.5">
+            <button
+              type="button"
+              disabled={submitting}
+              onClick={onClose}
+              className="px-4 py-2 border border-slate-200 text-slate-600 hover:bg-slate-50 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+            >
+              Hủy bỏ
+            </button>
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="inline-flex items-center gap-2 px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+            >
+              {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
+              <span>
+                {txType === 'IMPORT'
+                  ? 'Lưu & Nhập kho'
+                  : txType === 'EXPORT'
+                  ? 'Lưu & Xuất kho'
+                  : txType === 'TRANSFER'
+                  ? 'Lưu & Chuyển kho'
+                  : 'Xác nhận điều chỉnh'}
+              </span>
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+

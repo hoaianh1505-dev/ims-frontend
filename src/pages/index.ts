@@ -5,4 +5,5 @@ export { ProductsPage } from './ProductsPage';
 export { WarehousesPage } from './WarehousesPage';
 export { UsersPage } from './UsersPage';
 export { SuppliersPage } from './SuppliersPage';
+export { StockTransactionsPage } from './StockTransactionsPage';
 export { PlaceholderPage } from './PlaceholderPage';

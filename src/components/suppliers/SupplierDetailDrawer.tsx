@@ -77,7 +77,7 @@ export const SupplierDetailDrawer: React.FC<SupplierDetailDrawerProps> = ({
             <button
               onClick={() => {
                 onClose();
-                navigate('/stock-transactions');
+                navigate(`/stock-transactions?action=import&supplier_id=${supplier.id}`);
               }}
               className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
             >

@@ -9,12 +9,12 @@ import {
   WarehousesPage,
   UsersPage,
   SuppliersPage,
+  StockTransactionsPage,
   PlaceholderPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import {
-  ArrowLeftRight,
   FileText,
   User as UserIcon,
   History,
@@ -54,17 +54,8 @@ export default function App() {
             {/* 5. Nhà cung cấp (Real data from PostgreSQL) */}
             <Route path="suppliers" element={<SuppliersPage />} />
 
-            {/* 6. Xử lý xuất / nhập */}
-            <Route
-              path="stock-transactions"
-              element={
-                <PlaceholderPage
-                  title="Xử lý xuất / nhập kho"
-                  description="Theo dõi và tạo phiếu nhập kho, xuất kho và chuyển kho nội bộ"
-                  icon={ArrowLeftRight}
-                />
-              }
-            />
+            {/* 6. Xử lý xuất / nhập (Real data from PostgreSQL) */}
+            <Route path="stock-transactions" element={<StockTransactionsPage />} />
 
             {/* 7. Phiếu của tôi */}
             <Route

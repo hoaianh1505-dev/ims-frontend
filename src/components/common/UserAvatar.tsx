@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { formatImageUrl } from '../../utils/image.util';
 
 interface UserAvatarProps {
   src?: string | null;
@@ -15,6 +16,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   variant = 'light',
   className = '',
 }) => {
+  const [hasError, setHasError] = useState(false);
+
   const sizeClasses = {
     xs: 'w-6 h-6',
     sm: 'w-7 h-7',
@@ -22,11 +25,14 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     lg: 'w-9 h-9 sm:w-10 sm:h-10',
   }[size];
 
-  if (src) {
+  const resolvedUrl = formatImageUrl(src);
+
+  if (resolvedUrl && !hasError) {
     return (
       <img
-        src={src}
+        src={resolvedUrl}
         alt={alt}
+        onError={() => setHasError(true)}
         className={`${sizeClasses} rounded-full object-cover border ${
           variant === 'dark' ? 'border-[#333D4B]' : 'border-slate-200'
         } shrink-0 ${className}`}

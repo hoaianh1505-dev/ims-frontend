@@ -30,6 +30,7 @@ import { Product } from '../types/product.types';
 import { Category, Unit } from '../types/category.types';
 import { useAuthStore } from '../stores/auth.store';
 import { showToast } from '../utils/toast.util';
+import { formatImageUrl } from '../utils/image.util';
 
 export const ProductsPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -578,8 +579,11 @@ export const ProductsPage: React.FC = () => {
                         <div className="flex items-center gap-3">
                           {primaryImg ? (
                             <img
-                              src={primaryImg}
+                              src={formatImageUrl(primaryImg)}
                               alt={p.name}
+                              onError={(e) => {
+                                e.currentTarget.style.display = 'none';
+                              }}
                               className="w-10 h-10 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-slate-50 shadow-2xs"
                             />
                           ) : (
@@ -822,7 +826,7 @@ export const ProductsPage: React.FC = () => {
                           {/* Active Large View */}
                           <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center max-h-72 aspect-video">
                             <img
-                              src={activeImg.image_url}
+                              src={formatImageUrl(activeImg.image_url)}
                               alt={activeDrawerProduct.name}
                               className="max-h-72 w-full object-contain p-2"
                             />
@@ -876,7 +880,7 @@ export const ProductsPage: React.FC = () => {
                                     }`}
                                   >
                                     <img
-                                      src={img.image_url}
+                                      src={formatImageUrl(img.image_url)}
                                       alt=""
                                       className="w-full h-full object-cover"
                                     />
@@ -1291,7 +1295,7 @@ export const ProductsPage: React.FC = () => {
                   {modalImagePreview ? (
                     <div className="relative group w-14 h-14 rounded-xl border border-slate-200 overflow-hidden shrink-0 bg-white shadow-2xs">
                       <img
-                        src={modalImagePreview}
+                        src={formatImageUrl(modalImagePreview)}
                         alt="Preview"
                         className="w-full h-full object-cover"
                       />

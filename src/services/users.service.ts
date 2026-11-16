@@ -92,4 +92,15 @@ export const usersService = {
     const res = await apiClient.delete<{ success: boolean; message?: string }>(`/users/${id}`);
     return res.data;
   },
+
+  uploadAvatar: async (id: string, file: File) => {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await apiClient.post<UserItem>(`/users/${id}/avatar`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
 };

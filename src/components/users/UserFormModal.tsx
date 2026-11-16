@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { X, Eye, EyeOff, Loader2 } from 'lucide-react';
-import { UserItem, UserRole, CreateUserData, UpdateUserData } from '../../services/users.service';
+import { X, Eye, EyeOff, Loader2, Camera } from 'lucide-react';
+import { UserItem, UserRole, CreateUserData, UpdateUserData, usersService } from '../../services/users.service';
 import { ToggleSwitch } from './ToggleSwitch';
+import { UserAvatar } from '../common/UserAvatar';
+import { showToast } from '../../utils/toast.util';
 
 interface UserFormModalProps {
   isOpen: boolean;
@@ -31,6 +33,8 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
 
   useEffect(() => {
     if (user) {
@@ -41,6 +45,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
       setPhone(user.phone || '');
       setRole(user.role);
       setIsActive(user.is_active);
+      setAvatarUrl(user.avatar || null);
     } else {
       setUsername('');
       setPassword('');
@@ -49,10 +54,42 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
       setPhone('');
       setRole('STAFF');
       setIsActive(true);
+      setAvatarUrl(null);
     }
     setError('');
     setShowPassword(false);
   }, [user, isOpen]);
+
+  const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast.error('Vui lòng chọn file hình ảnh (jpg, png, webp)');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast.error('Kích thước ảnh tối đa 5MB');
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const res: any = await usersService.uploadAvatar(user.id, file);
+      const url = res?.avatar || res?.data?.avatar;
+      if (url) {
+        setAvatarUrl(url);
+        user.avatar = url;
+        showToast.success('Cập nhật avatar tài khoản thành công!');
+      }
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Không thể upload ảnh avatar';
+      showToast.error(Array.isArray(msg) ? msg[0] : msg);
+    } finally {
+      setUploadingAvatar(false);
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -124,6 +161,32 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
           )}
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* Avatar Preview & Upload (Edit Mode) */}
+            {isEdit && user && (
+              <div className="sm:col-span-2 flex items-center gap-4 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                <UserAvatar src={avatarUrl} size="lg" alt={user.username} />
+                <div className="flex-1 min-w-0">
+                  <div className="text-xs font-bold text-slate-800">Ảnh đại diện</div>
+                  <div className="text-[11px] text-slate-400">Định dạng JPG, PNG hoặc WebP, tối đa 5MB</div>
+                  <label className="inline-flex items-center gap-1.5 px-3 py-1.5 mt-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl shadow-2xs transition-all cursor-pointer">
+                    {uploadingAvatar ? (
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#EE3D43]" />
+                    ) : (
+                      <Camera className="w-3.5 h-3.5 text-slate-500" />
+                    )}
+                    <span>{uploadingAvatar ? 'Đang tải lên...' : 'Tải ảnh mới'}</span>
+                    <input
+                      type="file"
+                      accept="image/png,image/jpeg,image/webp,image/jpg"
+                      disabled={uploadingAvatar}
+                      onChange={handleAvatarUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
+              </div>
+            )}
+
             {/* Username */}
             <div>
               <label className="block text-xs font-semibold text-slate-700 mb-1">

@@ -26,5 +26,29 @@ export const productsService = {
     const res = await apiClient.delete(`/products/${id}`);
     return res.data;
   },
+
+  async uploadImage(productId: string, file: File, isPrimary?: boolean) {
+    const formData = new FormData();
+    formData.append('file', file);
+    if (isPrimary !== undefined) {
+      formData.append('is_primary', String(isPrimary));
+    }
+    const res = await apiClient.post(`/products/${productId}/images`, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return res.data;
+  },
+
+  async deleteImage(productId: string, imageId: string) {
+    const res = await apiClient.delete(`/products/${productId}/images/${imageId}`);
+    return res.data;
+  },
+
+  async setPrimaryImage(productId: string, imageId: string) {
+    const res = await apiClient.patch(`/products/${productId}/images/${imageId}/primary`);
+    return res.data;
+  },
 };
 

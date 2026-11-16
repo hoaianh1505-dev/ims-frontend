@@ -60,3 +60,4 @@ export interface PaginatedCustomersResponse {
     totalPages: number;
   };
 }
+

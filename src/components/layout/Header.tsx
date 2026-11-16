@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Plus,
@@ -11,10 +11,13 @@ import {
   ArrowUpRight,
   User as UserIcon,
   LogOut,
+  Camera,
+  Loader2,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
 import { UserAvatar } from '../common/UserAvatar';
 import { NotificationDropdown } from './NotificationDropdown';
+import { usersService } from '../../services/users.service';
 import { showToast } from '../../utils/toast.util';
 
 const ROLE_LABELS: Record<string, string> = {
@@ -24,12 +27,47 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export const Header: React.FC = () => {
-  const { user, logout } = useAuthStore();
+  const { user, logout, updateUser } = useAuthStore();
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('Kho Tổng Hà Nội');
   const [showBranchMenu, setShowBranchMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
+  const avatarInputRef = useRef<HTMLInputElement>(null);
   const roleLabel = ROLE_LABELS[user?.role || ''] || user?.role || '';
+
+  const handleAvatarSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user?.id) return;
+
+    if (!file.type.startsWith('image/')) {
+      showToast.error('Vui lòng chọn file hình ảnh (jpg, png, webp)');
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showToast.error('Kích thước ảnh tối đa 5MB');
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const res: any = await usersService.uploadAvatar(user.id, file);
+      const newAvatarUrl = res?.avatar || res?.data?.avatar;
+      if (newAvatarUrl) {
+        updateUser({ avatar: newAvatarUrl });
+        showToast.success('Cập nhật ảnh đại diện thành công!');
+      }
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Không thể upload ảnh đại diện';
+      showToast.error(Array.isArray(msg) ? msg[0] : msg);
+    } finally {
+      setUploadingAvatar(false);
+      if (avatarInputRef.current) {
+        avatarInputRef.current.value = '';
+      }
+    }
+  };
 
   return (
     <header className="h-16 sm:h-[68px] px-6 sm:px-8 flex items-center justify-between border-b border-slate-200 bg-white sticky top-0 z-10 shadow-2xs">
@@ -154,13 +192,22 @@ export const Header: React.FC = () => {
           <HelpCircle className="w-5 h-5" />
         </button>
 
+        {/* Hidden File Input for Avatar */}
+        <input
+          type="file"
+          ref={avatarInputRef}
+          accept="image/png,image/jpeg,image/webp,image/jpg"
+          className="hidden"
+          onChange={handleAvatarSelect}
+        />
+
         {/* Profile Menu */}
         <div className="relative pl-1">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
             className="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
           >
-            <UserAvatar size="md" alt={user?.username || 'User'} />
+            <UserAvatar src={user?.avatar} size="md" alt={user?.username || 'User'} />
             <div className="hidden md:block text-left leading-tight">
               <div className="text-sm font-semibold text-slate-800 max-w-[160px] truncate">
                 {user?.full_name || user?.username}
@@ -173,13 +220,49 @@ export const Header: React.FC = () => {
           {showProfileMenu && (
             <>
               <div className="fixed inset-0 z-20" onClick={() => setShowProfileMenu(false)} />
-              <div className="absolute right-0 top-12 z-30 w-60 bg-white rounded-xl shadow-xl border border-slate-200 py-1.5 animate-in fade-in zoom-in-95 duration-100 text-sm">
-                <div className="px-4 py-2.5 border-b border-slate-100">
-                  <div className="font-semibold text-slate-800 truncate">
-                    {user?.full_name || user?.username}
+              <div className="absolute right-0 top-12 z-30 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 animate-in fade-in zoom-in-95 duration-100 text-sm overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+                  <div className="relative group shrink-0">
+                    <UserAvatar src={user?.avatar} size="lg" alt={user?.username || 'User'} />
+                    <button
+                      type="button"
+                      disabled={uploadingAvatar}
+                      onClick={() => avatarInputRef.current?.click()}
+                      title="Đổi ảnh đại diện"
+                      className="absolute inset-0 bg-slate-900/60 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer text-white"
+                    >
+                      {uploadingAvatar ? (
+                        <Loader2 className="w-4 h-4 animate-spin" />
+                      ) : (
+                        <Camera className="w-4 h-4" />
+                      )}
+                    </button>
                   </div>
-                  <div className="text-xs text-slate-500 truncate">
-                    @{user?.username} · {roleLabel}
+                  <div className="flex-1 min-w-0">
+                    <div className="font-semibold text-slate-800 truncate">
+                      {user?.full_name || user?.username}
+                    </div>
+                    <div className="text-xs text-slate-500 truncate">
+                      @{user?.username} · {roleLabel}
+                    </div>
+                    <button
+                      type="button"
+                      disabled={uploadingAvatar}
+                      onClick={() => avatarInputRef.current?.click()}
+                      className="text-[11px] font-semibold text-[#EE3D43] hover:underline mt-0.5 inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      {uploadingAvatar ? (
+                        <>
+                          <Loader2 className="w-3 h-3 animate-spin" />
+                          <span>Đang tải ảnh...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Camera className="w-3 h-3" />
+                          <span>Đổi ảnh đại diện</span>
+                        </>
+                      )}
+                    </button>
                   </div>
                 </div>
                 <Link

@@ -10,6 +10,7 @@ interface AuthState {
   error: string | null;
   login: (payload: LoginPayload) => Promise<boolean>;
   logout: () => Promise<void>;
+  updateUser: (partial: Partial<User>) => void;
   clearError: () => void;
 }
 
@@ -63,6 +64,15 @@ export const useAuthStore = create<AuthState>((set) => ({
       token: null,
       isAuthenticated: false,
       error: null,
+    });
+  },
+
+  updateUser: (partial: Partial<User>) => {
+    set((state) => {
+      if (!state.user) return state;
+      const updated = { ...state.user, ...partial };
+      localStorage.setItem('ims_user', JSON.stringify(updated));
+      return { user: updated };
     });
   },
 

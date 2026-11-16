@@ -82,3 +82,4 @@ export const DeleteCustomerModal: React.FC<DeleteCustomerModalProps> = ({
     </div>
   );
 };
+

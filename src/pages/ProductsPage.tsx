@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Package,
   Search,
@@ -17,6 +17,9 @@ import {
   ShieldAlert,
   Sparkles,
   Printer,
+  Image as ImageIcon,
+  Star,
+  Upload,
 } from 'lucide-react';
 import { BarcodeRenderer } from '../components/common/BarcodeRenderer';
 import { generateEAN13Barcode, printBarcodeLabel } from '../utils/barcode.utils';
@@ -67,6 +70,16 @@ export const ProductsPage: React.FC = () => {
   const [formUnitId, setFormUnitId] = useState('');
   const [formError, setFormError] = useState('');
   const [submitting, setSubmitting] = useState(false);
+
+  // Image Upload & Gallery State
+  const [selectedGalleryImageId, setSelectedGalleryImageId] = useState<string | null>(null);
+  const [uploadingProductImage, setUploadingProductImage] = useState(false);
+  const drawerImageInputRef = useRef<HTMLInputElement>(null);
+
+  // Modal Image State (For Add/Edit Product Modal)
+  const [modalImageFile, setModalImageFile] = useState<File | null>(null);
+  const [modalImagePreview, setModalImagePreview] = useState<string | null>(null);
+  const modalImageInputRef = useRef<HTMLInputElement>(null);
 
   // Custom Delete Confirm Dialog
   const [deleteTarget, setDeleteTarget] = useState<Product | null>(null);
@@ -181,6 +194,8 @@ export const ProductsPage: React.FC = () => {
     setFormCategoryId(categories[0]?.id || '');
     setFormUnitId(units[0]?.id || '');
     setFormError('');
+    setModalImageFile(null);
+    setModalImagePreview(null);
     setIsModalOpen(true);
   };
 
@@ -197,7 +212,76 @@ export const ProductsPage: React.FC = () => {
     setFormCategoryId(p.category_id || p.category?.id || '');
     setFormUnitId(p.unit_id || p.unit?.id || '');
     setFormError('');
+    setModalImageFile(null);
+    const prim = p.images?.find((img) => img.is_primary)?.image_url || p.images?.[0]?.image_url || null;
+    setModalImagePreview(prim);
     setIsModalOpen(true);
+  };
+
+  // Drawer Image Upload & Actions
+  const handleDrawerUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !activeDrawerProduct) return;
+
+    if (!file.type.startsWith('image/')) {
+      showNotify('error', 'Chỉ cho phép upload file định dạng hình ảnh (jpg, png, webp)');
+      return;
+    }
+    if (file.size > 5 * 1024 * 1024) {
+      showNotify('error', 'Kích thước file tối đa 5MB');
+      return;
+    }
+
+    setUploadingProductImage(true);
+    try {
+      await productsService.uploadImage(activeDrawerProduct.id, file);
+      showNotify('success', 'Đã tải ảnh sản phẩm lên AWS S3 thành công');
+      const fresh = await productsService.getOne(activeDrawerProduct.id);
+      const updated = fresh?.data || fresh;
+      setActiveDrawerProduct(updated);
+      setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Không thể upload ảnh sản phẩm';
+      showNotify('error', Array.isArray(msg) ? msg[0] : msg);
+    } finally {
+      setUploadingProductImage(false);
+      if (drawerImageInputRef.current) {
+        drawerImageInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleSetPrimaryImage = async (imageId: string) => {
+    if (!activeDrawerProduct) return;
+    try {
+      await productsService.setPrimaryImage(activeDrawerProduct.id, imageId);
+      showNotify('success', 'Đã đặt làm ảnh đại diện chính của sản phẩm');
+      const fresh = await productsService.getOne(activeDrawerProduct.id);
+      const updated = fresh?.data || fresh;
+      setActiveDrawerProduct(updated);
+      setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Không thể đặt ảnh chính';
+      showNotify('error', Array.isArray(msg) ? msg[0] : msg);
+    }
+  };
+
+  const handleDeleteProductImage = async (imageId: string) => {
+    if (!activeDrawerProduct) return;
+    try {
+      await productsService.deleteImage(activeDrawerProduct.id, imageId);
+      showNotify('success', 'Đã xóa ảnh sản phẩm khỏi hệ thống');
+      const fresh = await productsService.getOne(activeDrawerProduct.id);
+      const updated = fresh?.data || fresh;
+      setActiveDrawerProduct(updated);
+      if (selectedGalleryImageId === imageId) {
+        setSelectedGalleryImageId(null);
+      }
+      setProducts((prev) => prev.map((p) => (p.id === updated.id ? updated : p)));
+    } catch (err: any) {
+      const msg = err?.response?.data?.message || 'Không thể xóa ảnh sản phẩm';
+      showNotify('error', Array.isArray(msg) ? msg[0] : msg);
+    }
   };
 
   // Handle Save
@@ -226,12 +310,20 @@ export const ProductsPage: React.FC = () => {
 
       if (editingProduct) {
         await productsService.update(editingProduct.id, payload);
+        if (modalImageFile) {
+          await productsService.uploadImage(editingProduct.id, modalImageFile, true);
+        }
         showNotify('success', `Đã cập nhật sản phẩm "${formName}"`);
         if (activeDrawerProduct?.id === editingProduct.id) {
-          setActiveDrawerProduct({ ...editingProduct, ...payload });
+          const fresh = await productsService.getOne(editingProduct.id);
+          setActiveDrawerProduct(fresh?.data || fresh);
         }
       } else {
-        await productsService.create(payload);
+        const created: any = await productsService.create(payload);
+        const createdId = created?.data?.id || created?.id;
+        if (createdId && modalImageFile) {
+          await productsService.uploadImage(createdId, modalImageFile, true);
+        }
         showNotify('success', `Đã thêm mới sản phẩm "${formName}"`);
       }
 
@@ -473,6 +565,7 @@ export const ProductsPage: React.FC = () => {
                   const threshold = p.low_stock_threshold ?? 10;
                   const isOutOfStock = stock <= 0;
                   const isLowStock = !isOutOfStock && stock <= threshold;
+                  const primaryImg = p.images?.find((img) => img.is_primary)?.image_url || p.images?.[0]?.image_url;
 
                   return (
                     <tr
@@ -482,15 +575,30 @@ export const ProductsPage: React.FC = () => {
                     >
                       {/* Name, SKU & Unit */}
                       <td className="py-2.5 px-4">
-                        <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
-                          {p.name}
-                        </div>
-                        <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
-                          <span className="font-mono text-xs text-slate-600 bg-slate-100 border border-slate-200/80 px-1.5 py-0.5 rounded">
-                            {p.sku}
-                          </span>
-                          {p.unit && <span>• {p.unit.name}</span>}
-                          {p.barcode && <span className="font-mono text-xs hidden sm:inline">• {p.barcode}</span>}
+                        <div className="flex items-center gap-3">
+                          {primaryImg ? (
+                            <img
+                              src={primaryImg}
+                              alt={p.name}
+                              className="w-10 h-10 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-slate-50 shadow-2xs"
+                            />
+                          ) : (
+                            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0 text-slate-400">
+                              <Package className="w-5 h-5 stroke-[1.5]" />
+                            </div>
+                          )}
+                          <div className="min-w-0">
+                            <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
+                              {p.name}
+                            </div>
+                            <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
+                              <span className="font-mono text-xs text-slate-600 bg-slate-100 border border-slate-200/80 px-1.5 py-0.5 rounded">
+                                {p.sku}
+                              </span>
+                              {p.unit && <span>• {p.unit.name}</span>}
+                              {p.barcode && <span className="font-mono text-xs hidden sm:inline">• {p.barcode}</span>}
+                            </div>
+                          </div>
                         </div>
                       </td>
 
@@ -668,6 +776,140 @@ export const ProductsPage: React.FC = () => {
 
               {/* Drawer Body */}
               <div className="flex-1 p-6 sm:p-7 space-y-6 overflow-y-auto text-sm">
+                {/* Product Image Gallery Section */}
+                {(() => {
+                  const images = activeDrawerProduct.images || [];
+                  const activeImg =
+                    images.find((i) => i.id === selectedGalleryImageId) ||
+                    images.find((i) => i.is_primary) ||
+                    images[0];
+
+                  return (
+                    <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3.5">
+                      <div className="flex items-center justify-between">
+                        <div className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                          <ImageIcon className="w-3.5 h-3.5 text-slate-400" />
+                          <span>Thư viện ảnh sản phẩm ({images.length})</span>
+                        </div>
+                        {isManagerOrAdmin && (
+                          <div>
+                            <input
+                              type="file"
+                              ref={drawerImageInputRef}
+                              accept="image/png,image/jpeg,image/webp,image/jpg"
+                              onChange={handleDrawerUploadImage}
+                              className="hidden"
+                            />
+                            <button
+                              type="button"
+                              disabled={uploadingProductImage}
+                              onClick={() => drawerImageInputRef.current?.click()}
+                              className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 rounded-xl transition-colors cursor-pointer border border-slate-200 shadow-2xs disabled:opacity-50"
+                            >
+                              {uploadingProductImage ? (
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#EE3D43]" />
+                              ) : (
+                                <Upload className="w-3.5 h-3.5 text-slate-600" />
+                              )}
+                              <span>{uploadingProductImage ? 'Đang tải lên...' : 'Thêm ảnh mới'}</span>
+                            </button>
+                          </div>
+                        )}
+                      </div>
+
+                      {activeImg ? (
+                        <div className="space-y-3">
+                          {/* Active Large View */}
+                          <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-white flex items-center justify-center max-h-72 aspect-video">
+                            <img
+                              src={activeImg.image_url}
+                              alt={activeDrawerProduct.name}
+                              className="max-h-72 w-full object-contain p-2"
+                            />
+                            {/* Badges & Actions Overlay */}
+                            <div className="absolute top-3 left-3 flex items-center gap-2">
+                              {activeImg.is_primary ? (
+                                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold bg-amber-500 text-white shadow-xs">
+                                  <Star className="w-3 h-3 fill-white" />
+                                  <span>Ảnh đại diện chính</span>
+                                </span>
+                              ) : isManagerOrAdmin ? (
+                                <button
+                                  type="button"
+                                  onClick={() => handleSetPrimaryImage(activeImg.id)}
+                                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/90 hover:bg-white text-slate-700 shadow-xs backdrop-blur-xs border border-slate-200 transition-all cursor-pointer"
+                                >
+                                  <Star className="w-3 h-3 text-amber-500" />
+                                  <span>Đặt làm ảnh chính</span>
+                                </button>
+                              ) : null}
+                            </div>
+
+                            {isManagerOrAdmin && (
+                              <div className="absolute top-3 right-3">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteProductImage(activeImg.id)}
+                                  className="p-1.5 rounded-lg bg-white/90 hover:bg-rose-50 text-slate-500 hover:text-rose-600 shadow-xs backdrop-blur-xs border border-slate-200 transition-all cursor-pointer"
+                                  title="Xóa ảnh này"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Thumbnails Strip */}
+                          {images.length > 1 && (
+                            <div className="flex items-center gap-2 overflow-x-auto pb-1 custom-scrollbar">
+                              {images.map((img) => {
+                                const isSelected = img.id === activeImg.id;
+                                return (
+                                  <button
+                                    key={img.id}
+                                    type="button"
+                                    onClick={() => setSelectedGalleryImageId(img.id)}
+                                    className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer bg-white ${
+                                      isSelected
+                                        ? 'border-[#EE3D43] ring-2 ring-[#EE3D43]/20'
+                                        : 'border-slate-200 hover:border-slate-400'
+                                    }`}
+                                  >
+                                    <img
+                                      src={img.image_url}
+                                      alt=""
+                                      className="w-full h-full object-cover"
+                                    />
+                                    {img.is_primary && (
+                                      <div className="absolute top-1 right-1 w-2.5 h-2.5 rounded-full bg-amber-500 ring-1 ring-white" />
+                                    )}
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="py-8 text-center bg-white rounded-2xl border border-dashed border-slate-200 space-y-2">
+                          <ImageIcon className="w-8 h-8 mx-auto text-slate-300 stroke-1" />
+                          <div className="text-xs font-semibold text-slate-600">
+                            Chưa có hình ảnh nào cho sản phẩm này
+                          </div>
+                          {isManagerOrAdmin && (
+                            <button
+                              type="button"
+                              onClick={() => drawerImageInputRef.current?.click()}
+                              className="text-xs font-bold text-[#EE3D43] hover:underline cursor-pointer"
+                            >
+                              Bấm vào đây để tải ảnh đầu tiên lên AWS S3
+                            </button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                })()}
+
                 {/* Barcode & Print Section */}
                 <div className="bg-slate-50 p-5 rounded-2xl border border-slate-200/90 space-y-3">
                   <div className="flex items-center justify-between">
@@ -1039,6 +1281,73 @@ export const ProductsPage: React.FC = () => {
                   placeholder="Quy cách đóng gói, thông số kỹ thuật..."
                   className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs font-medium text-slate-800 focus:outline-none focus:ring-1 focus:ring-slate-400 focus:border-slate-400 focus:bg-white transition-all resize-none"
                 />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+                  Hình ảnh đại diện sản phẩm
+                </label>
+                <div className="flex items-center gap-3 p-3 bg-slate-50 border border-slate-200/80 rounded-2xl">
+                  {modalImagePreview ? (
+                    <div className="relative group w-14 h-14 rounded-xl border border-slate-200 overflow-hidden shrink-0 bg-white shadow-2xs">
+                      <img
+                        src={modalImagePreview}
+                        alt="Preview"
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalImageFile(null);
+                          setModalImagePreview(null);
+                          if (modalImageInputRef.current) modalImageInputRef.current.value = '';
+                        }}
+                        className="absolute inset-0 bg-rose-900/70 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+                        title="Hủy chọn ảnh"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="w-14 h-14 rounded-xl bg-white border border-dashed border-slate-300 flex items-center justify-center text-slate-400 shrink-0">
+                      <ImageIcon className="w-6 h-6 stroke-1" />
+                    </div>
+                  )}
+
+                  <div className="flex-1 min-w-0">
+                    <input
+                      type="file"
+                      ref={modalImageInputRef}
+                      accept="image/png,image/jpeg,image/webp,image/jpg"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (!file) return;
+                        if (!file.type.startsWith('image/')) {
+                          showNotify('error', 'Chỉ cho phép chọn file hình ảnh (jpg, png, webp)');
+                          return;
+                        }
+                        if (file.size > 5 * 1024 * 1024) {
+                          showNotify('error', 'Kích thước file ảnh tối đa 5MB');
+                          return;
+                        }
+                        setModalImageFile(file);
+                        setModalImagePreview(URL.createObjectURL(file));
+                      }}
+                      className="hidden"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => modalImageInputRef.current?.click()}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-white border border-slate-200 hover:bg-slate-100 rounded-xl text-xs font-semibold text-slate-700 shadow-2xs transition-colors cursor-pointer"
+                    >
+                      <Upload className="w-3.5 h-3.5 text-slate-500" />
+                      <span>{modalImagePreview ? 'Đổi ảnh khác' : 'Chọn ảnh từ thiết bị'}</span>
+                    </button>
+                    <div className="text-[11px] text-slate-400 mt-1">
+                      Ảnh tải lên sẽ được tự động đồng bộ và lưu trữ an toàn trên AWS S3.
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="pt-2 flex items-center justify-end gap-2.5">

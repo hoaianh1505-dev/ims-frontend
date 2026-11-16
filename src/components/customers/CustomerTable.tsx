@@ -208,3 +208,4 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
     </table>
   );
 };
+

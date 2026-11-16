@@ -14,20 +14,24 @@ import {
 } from '../../types/stock-transaction.types';
 import { Warehouse, WarehouseLocation } from '../../types/warehouse.types';
 import { Supplier } from '../../types/supplier.types';
+import { Customer } from '../../types/customer.types';
 import { Product } from '../../types/product.types';
 import {
   stockTransactionsService,
   WarehouseInventoryRecord,
 } from '../../services/stock-transactions.service';
 import { warehousesService } from '../../services/warehouses.service';
+import { customersService } from '../../services/customers.service';
 import { showToast } from '../../utils/toast.util';
 
 interface StockTransactionFormModalProps {
   isOpen: boolean;
   initialType: StockTransactionType;
   initialSupplierId?: string;
+  initialCustomerId?: string;
   warehouses: Warehouse[];
   suppliers: Supplier[];
+  customers?: Customer[];
   products: Product[];
   isManagerOrAdmin: boolean;
   onClose: () => void;
@@ -65,8 +69,10 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
   isOpen,
   initialType,
   initialSupplierId,
+  initialCustomerId,
   warehouses,
   suppliers,
+  customers = [],
   products,
   isManagerOrAdmin,
   onClose,
@@ -76,10 +82,27 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
   const [warehouseId, setWarehouseId] = useState('');
   const [targetWarehouseId, setTargetWarehouseId] = useState('');
   const [supplierId, setSupplierId] = useState('');
+  const [customerId, setCustomerId] = useState(initialCustomerId || '');
   const [referenceNo, setReferenceNo] = useState('');
   const [note, setNote] = useState('');
   const [rows, setRows] = useState<FormRowItem[]>([createEmptyRow()]);
   const [submitting, setSubmitting] = useState(false);
+
+  // Internal customer list fallback
+  const [internalCustomers, setInternalCustomers] = useState<Customer[]>(customers);
+
+  useEffect(() => {
+    if (customers && customers.length > 0) {
+      setInternalCustomers(customers);
+    } else if (isOpen) {
+      customersService
+        .getAll({ limit: 100 })
+        .then((res) => {
+          setInternalCustomers(res.data || []);
+        })
+        .catch(() => {});
+    }
+  }, [customers, isOpen]);
 
   // Locations & inventory for selected warehouse
   const [sourceLocations, setSourceLocations] = useState<WarehouseLocation[]>([]);
@@ -94,11 +117,12 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
       setWarehouseId(defaultWh);
       setTargetWarehouseId(warehouses[1]?.id || '');
       setSupplierId(initialSupplierId || '');
+      setCustomerId(initialCustomerId || '');
       setReferenceNo('');
       setNote('');
       setRows([createEmptyRow()]);
     }
-  }, [isOpen, initialType, initialSupplierId, warehouses]);
+  }, [isOpen, initialType, initialSupplierId, initialCustomerId, warehouses]);
 
   // Fetch source warehouse locations & inventory when warehouseId changes
   useEffect(() => {
@@ -285,6 +309,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
       } else if (txType === 'EXPORT') {
         await stockTransactionsService.createExport({
           warehouse_id: warehouseId,
+          customer_id: customerId || undefined,
           reference_no: cleanRef,
           note: cleanNote,
           items: validRows.map((r) => ({
@@ -451,7 +476,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
               </select>
             </div>
 
-            {/* Second dynamic column: Supplier (if IMPORT), Target Warehouse (if TRANSFER), or Reference Code */}
+            {/* Second dynamic column: Supplier (IMPORT), Customer (EXPORT), Target Warehouse (TRANSFER), or Ref No (ADJUSTMENT) */}
             {txType === 'IMPORT' ? (
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
@@ -468,6 +493,26 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                       {s.name} {s.code ? `(${s.code})` : ''}
                     </option>
                   ))}
+                </select>
+              </div>
+            ) : txType === 'EXPORT' ? (
+              <div>
+                <label className="block text-xs font-bold text-slate-700 mb-1.5">
+                  Khách hàng / Đại lý nhận hàng
+                </label>
+                <select
+                  value={customerId}
+                  onChange={(e) => setCustomerId(e.target.value)}
+                  className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400 bg-white"
+                >
+                  <option value="">-- Khách vãng lai / Bán lẻ trực tiếp --</option>
+                  {internalCustomers
+                    .filter((c) => c.is_active !== false)
+                    .map((c) => (
+                      <option key={c.id} value={c.id}>
+                        {c.name} {c.code ? `(${c.code})` : ''} {c.phone ? `- ${c.phone}` : ''}
+                      </option>
+                    ))}
                 </select>
               </div>
             ) : txType === 'TRANSFER' ? (
@@ -506,8 +551,8 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
               </div>
             )}
 
-            {/* Third column: Reference No (for IMPORT/TRANSFER) or Note */}
-            {txType === 'IMPORT' || txType === 'TRANSFER' ? (
+            {/* Third column: Reference No (for IMPORT/EXPORT/TRANSFER) or Note (for ADJUSTMENT) */}
+            {txType !== 'ADJUSTMENT' ? (
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
                   Mã chứng từ (Tùy chọn)
@@ -523,20 +568,20 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
             ) : (
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1.5">
-                  Ghi chú phiếu
+                  Ghi chú điều chỉnh
                 </label>
                 <input
                   type="text"
                   value={note}
                   onChange={(e) => setNote(e.target.value)}
-                  placeholder="Nhập lý do xuất kho, số hóa đơn..."
+                  placeholder="Lý do điều chỉnh số liệu kiểm kê..."
                   className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
                 />
               </div>
             )}
           </div>
 
-          {(txType === 'IMPORT' || txType === 'TRANSFER') && (
+          {txType !== 'ADJUSTMENT' && (
             <div>
               <label className="block text-xs font-bold text-slate-700 mb-1.5">
                 Ghi chú chứng từ / Hóa đơn đính kèm
@@ -545,7 +590,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                 type="text"
                 value={note}
                 onChange={(e) => setNote(e.target.value)}
-                placeholder="Ví dụ: Nhập hàng theo PO #2026-11, biển số xe giao hàng..."
+                placeholder="Ví dụ: Xuất hàng đại lý, đơn hàng #SO-009, biển số xe giao..."
                 className="w-full px-3.5 py-2 border border-slate-200 rounded-xl text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-slate-900/10 focus:border-slate-400"
               />
             </div>

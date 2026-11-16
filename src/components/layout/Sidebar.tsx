@@ -7,6 +7,7 @@ import {
   Building2,
   ArrowLeftRight,
   Truck,
+  Users,
   FileText,
   ShieldCheck,
   History,
@@ -104,6 +105,7 @@ export const Sidebar: React.FC = () => {
             {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
             {renderNavItem('/warehouses', 'Tổ chức kho hàng', <Building2 className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
             {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-4 h-4 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
+            {renderNavItem('/customers', 'Khách hàng & Đại lý', <Users className="w-4 h-4 shrink-0" />, true, false)}
           </div>
         </div>
 

@@ -3,6 +3,7 @@ import {
   X,
   Building2,
   Truck,
+  Users,
   Calendar,
   FileText,
   Printer,
@@ -199,6 +200,37 @@ export const StockTransactionDetailDrawer: React.FC<StockTransactionDetailDrawer
               {transaction.supplier.code && (
                 <span className="font-mono text-xs font-semibold text-slate-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shrink-0">
                   {transaction.supplier.code}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* Customer Block (if EXPORT) */}
+          {transaction.type === 'EXPORT' && transaction.customer && (
+            <div className="bg-slate-50 rounded-2xl p-4 border border-slate-200/80 flex items-start justify-between gap-4">
+              <div className="space-y-1">
+                <div className="text-xs font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5 text-slate-400" />
+                  Khách hàng / Đại lý nhận hàng
+                </div>
+                <div className="font-bold text-slate-900 text-sm">
+                  {transaction.customer.name}
+                </div>
+                <div className="text-xs text-slate-600 flex items-center gap-3 flex-wrap">
+                  {transaction.customer.phone && (
+                    <span className="font-mono">SĐT: {transaction.customer.phone}</span>
+                  )}
+                  {transaction.customer.email && (
+                    <span>Email: {transaction.customer.email}</span>
+                  )}
+                  {transaction.customer.address && (
+                    <span>Địa chỉ: {transaction.customer.address}</span>
+                  )}
+                </div>
+              </div>
+              {transaction.customer.code && (
+                <span className="font-mono text-xs font-semibold text-slate-600 bg-white px-2.5 py-1 rounded-lg border border-slate-200 shrink-0">
+                  {transaction.customer.code}
                 </span>
               )}
             </div>

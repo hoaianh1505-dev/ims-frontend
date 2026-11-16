@@ -1,5 +1,6 @@
 import { Product } from './product.types';
 import { Supplier } from './supplier.types';
+import { Customer } from './customer.types';
 import { Warehouse, WarehouseLocation } from './warehouse.types';
 
 export type StockTransactionType = 'IMPORT' | 'EXPORT' | 'TRANSFER' | 'ADJUSTMENT';
@@ -38,6 +39,8 @@ export interface StockTransaction {
   target_warehouse?: Warehouse | null;
   supplier_id: string | null;
   supplier?: Supplier | null;
+  customer_id?: string | null;
+  customer?: Customer | null;
   created_by_user_id: string;
   creator?: TransactionCreator;
   note: string | null;
@@ -69,6 +72,7 @@ export interface ExportStockItemPayload {
 
 export interface ExportStockPayload {
   warehouse_id: string;
+  customer_id?: string;
   reference_no?: string;
   note?: string;
   items: ExportStockItemPayload[];

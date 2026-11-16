@@ -9,6 +9,7 @@ import {
   WarehousesPage,
   UsersPage,
   SuppliersPage,
+  CustomersPage,
   StockTransactionsPage,
   PlaceholderPage,
 } from './pages';
@@ -54,7 +55,10 @@ export default function App() {
             {/* 5. Nhà cung cấp (Real data from PostgreSQL) */}
             <Route path="suppliers" element={<SuppliersPage />} />
 
-            {/* 6. Xử lý xuất / nhập (Real data from PostgreSQL) */}
+            {/* 6. Khách hàng & Đại lý (Real data from PostgreSQL) */}
+            <Route path="customers" element={<CustomersPage />} />
+
+            {/* 7. Xử lý xuất / nhập (Real data from PostgreSQL) */}
             <Route path="stock-transactions" element={<StockTransactionsPage />} />
 
             {/* 7. Phiếu của tôi */}

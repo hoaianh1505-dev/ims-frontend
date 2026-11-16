@@ -161,6 +161,10 @@ export const StockTransactionTable: React.FC<StockTransactionTableProps> = ({
                   <div className="text-xs text-slate-500 truncate mt-0.5">
                     NCC: <span className="font-medium text-slate-700">{tx.supplier.name}</span>
                   </div>
+                ) : tx.type === 'EXPORT' && tx.customer ? (
+                  <div className="text-xs text-slate-500 truncate mt-0.5">
+                    KH: <span className="font-medium text-slate-700">{tx.customer.name}</span>
+                  </div>
                 ) : tx.note ? (
                   <div className="text-xs text-slate-400 truncate mt-0.5 max-w-[260px]" title={tx.note}>
                     {tx.note}

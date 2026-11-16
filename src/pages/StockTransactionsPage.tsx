@@ -18,10 +18,12 @@ import {
 } from '../types/stock-transaction.types';
 import { Warehouse } from '../types/warehouse.types';
 import { Supplier } from '../types/supplier.types';
+import { Customer } from '../types/customer.types';
 import { Product } from '../types/product.types';
 import { stockTransactionsService } from '../services/stock-transactions.service';
 import { warehousesService } from '../services/warehouses.service';
 import { suppliersService } from '../services/suppliers.service';
+import { customersService } from '../services/customers.service';
 import { productsService } from '../services/products.service';
 import { useAuthStore } from '../stores/auth.store';
 import { showToast } from '../utils/toast.util';
@@ -42,6 +44,7 @@ export const StockTransactionsPage: React.FC = () => {
   // Reference data for filters & form
   const [warehouses, setWarehouses] = useState<Warehouse[]>([]);
   const [suppliers, setSuppliers] = useState<Supplier[]>([]);
+  const [customers, setCustomers] = useState<Customer[]>([]);
   const [products, setProducts] = useState<Product[]>([]);
 
   // Filter state
@@ -58,15 +61,17 @@ export const StockTransactionsPage: React.FC = () => {
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formInitialType, setFormInitialType] = useState<StockTransactionType>('IMPORT');
   const [formInitialSupplierId, setFormInitialSupplierId] = useState<string | undefined>(undefined);
+  const [formInitialCustomerId, setFormInitialCustomerId] = useState<string | undefined>(undefined);
   const [activeTransaction, setActiveTransaction] = useState<StockTransaction | null>(null);
 
-  // Load reference lists (warehouses, suppliers, products)
+  // Load reference lists (warehouses, suppliers, customers, products)
   useEffect(() => {
     const loadRefData = async () => {
       try {
-        const [whRes, supRes, prodRes] = await Promise.all([
+        const [whRes, supRes, custRes, prodRes] = await Promise.all([
           warehousesService.getAll({ limit: 100 }).catch(() => ({ data: [] })),
           suppliersService.getAll({ limit: 100 }).catch(() => ({ data: [] })),
+          customersService.getAll({ limit: 100 }).catch(() => ({ data: [] })),
           productsService.getAll({ limit: 200 }).catch(() => ({ data: [] })),
         ]);
 
@@ -80,6 +85,11 @@ export const StockTransactionsPage: React.FC = () => {
           : Array.isArray(supRes)
           ? supRes
           : [];
+        const custList = Array.isArray((custRes as any)?.data)
+          ? (custRes as any).data
+          : Array.isArray(custRes)
+          ? custRes
+          : [];
         const prodList = Array.isArray((prodRes as any)?.data)
           ? (prodRes as any).data
           : Array.isArray(prodRes)
@@ -88,6 +98,7 @@ export const StockTransactionsPage: React.FC = () => {
 
         setWarehouses(whList);
         setSuppliers(supList);
+        setCustomers(custList);
         setProducts(prodList);
       } catch (err) {
         console.error('Failed to load reference data:', err);
@@ -96,10 +107,11 @@ export const StockTransactionsPage: React.FC = () => {
     loadRefData();
   }, []);
 
-  // Handle URL query params (?action=import|export|transfer&supplier_id=...)
+  // Handle URL query params (?action=import|export|transfer&supplier_id=...&customer_id=...)
   useEffect(() => {
     const action = searchParams.get('action')?.toUpperCase();
     const supId = searchParams.get('supplier_id') || undefined;
+    const custId = searchParams.get('customer_id') || undefined;
     if (
       action === 'IMPORT' ||
       action === 'EXPORT' ||
@@ -108,9 +120,11 @@ export const StockTransactionsPage: React.FC = () => {
     ) {
       setFormInitialType(action as StockTransactionType);
       setFormInitialSupplierId(supId);
+      setFormInitialCustomerId(custId);
       setIsFormModalOpen(true);
       searchParams.delete('action');
       searchParams.delete('supplier_id');
+      searchParams.delete('customer_id');
       setSearchParams(searchParams, { replace: true });
     }
   }, [searchParams, setSearchParams]);
@@ -371,8 +385,10 @@ export const StockTransactionsPage: React.FC = () => {
         isOpen={isFormModalOpen}
         initialType={formInitialType}
         initialSupplierId={formInitialSupplierId}
+        initialCustomerId={formInitialCustomerId}
         warehouses={warehouses}
         suppliers={suppliers}
+        customers={customers}
         products={products}
         isManagerOrAdmin={isManagerOrAdmin}
         onClose={() => setIsFormModalOpen(false)}

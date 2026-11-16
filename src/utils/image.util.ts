@@ -15,3 +15,4 @@ export const formatImageUrl = (url?: string | null): string => {
   }
   return url;
 };
+

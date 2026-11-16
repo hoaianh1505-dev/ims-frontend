@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import {
   Plus,
   History,
-  Bell,
   HelpCircle,
   ChevronDown,
   Building2,
@@ -15,6 +14,7 @@ import {
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
 import { UserAvatar } from '../common/UserAvatar';
+import { NotificationDropdown } from './NotificationDropdown';
 import { showToast } from '../../utils/toast.util';
 
 const ROLE_LABELS: Record<string, string> = {
@@ -143,14 +143,8 @@ export const Header: React.FC = () => {
         {/* Divider */}
         <div className="w-[1px] h-6 bg-slate-200" />
 
-        {/* Notification Bell */}
-        <button
-          title="Thông báo"
-          className="relative p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
-        >
-          <Bell className="w-5 h-5" />
-          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-[#EE3D43] ring-2 ring-white" />
-        </button>
+        {/* Realtime Notification Bell */}
+        <NotificationDropdown />
 
         {/* Help */}
         <button

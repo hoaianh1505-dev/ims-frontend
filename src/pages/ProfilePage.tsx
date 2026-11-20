@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+﻿import React, { useState, useRef, useEffect } from 'react';
 import {
   User,
   Mail,
@@ -23,7 +23,7 @@ import { formatImageUrl } from '../utils/image.util';
 const ROLE_LABELS: Record<string, { label: string; badge: string; desc: string }> = {
   ADMIN: {
     label: 'Quản trị viên (Super Admin)',
-    badge: 'bg-red-50 text-red-700 border-red-200',
+    badge: 'bg-blue-50 text-blue-700 border-blue-200',
     desc: 'Toàn quyền cấu hình hệ thống, quản lý người dùng, phân quyền và dữ liệu.',
   },
   MANAGER: {
@@ -188,7 +188,7 @@ export const ProfilePage: React.FC = () => {
       {/* Page Header */}
       <div>
         <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
-          <User className="w-7 h-7 text-red-600" />
+          <User className="w-7 h-7 text-blue-600" />
           Hồ sơ cá nhân
         </h1>
         <p className="text-slate-500 text-sm mt-1">
@@ -198,7 +198,7 @@ export const ProfilePage: React.FC = () => {
 
       {/* Main Profile Header Card */}
       <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/5 rounded-full blur-3xl -z-0 pointer-events-none" />
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/5 rounded-full blur-3xl -z-0 pointer-events-none" />
 
         <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
           {/* Avatar with Upload Badge */}
@@ -225,7 +225,7 @@ export const ProfilePage: React.FC = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingAvatar}
-              className="absolute -bottom-2 -right-2 p-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
+              className="absolute -bottom-2 -right-2 p-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
               title="Đổi ảnh đại diện"
             >
               <Camera className="w-4 h-4" />
@@ -274,7 +274,7 @@ export const ProfilePage: React.FC = () => {
         <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-7">
           <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
             <div className="flex items-center gap-2.5">
-              <div className="p-2 bg-red-50 text-red-600 rounded-xl">
+              <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
                 <User className="w-5 h-5" />
               </div>
               <div>
@@ -312,7 +312,7 @@ export const ProfilePage: React.FC = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Nhập họ và tên..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
                 />
               </div>
             </div>
@@ -329,7 +329,7 @@ export const ProfilePage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@ims.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -345,7 +345,7 @@ export const ProfilePage: React.FC = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="0901 234 567"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -355,7 +355,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isUpdatingProfile}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl shadow-sm transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-xl shadow-sm transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
               >
                 {isUpdatingProfile ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -395,7 +395,7 @@ export const ProfilePage: React.FC = () => {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Nhập mật khẩu hiện tại..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm"
                   />
                   <button
                     type="button"
@@ -419,7 +419,7 @@ export const ProfilePage: React.FC = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Ít nhất 6 ký tự..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm"
                   />
                   <button
                     type="button"
@@ -443,7 +443,7 @@ export const ProfilePage: React.FC = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Nhập lại mật khẩu mới..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 text-sm"
                   />
                 </div>
               </div>
@@ -467,8 +467,8 @@ export const ProfilePage: React.FC = () => {
 
           {/* Quick Security Badge Box */}
           <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center gap-2 text-red-400 font-semibold text-sm">
-              <BadgeCheck className="w-5 h-5 text-red-500" />
+            <div className="flex items-center gap-2 text-blue-400 font-semibold text-sm">
+              <BadgeCheck className="w-5 h-5 text-blue-500" />
               Bảo mật hệ thống IMS
             </div>
             <p className="text-xs text-slate-300 leading-relaxed">
@@ -481,3 +481,4 @@ export const ProfilePage: React.FC = () => {
     </div>
   );
 };
+

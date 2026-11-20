@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Edit3, Trash2, Users, Loader2 } from 'lucide-react';
 import { Customer, CustomerType } from '../../types/customer.types';
 import { ToggleSwitch } from '../users/ToggleSwitch';
@@ -93,7 +93,7 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
               {/* Customer Name & Code */}
               <td className="py-2.5 px-4">
                 <div>
-                  <div className="font-semibold text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                  <div className="font-semibold text-slate-800 group-hover:text-[#2563EB] transition-colors text-sm line-clamp-1 leading-snug">
                     {c.name}
                   </div>
                   {c.code && (
@@ -208,4 +208,5 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
     </table>
   );
 };
+
 

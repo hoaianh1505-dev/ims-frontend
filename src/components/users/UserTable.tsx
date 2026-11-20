@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   KeyRound,
   Edit3,
@@ -75,7 +75,7 @@ export const UserTable: React.FC<UserTableProps> = ({
                   <UserAvatar src={u.avatar} alt={u.username} size="md" />
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1">
+                      <span className="font-medium text-slate-800 group-hover:text-[#2563EB] transition-colors text-sm line-clamp-1">
                         {u.display_name || u.username}
                       </span>
                       {isCurrent && (
@@ -200,3 +200,4 @@ export const UserTable: React.FC<UserTableProps> = ({
     </table>
   );
 };
+

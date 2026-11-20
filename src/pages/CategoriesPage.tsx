@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import {
   Layers,
   Ruler,
@@ -282,7 +282,7 @@ export const CategoriesPage: React.FC = () => {
           {isAdmin && (
             <button
               onClick={activeTab === 'categories' ? openCreateCategory : openCreateUnit}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>{activeTab === 'categories' ? 'Thêm danh mục' : 'Thêm đơn vị tính'}</span>
@@ -309,7 +309,7 @@ export const CategoriesPage: React.FC = () => {
               }
             }}
             placeholder={activeTab === 'categories' ? 'Tìm kiếm danh mục...' : 'Tìm kiếm đơn vị tính...'}
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {((activeTab === 'categories' ? catSearch : unitSearch)) && (
             <button
@@ -339,7 +339,7 @@ export const CategoriesPage: React.FC = () => {
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
-            <Layers className="w-4 h-4 text-[#EE3D43]" />
+            <Layers className="w-4 h-4 text-[#2563EB]" />
             <span>Danh mục ({categories.length})</span>
           </button>
           <button
@@ -386,7 +386,7 @@ export const CategoriesPage: React.FC = () => {
                   {paginatedCategories.map((cat) => (
                     <tr key={cat.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
-                        <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                        <span className="font-medium text-slate-800 group-hover:text-[#2563EB] transition-colors text-sm">
                           {cat.name}
                         </span>
                       </td>
@@ -464,7 +464,7 @@ export const CategoriesPage: React.FC = () => {
                   {paginatedUnits.map((unit) => (
                     <tr key={unit.id} className="hover:bg-slate-50/80 transition-colors group">
                       <td className="py-2.5 px-4 whitespace-nowrap">
-                        <span className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm">
+                        <span className="font-medium text-slate-800 group-hover:text-[#2563EB] transition-colors text-sm">
                           {unit.name}
                         </span>
                       </td>
@@ -812,3 +812,4 @@ export const CategoriesPage: React.FC = () => {
     </div>
   );
 };
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { X, Eye, EyeOff, Loader2, Camera } from 'lucide-react';
 import { UserItem, UserRole, CreateUserData, UpdateUserData, usersService } from '../../services/users.service';
 import { ToggleSwitch } from './ToggleSwitch';
@@ -170,7 +170,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                   <div className="text-[11px] text-slate-400">Định dạng JPG, PNG hoặc WebP, tối đa 5MB</div>
                   <label className="inline-flex items-center gap-1.5 px-3 py-1.5 mt-1.5 bg-white border border-slate-200 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl shadow-2xs transition-all cursor-pointer">
                     {uploadingAvatar ? (
-                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#EE3D43]" />
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2563EB]" />
                     ) : (
                       <Camera className="w-3.5 h-3.5 text-slate-500" />
                     )}
@@ -201,7 +201,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 className={`w-full px-3.5 py-2 border rounded-xl text-sm font-medium text-slate-800 transition-all ${
                   isEdit
                     ? 'bg-slate-100 border-slate-200 text-slate-500 cursor-not-allowed'
-                    : 'bg-slate-50 border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white'
+                    : 'bg-slate-50 border-slate-200 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white'
                 }`}
               />
             </div>
@@ -218,7 +218,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Tối thiểu 6 ký tự"
-                    className="w-full pl-3.5 pr-9 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
+                    className="w-full pl-3.5 pr-9 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
                   />
                   <button
                     type="button"
@@ -251,7 +251,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
               placeholder="vd: Đỗ Hoài Anh"
-              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
+              className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
             />
           </div>
 
@@ -266,7 +266,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="user@gmail.com"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -280,7 +280,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="0912345678"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
               />
             </div>
           </div>
@@ -299,7 +299,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
               <select
                 value={role}
                 onChange={(e) => setRole(e.target.value as UserRole)}
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all cursor-pointer"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all cursor-pointer"
               >
                 <option value="STAFF">Nhân viên kho (Staff) — Thao tác nhập xuất thực tế</option>
                 <option value="MANAGER">Quản lý kho (Manager) — Quản lý kho, duyệt phiếu</option>
@@ -332,7 +332,7 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
             >
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>{loading ? 'Đang lưu...' : isEdit ? 'Lưu thay đổi' : 'Tạo tài khoản'}</span>
@@ -343,4 +343,5 @@ export const UserFormModal: React.FC<UserFormModalProps> = ({
     </div>
   );
 };
+
 

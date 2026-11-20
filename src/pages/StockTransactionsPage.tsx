@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import {
   Search,
@@ -251,7 +251,7 @@ export const StockTransactionsPage: React.FC = () => {
 
           <button
             onClick={() => handleOpenCreateModal('IMPORT')}
-            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-bold text-xs transition-all shadow-sm active:scale-95 cursor-pointer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl font-bold text-xs transition-all shadow-sm active:scale-95 cursor-pointer"
           >
             <ArrowDownLeft className="w-4 h-4 stroke-[2.5]" />
             <span>Phiếu nhập kho</span>
@@ -403,4 +403,5 @@ export const StockTransactionsPage: React.FC = () => {
     </div>
   );
 };
+
 

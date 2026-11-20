@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+﻿import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Plus,
@@ -93,7 +93,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
           <button
             onClick={() => setShowQuickAdd(!showQuickAdd)}
             title="Thao tác nhanh"
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
           </button>
@@ -181,7 +181,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                       }}
                       className={`w-full text-left px-4 py-2.5 font-medium transition-colors ${
                         selectedBranch === branch
-                          ? 'bg-rose-50 text-[#EE3D43] font-bold'
+                          ? 'bg-blue-50 text-blue-700 font-bold'
                           : 'text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -265,7 +265,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                       type="button"
                       disabled={uploadingAvatar}
                       onClick={() => avatarInputRef.current?.click()}
-                      className="text-[11px] font-semibold text-[#EE3D43] hover:underline mt-0.5 inline-flex items-center gap-1 cursor-pointer"
+                      className="text-[11px] font-semibold text-[#2563EB] hover:underline mt-0.5 inline-flex items-center gap-1 cursor-pointer"
                     >
                       {uploadingAvatar ? (
                         <>
@@ -309,3 +309,4 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
     </header>
   );
 };
+

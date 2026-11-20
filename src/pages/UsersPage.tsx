@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+﻿import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import {
   Search,
   Plus,
@@ -177,7 +177,7 @@ export const UsersPage: React.FC = () => {
               setEditingUser(null);
               setIsFormOpen(true);
             }}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Thêm tài khoản</span>
@@ -198,7 +198,7 @@ export const UsersPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm theo họ tên, username, email, SĐT..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -377,3 +377,4 @@ export const UsersPage: React.FC = () => {
     </div>
   );
 };
+

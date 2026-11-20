@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from 'react';
+﻿import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import {
   FileText,
@@ -99,7 +99,7 @@ export const MyTasksPage: React.FC = () => {
       <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <FileText className="w-7 h-7 text-red-600" />
+            <FileText className="w-7 h-7 text-blue-600" />
             Phiếu kho của tôi
           </h1>
           <p className="text-sm font-medium text-slate-500 mt-1">
@@ -120,7 +120,7 @@ export const MyTasksPage: React.FC = () => {
 
           <Link
             to="/stock-transactions"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Tạo phiếu mới</span>
@@ -231,7 +231,7 @@ export const MyTasksPage: React.FC = () => {
                       <td className="px-4 py-3.5 whitespace-nowrap">
                         <Link
                           to="/stock-transactions"
-                          className="font-mono font-bold text-slate-900 hover:text-red-600 transition-colors"
+                          className="font-mono font-bold text-slate-900 hover:text-blue-600 transition-colors"
                         >
                           {t.reference_no}
                         </Link>
@@ -316,3 +316,5 @@ export const MyTasksPage: React.FC = () => {
     </div>
   );
 };
+
+

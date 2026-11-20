@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+﻿import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   Bell,
@@ -240,11 +240,11 @@ export const NotificationDropdown: React.FC = () => {
             : 'text-slate-500 hover:text-slate-800 hover:bg-slate-100'
         }`}
       >
-        <Bell className={`w-5 h-5 ${hasNewAlert ? 'animate-bounce text-[#EE3D43]' : ''}`} />
+        <Bell className={`w-5 h-5 ${hasNewAlert ? 'animate-bounce text-[#2563EB]' : ''}`} />
 
         {/* Unread badge count */}
         {unreadCount > 0 && (
-          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#EE3D43] text-white font-mono font-bold text-[10px] flex items-center justify-center ring-2 ring-white shadow-2xs animate-in zoom-in-75 duration-150">
+          <span className="absolute -top-0.5 -right-0.5 min-w-[18px] h-[18px] px-1 rounded-full bg-[#2563EB] text-white font-mono font-bold text-[10px] flex items-center justify-center ring-2 ring-white shadow-2xs animate-in zoom-in-75 duration-150">
             {unreadCount > 9 ? '9+' : unreadCount}
           </span>
         )}
@@ -258,7 +258,7 @@ export const NotificationDropdown: React.FC = () => {
             <div className="flex items-center gap-2">
               <span className="font-bold text-sm text-slate-900">Thông báo</span>
               {unreadCount > 0 && (
-                <span className="bg-[#EE3D43]/10 text-[#EE3D43] font-semibold text-[11px] px-2 py-0.5 rounded-full">
+                <span className="bg-blue-50 text-blue-700 border border-blue-200 font-semibold text-[11px] px-2 py-0.5 rounded-full">
                   {unreadCount} mới
                 </span>
               )}
@@ -363,7 +363,7 @@ export const NotificationDropdown: React.FC = () => {
                     <div className="flex items-center gap-2 mt-1.5 text-[11px] text-slate-400">
                       <span>{formatTimeAgo(notif.created_at)}</span>
                       {!notif.is_read && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#EE3D43]" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#2563EB]" />
                       )}
                     </div>
                   </div>
@@ -399,3 +399,4 @@ export const NotificationDropdown: React.FC = () => {
     </div>
   );
 };
+

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
+﻿import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   Package,
   Search,
@@ -390,7 +390,7 @@ export const ProductsPage: React.FC = () => {
           {isManagerOrAdmin && (
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Thêm sản phẩm</span>
@@ -412,7 +412,7 @@ export const ProductsPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm theo tên sản phẩm, SKU, barcode..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -604,7 +604,7 @@ export const ProductsPage: React.FC = () => {
                             </div>
                           )}
                           <div className="min-w-0">
-                            <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
+                            <div className="font-medium text-slate-800 group-hover:text-[#2563EB] transition-colors line-clamp-1 text-sm leading-snug">
                               {p.name}
                             </div>
                             <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
@@ -823,7 +823,7 @@ export const ProductsPage: React.FC = () => {
                               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-slate-700 bg-white hover:bg-slate-100 rounded-xl transition-colors cursor-pointer border border-slate-200 shadow-2xs disabled:opacity-50"
                             >
                               {uploadingProductImage ? (
-                                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#EE3D43]" />
+                                <Loader2 className="w-3.5 h-3.5 animate-spin text-[#2563EB]" />
                               ) : (
                                 <Upload className="w-3.5 h-3.5 text-slate-600" />
                               )}
@@ -898,7 +898,7 @@ export const ProductsPage: React.FC = () => {
                                     onClick={() => setSelectedGalleryImageId(img.id)}
                                     className={`relative w-16 h-16 rounded-xl overflow-hidden border-2 shrink-0 transition-all cursor-pointer bg-white ${
                                       isSelected
-                                        ? 'border-[#EE3D43] ring-2 ring-[#EE3D43]/20'
+                                        ? 'border-[#2563EB] ring-2 ring-[#2563EB]/20'
                                         : 'border-slate-200 hover:border-slate-400'
                                     }`}
                                   >
@@ -926,7 +926,7 @@ export const ProductsPage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => drawerImageInputRef.current?.click()}
-                              className="text-xs font-bold text-[#EE3D43] hover:underline cursor-pointer"
+                              className="text-xs font-bold text-[#2563EB] hover:underline cursor-pointer"
                             >
                               Bấm vào đây để tải ảnh đầu tiên lên AWS S3
                             </button>
@@ -992,7 +992,7 @@ export const ProductsPage: React.FC = () => {
                     </div>
                     <div className="bg-white p-4 rounded-xl border border-slate-200/80">
                       <div className="text-slate-400 text-xs font-semibold uppercase tracking-wider">Giá bán niêm yết</div>
-                      <div className="text-xl sm:text-2xl font-black text-[#EE3D43] mt-1 font-mono">
+                      <div className="text-xl sm:text-2xl font-black text-[#2563EB] mt-1 font-mono">
                         {formatVND(activeDrawerProduct.selling_price)}
                       </div>
                     </div>
@@ -1071,7 +1071,7 @@ export const ProductsPage: React.FC = () => {
                       onClick={() => {
                         openEditModal(activeDrawerProduct);
                       }}
-                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-bold shadow-xs transition-colors cursor-pointer text-sm"
+                      className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl font-bold shadow-xs transition-colors cursor-pointer text-sm"
                     >
                       <Edit3 className="w-4 h-4" />
                       <span>Chỉnh sửa sản phẩm</span>
@@ -1512,3 +1512,4 @@ export const ProductsPage: React.FC = () => {
     </div>
   );
 };
+

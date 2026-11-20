@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {
   X,
   Building2,
@@ -358,7 +358,7 @@ export const StockTransactionDetailDrawer: React.FC<StockTransactionDetailDrawer
                         : totalQuantity.toLocaleString('vi-VN')}
                     </td>
                     <td className="py-3 px-3" />
-                    <td className="py-3 px-3 text-right font-mono text-sm text-[#EE3D43]">
+                    <td className="py-3 px-3 text-right font-mono text-sm text-[#2563EB]">
                       {formatCurrency(totalAmount)}
                     </td>
                   </tr>
@@ -389,4 +389,5 @@ export const StockTransactionDetailDrawer: React.FC<StockTransactionDetailDrawer
     </div>
   );
 };
+
 

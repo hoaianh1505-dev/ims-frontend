@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import {
   Eye,
   EyeOff,
@@ -133,7 +133,7 @@ export const LoginPage: React.FC = () => {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Nhập tên đăng nhập hoặc email..."
-                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
+                    className="w-full pl-12 pr-4 py-4 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
                   />
                 </div>
               </div>
@@ -151,7 +151,7 @@ export const LoginPage: React.FC = () => {
                       setForgotSuccess(false);
                       setForgotEmail('');
                     }}
-                    className="text-sm font-semibold text-[#EE3D43] hover:underline cursor-pointer"
+                    className="text-sm font-semibold text-[#2563EB] hover:underline cursor-pointer"
                   >
                     Quên mật khẩu?
                   </button>
@@ -165,7 +165,7 @@ export const LoginPage: React.FC = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     placeholder="Nhập mật khẩu..."
-                    className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#EE3D43] focus:ring-4 focus:ring-[#EE3D43]/10 transition-all"
+                    className="w-full pl-12 pr-12 py-4 bg-slate-50 border border-slate-300 rounded-xl text-base font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:bg-white focus:border-[#2563EB] focus:ring-4 focus:ring-[#2563EB]/10 transition-all"
                   />
                   <button
                     type="button"
@@ -185,7 +185,7 @@ export const LoginPage: React.FC = () => {
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="w-4 h-4 rounded border-slate-300 text-[#EE3D43] focus:ring-[#EE3D43] cursor-pointer accent-[#EE3D43]"
+                    className="w-4 h-4 rounded border-slate-300 text-[#2563EB] focus:ring-[#2563EB] cursor-pointer accent-[#2563EB]"
                   />
                   <span>Ghi nhớ đăng nhập</span>
                 </label>
@@ -195,7 +195,7 @@ export const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full mt-2 py-4 px-6 bg-[#EE3D43] hover:bg-[#D9343A] text-white font-bold rounded-xl text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 active:scale-[0.99]"
+                className="w-full mt-2 py-4 px-6 bg-[#2563EB] hover:bg-[#1D4ED8] text-white font-bold rounded-xl text-base sm:text-lg transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 active:scale-[0.99]"
               >
                 {isLoading ? (
                   <>
@@ -222,7 +222,7 @@ export const LoginPage: React.FC = () => {
           <div className="bg-white rounded-2xl max-w-md w-full p-6 sm:p-8 shadow-2xl border border-slate-100 space-y-4 animate-in zoom-in-95 duration-150">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-rose-50 text-[#EE3D43] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-lg bg-rose-50 text-[#2563EB] flex items-center justify-center">
                   <ShieldAlert className="w-5 h-5" />
                 </div>
                 <h3 className="text-lg font-bold text-slate-900">Quên mật khẩu?</h3>
@@ -258,12 +258,12 @@ export const LoginPage: React.FC = () => {
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="Nhập tên tài khoản hoặc email của bạn..."
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#EE3D43] focus:bg-white"
+                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#2563EB] focus:bg-white"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-xs"
+                  className="w-full py-3 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-xs"
                 >
                   Gửi yêu cầu tới Quản trị viên
                 </button>
@@ -285,3 +285,4 @@ export const LoginPage: React.FC = () => {
     </div>
   );
 };
+

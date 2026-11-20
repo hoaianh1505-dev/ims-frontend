@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { Edit3, Trash2, Truck, Loader2 } from 'lucide-react';
 import { Supplier } from '../../types/supplier.types';
 import { ToggleSwitch } from '../users/ToggleSwitch';
@@ -67,7 +67,7 @@ export const SupplierTable: React.FC<SupplierTableProps> = ({
             {/* Supplier Name & Code */}
             <td className="py-2.5 px-4">
               <div>
-                <div className="font-semibold text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                <div className="font-semibold text-slate-800 group-hover:text-[#2563EB] transition-colors text-sm line-clamp-1 leading-snug">
                   {s.name}
                 </div>
                 {s.code && (
@@ -160,4 +160,5 @@ export const SupplierTable: React.FC<SupplierTableProps> = ({
     </table>
   );
 };
+
 

@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutGrid,
@@ -62,7 +62,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
         className={({ isActive }) =>
           `w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all group ${
             isActive
-              ? 'bg-[#EE3D43] text-white font-semibold shadow-xs'
+              ? 'bg-[#2563EB] text-white font-semibold shadow-xs'
               : 'text-slate-300 hover:bg-white/5 hover:text-white'
           }`
         }
@@ -175,3 +175,4 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
     </>
   );
 };
+

@@ -48,6 +48,34 @@ interface FormRowItem {
   unit_price: number;
 }
 
+const PRESET_REASONS: Record<StockTransactionType, string[]> = {
+  IMPORT: [
+    'Nhập hàng mua mới từ nhà cung cấp',
+    'Nhập bổ sung tồn kho định kỳ',
+    'Nhập hàng khách trả lại / hoàn trả',
+    'Nhập hàng điều chuyển từ chi nhánh',
+    'Nhập cân đối dư thừa sau kiểm kê',
+  ],
+  EXPORT: [
+    'Xuất bán hàng cho khách lẻ',
+    'Xuất hàng đại lý / bán buôn',
+    'Xuất điều chuyển sang chi nhánh khác',
+    'Xuất trả hàng lỗi cho nhà cung cấp',
+    'Xuất hủy hàng hỏng hóc / quá hạn',
+    'Xuất hàng mẫu / quà tặng khuyến mãi',
+  ],
+  TRANSFER: [
+    'Điều chuyển cân bằng tồn kho giữa các chi nhánh',
+    'Điều chuyển hàng hóa phục vụ đơn hàng tỉnh',
+    'Điều chuyển hàng về kho trung tâm',
+  ],
+  ADJUSTMENT: [
+    'Cân bằng tồn kho định kỳ cuối tháng',
+    'Điều chỉnh hao hụt hàng hóa trong lưu kho',
+    'Xử lý chênh lệch số liệu kiểm kê thực tế',
+  ],
+};
+
 const createEmptyRow = (): FormRowItem => ({
   key: `${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
   product_id: '',
@@ -465,11 +493,30 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
 
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          {/* General Voucher Metadata */}
-          <div className="px-6 py-4 space-y-3 bg-slate-50/30 dark:bg-[#161b22]/50 border-b border-slate-100 dark:border-[#30363d] shrink-0">
+          {/* General Voucher Metadata - Tối ưu 100% thành dropdowns */}
+          <div className="px-6 py-4 space-y-3 bg-slate-50/40 dark:bg-[#161b22]/50 border-b border-slate-100 dark:border-[#30363d] shrink-0">
             {/* Row 1: 3 columns */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
-              {/* Col 1 */}
+              {/* Col 1: Loại phiếu giao dịch (Dropdown) */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                  Loại nghiệp vụ kho <span className="text-rose-500">*</span>
+                </label>
+                <select
+                  value={txType}
+                  onChange={(e) => setTxType(e.target.value as StockTransactionType)}
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-bold text-slate-900 dark:text-white bg-white dark:bg-[#0d1117] focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] shadow-2xs cursor-pointer"
+                >
+                  <option value="IMPORT">📥 Phiếu nhập kho (Nhập NCC / Bù tồn)</option>
+                  <option value="EXPORT">📤 Phiếu xuất kho (Xuất bán / Đại lý)</option>
+                  <option value="TRANSFER">🔄 Chuyển kho nội bộ (Giữa các kho)</option>
+                  {isManagerOrAdmin && (
+                    <option value="ADJUSTMENT">📋 Điều chỉnh kiểm kê (Cân bằng thực tế)</option>
+                  )}
+                </select>
+              </div>
+
+              {/* Col 2: Kho xuất / Kho nhập / Kho kiểm kê (Dropdown) */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                   {txType === 'IMPORT'
@@ -485,7 +532,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                   value={warehouseId}
                   onChange={(e) => setWarehouseId(e.target.value)}
                   required
-                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
                 >
                   <option value="">-- Chọn kho hàng --</option>
                   {warehouses.map((w) => (
@@ -496,7 +543,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                 </select>
               </div>
 
-              {/* Col 2 */}
+              {/* Col 3: Đối tác / Kho tiếp nhận / Mục đích kiểm kê (Dropdown) */}
               <div>
                 {txType === 'IMPORT' ? (
                   <>
@@ -506,7 +553,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     <select
                       value={supplierId}
                       onChange={(e) => setSupplierId(e.target.value)}
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
                     >
                       <option value="">-- Không chọn / Nhập lẻ --</option>
                       {activeSuppliers.map((s) => (
@@ -524,7 +571,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     <select
                       value={customerId}
                       onChange={(e) => setCustomerId(e.target.value)}
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
                     >
                       <option value="">-- Khách vãng lai / Bán lẻ trực tiếp --</option>
                       {internalCustomers
@@ -545,7 +592,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                       value={targetWarehouseId}
                       onChange={(e) => setTargetWarehouseId(e.target.value)}
                       required
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
                     >
                       <option value="">-- Chọn kho đích --</option>
                       {warehouses
@@ -562,17 +609,67 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                       Mục đích kiểm kê
                     </label>
-                    <input
-                      type="text"
-                      readOnly
-                      value="Kiểm kê định kỳ & Cân bằng tồn kho"
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-500 dark:text-slate-400 bg-slate-100/60 dark:bg-[#0d1117]/80 cursor-default font-medium shadow-2xs"
-                    />
+                    <select
+                      defaultValue="Kiểm kê định kỳ & Cân bằng tồn kho"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                    >
+                      <option value="Kiểm kê định kỳ & Cân bằng tồn kho">
+                        Kiểm kê định kỳ & Cân bằng tồn kho
+                      </option>
+                      <option value="Kiểm kê đột xuất cuối tháng">
+                        Kiểm kê đột xuất cuối tháng
+                      </option>
+                      <option value="Cân đối hao hụt & hàng hỏng">
+                        Cân đối hao hụt & hàng hỏng
+                      </option>
+                      <option value="Bàn giao ca thủ kho">
+                        Bàn giao ca thủ kho
+                      </option>
+                    </select>
                   </>
                 )}
               </div>
+            </div>
 
-              {/* Col 3 */}
+            {/* Row 2: 3 columns */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
+              {/* Col 1: Lý do mẫu nhanh (Dropdown) */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                  Lý do mẫu nhanh (Dropdown)
+                </label>
+                <select
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      setNote(e.target.value);
+                    }
+                  }}
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                >
+                  <option value="">-- Chọn lý do nghiệp vụ --</option>
+                  {PRESET_REASONS[txType]?.map((reason) => (
+                    <option key={reason} value={reason}>
+                      {reason}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Col 2: Ghi chú chi tiết / Số HĐ */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
+                  Diễn giải chi tiết / Hóa đơn
+                </label>
+                <input
+                  type="text"
+                  value={note}
+                  onChange={(e) => setNote(e.target.value)}
+                  placeholder="Ví dụ: Đơn hàng #SO-009, biển số xe giao..."
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
+                />
+              </div>
+
+              {/* Col 3: Mã chứng từ */}
               <div>
                 <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
                   Mã chứng từ (Tùy chọn)
@@ -585,20 +682,6 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                   className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-mono text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
                 />
               </div>
-            </div>
-
-            {/* Row 2: Note */}
-            <div>
-              <label className="block text-[11px] font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">
-                Ghi chú chứng từ / Diễn giải
-              </label>
-              <input
-                type="text"
-                value={note}
-                onChange={(e) => setNote(e.target.value)}
-                placeholder="Ví dụ: Xuất hàng đại lý, số hóa đơn VAT, đơn hàng #SO-009..."
-                className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs"
-              />
             </div>
           </div>
 

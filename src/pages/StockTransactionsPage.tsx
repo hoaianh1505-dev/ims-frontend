@@ -5,6 +5,8 @@ import {
   RefreshCw,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
+  Plus,
   ArrowDownLeft,
   ArrowUpRight,
   ArrowLeftRight,
@@ -58,6 +60,7 @@ export const StockTransactionsPage: React.FC = () => {
   const [total, setTotal] = useState(0);
 
   // Modal & Drawer state
+  const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
   const [formInitialType, setFormInitialType] = useState<StockTransactionType>('IMPORT');
   const [formInitialSupplierId, setFormInitialSupplierId] = useState<string | undefined>(undefined);
@@ -214,7 +217,7 @@ export const StockTransactionsPage: React.FC = () => {
           </p>
         </div>
 
-        {/* Action Hub - Chuẩn KiotViet / Odoo / SAP */}
+        {/* Action Hub - Dropdown tạo phiếu tinh gọn */}
         <div className="flex items-center gap-2 flex-wrap">
           {isManagerOrAdmin && (
             <button
@@ -228,53 +231,110 @@ export const StockTransactionsPage: React.FC = () => {
             </button>
           )}
 
-          {isManagerOrAdmin && (
+          {/* Unified Create Dropdown */}
+          <div className="relative">
             <button
-              onClick={() => handleOpenCreateModal('ADJUSTMENT')}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161b22] hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#30363d] rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-2xs"
-              title="Cân đối tồn kho sau kiểm kê thực tế"
+              onClick={() => setCreateMenuOpen((prev) => !prev)}
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-bold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
+              title="Mở danh mục tạo phiếu mới"
             >
-              <ClipboardCheck className="w-4 h-4 text-amber-500" />
-              <span>Kiểm kê</span>
+              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <span>+ Tạo phiếu giao dịch</span>
+              <ChevronDown
+                className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                  createMenuOpen ? 'rotate-180' : ''
+                }`}
+              />
             </button>
-          )}
 
-          <button
-            onClick={() => handleOpenCreateModal('TRANSFER')}
-            className="inline-flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161b22] hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#30363d] rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-2xs"
-            title="Điều chuyển hàng hóa giữa các kho nội bộ"
-          >
-            <ArrowLeftRight className="w-4 h-4 text-blue-500" />
-            <span>Chuyển kho</span>
-          </button>
+            {createMenuOpen && (
+              <>
+                <div
+                  className="fixed inset-0 z-30"
+                  onClick={() => setCreateMenuOpen(false)}
+                />
+                <div className="absolute right-0 mt-1.5 w-64 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[#30363d] rounded-xl shadow-xl py-1.5 z-40 animate-in fade-in zoom-in-95 duration-100 divide-y divide-slate-100 dark:divide-[#30363d]/60">
+                  <div className="p-1">
+                    <button
+                      onClick={() => {
+                        setCreateMenuOpen(false);
+                        handleOpenCreateModal('IMPORT');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-left hover:bg-slate-50 dark:hover:bg-white/5 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors"
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/40 text-emerald-600 flex items-center justify-center shrink-0">
+                        <ArrowDownLeft className="w-4 h-4 stroke-[2.5]" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 dark:text-white">Phiếu nhập kho</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">Mua hàng NCC / Hoàn trả</div>
+                      </div>
+                    </button>
 
-          {/* Nút Tạo Phiếu Xuất */}
-          <button
-            onClick={() => handleOpenCreateModal('EXPORT')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-semibold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
-            title="Lập phiếu xuất hàng"
-          >
-            <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
-            <span>+ Tạo phiếu xuất</span>
-          </button>
+                    <button
+                      onClick={() => {
+                        setCreateMenuOpen(false);
+                        handleOpenCreateModal('EXPORT');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-left hover:bg-slate-50 dark:hover:bg-white/5 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors"
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#EE3D43] flex items-center justify-center shrink-0">
+                        <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 dark:text-white">Phiếu xuất kho</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">Xuất bán lẻ / Đại lý / Nội bộ</div>
+                      </div>
+                    </button>
 
-          {/* Nút Tạo Phiếu Nhập */}
-          <button
-            onClick={() => handleOpenCreateModal('IMPORT')}
-            className="inline-flex items-center gap-1.5 px-3.5 py-2 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl font-semibold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
-            title="Lập phiếu nhập hàng"
-          >
-            <ArrowDownLeft className="w-4 h-4 stroke-[2.5]" />
-            <span>+ Tạo phiếu nhập</span>
-          </button>
+                    <button
+                      onClick={() => {
+                        setCreateMenuOpen(false);
+                        handleOpenCreateModal('TRANSFER');
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-left hover:bg-slate-50 dark:hover:bg-white/5 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors"
+                    >
+                      <div className="w-7 h-7 rounded-lg bg-blue-50 dark:bg-blue-950/40 text-blue-600 flex items-center justify-center shrink-0">
+                        <ArrowLeftRight className="w-4 h-4 stroke-[2.5]" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-slate-900 dark:text-white">Chuyển kho nội bộ</div>
+                        <div className="text-[11px] text-slate-500 dark:text-slate-400">Điều chuyển giữa 2 chi nhánh</div>
+                      </div>
+                    </button>
+                  </div>
+
+                  {isManagerOrAdmin && (
+                    <div className="p-1">
+                      <button
+                        onClick={() => {
+                          setCreateMenuOpen(false);
+                          handleOpenCreateModal('ADJUSTMENT');
+                        }}
+                        className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-left hover:bg-slate-50 dark:hover:bg-white/5 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors"
+                      >
+                        <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/40 text-amber-600 flex items-center justify-center shrink-0">
+                          <ClipboardCheck className="w-4 h-4 stroke-[2.5]" />
+                        </div>
+                        <div>
+                          <div className="font-bold text-slate-900 dark:text-white">Điều chỉnh kiểm kê</div>
+                          <div className="text-[11px] text-slate-500 dark:text-slate-400">Cân đối hao hụt & tồn thực tế</div>
+                        </div>
+                      </button>
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* 2. FILTER & SEARCH TOOLBAR */}
+      {/* 2. FILTER & SEARCH TOOLBAR - Tối ưu toàn bộ thành Dropdown */}
       <div className="shrink-0 bg-white dark:bg-[#161b22] rounded-xl border border-slate-200/80 dark:border-[#30363d] p-2.5 shadow-2xs flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2 flex-wrap flex-1">
+        <div className="flex items-center gap-2.5 flex-wrap flex-1">
           {/* Search Input */}
-          <div className="relative w-full sm:w-80">
+          <div className="relative w-full sm:w-72">
             <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
             <input
               type="text"
@@ -285,30 +345,18 @@ export const StockTransactionsPage: React.FC = () => {
             />
           </div>
 
-          {/* Segmental Tabs (Tất cả, Nhập kho, Xuất kho, Chuyển kho, Kiểm kê) */}
-          <div className="flex items-center bg-slate-100/90 dark:bg-[#0d1117] p-0.5 rounded-lg border border-slate-200/60 dark:border-[#30363d] overflow-x-auto max-w-full">
-            {(
-              [
-                { id: 'ALL', label: 'Tất cả' },
-                { id: 'IMPORT', label: 'Phiếu nhập' },
-                { id: 'EXPORT', label: 'Phiếu xuất' },
-                { id: 'TRANSFER', label: 'Chuyển kho' },
-                { id: 'ADJUSTMENT', label: 'Kiểm kê' },
-              ] as const
-            ).map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => setTypeFilter(tab.id)}
-                className={`px-3 py-1 rounded-md text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
-                  typeFilter === tab.id
-                    ? 'bg-white dark:bg-[#161b22] text-slate-900 dark:text-white shadow-2xs font-bold'
-                    : 'text-slate-500 hover:text-slate-800 dark:hover:text-slate-200'
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          {/* Type Filter Dropdown */}
+          <select
+            value={typeFilter}
+            onChange={(e) => setTypeFilter(e.target.value as any)}
+            className="px-3 py-1.5 bg-slate-50 dark:bg-[#0d1117] border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-semibold text-slate-700 dark:text-slate-200 focus:outline-none cursor-pointer"
+          >
+            <option value="ALL">Tất cả loại giao dịch</option>
+            <option value="IMPORT">📥 Phiếu nhập kho</option>
+            <option value="EXPORT">📤 Phiếu xuất kho</option>
+            <option value="TRANSFER">🔄 Chuyển kho nội bộ</option>
+            <option value="ADJUSTMENT">📋 Điều chỉnh kiểm kê</option>
+          </select>
 
           {/* Warehouse Filter Dropdown */}
           <select

@@ -18,8 +18,6 @@ import {
   X,
   PanelLeftClose,
   PanelLeftOpen,
-  Sparkles,
-  Database,
 } from 'lucide-react';
 import { Logo } from './Logo';
 import { useAuthStore } from '../../stores/auth.store';
@@ -66,7 +64,6 @@ export const Sidebar: React.FC<SidebarProps> = ({
     label: string,
     icon: React.ReactNode,
     isAllowed: boolean,
-    hasSubmenu: boolean = false,
     requiredRoleLabel?: string
   ) => {
     if (!isAllowed) {
@@ -117,12 +114,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
               )}
             </div>
 
-            {!isCollapsed && hasSubmenu && (
-              <ChevronRight
-                className={`w-4 h-4 shrink-0 transition-transform ${
-                  isActive ? 'text-white/80' : 'text-slate-500 group-hover:text-slate-300'
-                }`}
-              />
+            {!isCollapsed && isActive && (
+              <ChevronRight className="w-4 h-4 shrink-0 text-white animate-in fade-in duration-150" />
             )}
 
             {/* Floating Tooltip khi Sidebar co lại (Collapsed) */}
@@ -157,11 +150,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="border-t border-[#262E38] my-3 mx-2" />
           )}
           <div className="space-y-1">
-            {renderNavItem('/products', 'Sản phẩm', <Package className="w-5 h-5 shrink-0" />, true, true)}
-            {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-5 h-5 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
-            {renderNavItem('/warehouses', 'Tổ chức kho hàng', <Building2 className="w-5 h-5 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
-            {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-5 h-5 shrink-0" />, isManagerOrAdmin, false, 'Quản lý')}
-            {renderNavItem('/customers', 'Khách hàng & Đại lý', <Users className="w-5 h-5 shrink-0" />, true, false)}
+            {renderNavItem('/products', 'Sản phẩm', <Package className="w-5 h-5 shrink-0" />, true)}
+            {renderNavItem('/categories', 'Danh mục & Đơn vị', <Layers className="w-5 h-5 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/warehouses', 'Tổ chức kho hàng', <Building2 className="w-5 h-5 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/suppliers', 'Nhà cung cấp', <Truck className="w-5 h-5 shrink-0" />, isManagerOrAdmin, 'Quản lý')}
+            {renderNavItem('/customers', 'Khách hàng & Đại lý', <Users className="w-5 h-5 shrink-0" />, true)}
           </div>
         </div>
 
@@ -176,7 +169,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           )}
           <div className="space-y-1">
             {renderNavItem('/purchase-orders', 'Đơn đặt hàng (PO)', <ShoppingCart className="w-5 h-5 shrink-0" />, true)}
-            {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-5 h-5 shrink-0" />, true, true)}
+            {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-5 h-5 shrink-0" />, true)}
             {renderNavItem('/my-tasks', 'Phiếu của tôi', <FileText className="w-5 h-5 shrink-0" />, true)}
           </div>
         </div>
@@ -191,72 +184,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="border-t border-[#262E38] my-3 mx-2" />
           )}
           <div className="space-y-1">
-            {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-5 h-5 shrink-0" />, isAdmin, false, 'Admin')}
-            {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-5 h-5 shrink-0" />, isAdmin, false, 'Admin')}
+            {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-5 h-5 shrink-0" />, isAdmin, 'Admin')}
+            {renderNavItem('/audit-logs', 'Nhật ký hệ thống', <History className="w-5 h-5 shrink-0" />, isAdmin, 'Admin')}
           </div>
         </div>
-
-        {/* Tiện ích Bổ sung & Giám sát hệ thống khi mở rộng */}
-        {!collapsed && (
-          <div className="pt-2 space-y-3">
-            {/* Widget Giám sát Sức chứa & Máy chủ */}
-            <div className="p-3.5 rounded-2xl bg-[#141A22] border border-[#262E38] text-xs space-y-2.5">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 font-bold text-slate-300">
-                  <span className="relative flex h-2 w-2">
-                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                    <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                  </span>
-                  <span>Hệ thống trực tuyến</span>
-                </div>
-                <span className="text-[10px] font-mono font-bold text-emerald-400 bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">
-                  ONLINE
-                </span>
-              </div>
-
-              {/* Sức chứa kho bãi */}
-              <div className="space-y-1">
-                <div className="flex items-center justify-between text-[11px] text-slate-400">
-                  <span>Sức chứa kho bãi</span>
-                  <span className="font-mono text-slate-200 font-bold">78%</span>
-                </div>
-                <div className="w-full h-1.5 bg-slate-800 rounded-full overflow-hidden">
-                  <div className="h-full bg-gradient-to-r from-emerald-500 to-teal-400 rounded-full w-[78%]" />
-                </div>
-              </div>
-
-              <div className="pt-2 border-t border-[#262E38]/80 flex items-center justify-between text-[11px] text-slate-400">
-                <span className="flex items-center gap-1 text-slate-400">
-                  <Database className="w-3 h-3 text-slate-500" /> PostgreSQL
-                </span>
-                <span className="text-emerald-400 font-medium">9/9 Kho sẵn sàng</span>
-              </div>
-            </div>
-
-            {/* Phím tắt Trợ lý AI Kho Hàng */}
-            <div className="p-3 rounded-2xl bg-gradient-to-br from-red-500/10 via-slate-800/40 to-slate-900 border border-red-500/20 flex items-center justify-between">
-              <div className="flex items-center gap-2.5 min-w-0">
-                <div className="w-8 h-8 rounded-xl bg-[#EE3D43]/20 text-[#EE3D43] flex items-center justify-center border border-red-500/30 shrink-0">
-                  <Sparkles className="w-4 h-4" />
-                </div>
-                <div className="min-w-0">
-                  <div className="text-xs font-bold text-white truncate">Trợ lý AI Kho</div>
-                  <div className="text-[10px] text-slate-400 truncate">Hỏi đáp tồn kho & SKU</div>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={() => {
-                  window.dispatchEvent(new CustomEvent('open-ai-assistant'));
-                  onClose?.();
-                }}
-                className="px-2.5 py-1 rounded-lg bg-[#EE3D43] hover:bg-[#D9343A] text-white text-[10px] font-bold transition-all shrink-0 cursor-pointer shadow-xs"
-              >
-                Mở AI
-              </button>
-            </div>
-          </div>
-        )}
       </nav>
     );
   };

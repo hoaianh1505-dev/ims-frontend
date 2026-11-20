@@ -16,14 +16,34 @@ interface ThemeState {
   toggleTheme: () => void;
 }
 
+export const applyThemeToDOM = (theme: ThemeMode) => {
+  const root = document.documentElement;
+  const isDark =
+    theme === 'dark' ||
+    (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+  if (isDark) {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+};
+
+const initialTheme = (localStorage.getItem('ims_theme') as ThemeMode) || 'light';
+// Áp dụng theme ngay khi app nạp
+if (typeof window !== 'undefined') {
+  applyThemeToDOM(initialTheme);
+}
+
 export const useThemeStore = create<ThemeState>((set, get) => ({
-  theme: (localStorage.getItem('ims_theme') as ThemeMode) || 'light',
+  theme: initialTheme,
   accent: (localStorage.getItem('ims_accent') as AccentColor) || 'red',
   density: (localStorage.getItem('ims_density') as DensityMode) || 'comfortable',
   soundEnabled: localStorage.getItem('ims_sound') !== 'false',
 
   setTheme: (theme) => {
     localStorage.setItem('ims_theme', theme);
+    applyThemeToDOM(theme);
     set({ theme });
   },
 
@@ -46,6 +66,7 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
     const current = get().theme;
     const next: ThemeMode = current === 'light' ? 'dark' : 'light';
     localStorage.setItem('ims_theme', next);
+    applyThemeToDOM(next);
     set({ theme: next });
   },
 }));

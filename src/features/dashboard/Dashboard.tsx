@@ -43,6 +43,7 @@ import {
   StockMovementItem,
   RecentTransaction,
 } from '../../services/dashboard.service';
+import { apiCache } from '../../services/api.client';
 import { showToast } from '../../utils/toast.util';
 
 const formatVND = (amount: number): string => {
@@ -183,7 +184,11 @@ export const Dashboard: React.FC = () => {
 
         <div className="flex items-center gap-2.5 shrink-0">
           <button
-            onClick={() => fetchDashboardData()}
+            onClick={() => {
+              apiCache.invalidate('/dashboard');
+              fetchDashboardData();
+              showToast.success('Đã cập nhật dữ liệu mới nhất!');
+            }}
             disabled={loading}
             className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 shadow-2xs transition-all cursor-pointer flex items-center gap-2"
             title="Làm mới dữ liệu từ server"

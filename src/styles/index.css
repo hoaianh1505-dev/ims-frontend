@@ -20,7 +20,10 @@
   }
 
   body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     @apply bg-brand-bg text-slate-800 antialiased selection:bg-brand-primary selection:text-white font-sans;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   /* Sleek modern scrollbar that stays consistent without jitter */

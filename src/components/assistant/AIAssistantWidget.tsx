@@ -74,6 +74,13 @@ export const AIAssistantWidget: React.FC = () => {
     }
   }, [isOpen, messages, loading]);
 
+  // Lắng nghe sự kiện mở từ Sidebar hoặc Settings
+  useEffect(() => {
+    const handleOpen = () => setIsOpen(true);
+    window.addEventListener('open-ai-assistant', handleOpen);
+    return () => window.removeEventListener('open-ai-assistant', handleOpen);
+  }, []);
+
   // Đóng khi bấm phím Esc
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

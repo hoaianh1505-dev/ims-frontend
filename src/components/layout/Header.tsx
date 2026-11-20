@@ -17,6 +17,7 @@ import {
 import { useAuthStore } from '../../stores/auth.store';
 import { UserAvatar } from '../common/UserAvatar';
 import { NotificationDropdown } from './NotificationDropdown';
+import { SettingsDropdown } from './SettingsDropdown';
 import { usersService } from '../../services/users.service';
 import { warehousesService } from '../../services/warehouses.service';
 import { showToast } from '../../utils/toast.util';
@@ -167,7 +168,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
         <Link
           to="/audit-logs"
           title="Lịch sử thao tác"
-          className="p-1.5 sm:p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
+          className="hidden sm:flex p-1.5 sm:p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
         >
           <History className="w-4 h-4 sm:w-5 sm:h-5" />
         </Link>
@@ -179,11 +180,11 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
         <div className="relative">
           <button
             onClick={() => setShowBranchMenu(!showBranchMenu)}
-            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+            className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+            title={`Chi nhánh: ${selectedBranch}`}
           >
             <Building2 className="w-4 h-4 text-slate-500 shrink-0" />
-            <span className="hidden md:inline">{selectedBranch}</span>
-            <span className="md:hidden max-w-[80px] sm:max-w-[120px] truncate">{selectedBranch.replace('Kho ', '')}</span>
+            <span className="hidden sm:inline">{selectedBranch}</span>
             <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
           </button>
 
@@ -223,6 +224,9 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
 
         {/* Realtime Notification Bell */}
         <NotificationDropdown />
+
+        {/* Settings & Customization Dropdown */}
+        <SettingsDropdown />
 
         {/* Hidden File Input for Avatar */}
         <input

@@ -406,7 +406,7 @@ export const ProductsPage: React.FC = () => {
               <button
                 onClick={handleExportExcel}
                 disabled={exportingExcel}
-                className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
+                className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
                 title="Xuất danh sách tồn kho ra file Excel (.xlsx)"
               >
                 <FileDown className="w-4 h-4 text-emerald-600" />
@@ -415,7 +415,7 @@ export const ProductsPage: React.FC = () => {
 
               <button
                 onClick={openCreateModal}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 <span>Thêm sản phẩm</span>
@@ -428,7 +428,7 @@ export const ProductsPage: React.FC = () => {
       {/* TOOLBAR: SEARCH & FILTERS */}
       <div className="shrink-0 bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3 min-h-[58px]">
         {/* Left: Search input */}
-        <div className="relative flex-1 min-w-[260px] max-w-sm">
+        <div className="relative flex-1 min-w-[180px] sm:min-w-[260px] max-w-sm">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
@@ -437,8 +437,8 @@ export const ProductsPage: React.FC = () => {
               setSearch(e.target.value);
               setPage(1);
             }}
-            placeholder="Tìm theo tên sản phẩm, SKU, barcode..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            placeholder="Tìm tên, SKU, barcode..."
+            className="w-full pl-9 sm:pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -451,7 +451,7 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* Middle: Clean Filter Tabs */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-sm font-medium text-slate-600">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium text-slate-600 overflow-x-auto no-scrollbar max-w-full">
           <button
             onClick={() => {
               setStockStatusFilter('all');
@@ -580,19 +580,160 @@ export const ProductsPage: React.FC = () => {
               </p>
             </div>
           ) : (
-            <table className="w-full text-left border-collapse text-sm">
-              <thead>
-                <tr className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs select-none shadow-2xs">
-                  <th className="py-2.5 px-4">Sản phẩm / Quy cách</th>
-                  <th className="py-2.5 px-4 w-44">Danh mục</th>
-                  <th className="py-2.5 px-4 w-44 text-right">Giá bán niêm yết</th>
-                  <th className="py-2.5 px-4 w-40 text-center">Tồn kho khả dụng</th>
-                  <th className="py-2.5 px-4 w-28 text-right whitespace-nowrap">Thao tác</th>
-                </tr>
-              </thead>
-              <tbody key={`${currentPage}-${selectedCategory}-${stockStatusFilter}-${sortBy}`} className="divide-y divide-slate-100 text-slate-700 animate-tab-enter">
+            <>
+              {/* DESKTOP TABLE VIEW (Màn hình máy tính) */}
+              <div className="hidden md:block">
+                <table className="w-full text-left border-collapse text-sm">
+                  <thead>
+                    <tr className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs select-none shadow-2xs">
+                      <th className="py-2.5 px-4">Sản phẩm / Quy cách</th>
+                      <th className="py-2.5 px-4 w-44">Danh mục</th>
+                      <th className="py-2.5 px-4 w-44 text-right">Giá bán niêm yết</th>
+                      <th className="py-2.5 px-4 w-40 text-center">Tồn kho khả dụng</th>
+                      <th className="py-2.5 px-4 w-28 text-right whitespace-nowrap">Thao tác</th>
+                    </tr>
+                  </thead>
+                  <tbody key={`${currentPage}-${selectedCategory}-${stockStatusFilter}-${sortBy}`} className="divide-y divide-slate-100 text-slate-700 animate-tab-enter">
+                    {paginatedProducts.map((p) => {
+                      const cost = Number(p.cost_price || 0);
+                      const sell = Number(p.selling_price || 0);
+                      const stock = p.current_stock ?? 0;
+                      const threshold = p.low_stock_threshold ?? 10;
+                      const isOutOfStock = stock <= 0;
+                      const isLowStock = !isOutOfStock && stock <= threshold;
+                      const primaryImg = p.images?.find((img) => img.is_primary)?.image_url || p.images?.[0]?.image_url;
+
+                      return (
+                        <tr
+                          key={p.id}
+                          onClick={() => setActiveDrawerProduct(p)}
+                          className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                        >
+                          {/* Name, SKU & Unit */}
+                          <td className="py-2.5 px-4">
+                            <div className="flex items-center gap-3">
+                              {primaryImg ? (
+                                <img
+                                  src={formatImageUrl(primaryImg)}
+                                  alt={p.name}
+                                  title="Bấm để xem phóng to"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setLightboxImageUrl(formatImageUrl(primaryImg));
+                                    setLightboxImageTitle(p.name);
+                                  }}
+                                  onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                  }}
+                                  className="w-10 h-10 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-slate-50 shadow-2xs hover:scale-105 transition-transform"
+                                />
+                              ) : (
+                                <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0 text-slate-400">
+                                  <Package className="w-5 h-5 stroke-[1.5]" />
+                                </div>
+                              )}
+                              <div className="min-w-0">
+                                <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
+                                  {p.name}
+                                </div>
+                                <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
+                                  <span className="font-mono text-xs text-slate-600 bg-slate-100 border border-slate-200/80 px-1.5 py-0.5 rounded">
+                                    {p.sku}
+                                  </span>
+                                  {p.unit && <span>• {p.unit.name}</span>}
+                                  {p.barcode && <span className="font-mono text-xs hidden sm:inline">• {p.barcode}</span>}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Category */}
+                          <td className="py-2.5 px-4 text-slate-600">
+                            <span className="line-clamp-1 text-sm">
+                              {p.category?.name || '—'}
+                            </span>
+                          </td>
+
+                          {/* Selling Price & Cost */}
+                          <td className="py-2.5 px-4 text-right whitespace-nowrap">
+                            <div className="font-medium text-slate-800 text-sm font-mono">
+                              {formatVND(sell)}
+                            </div>
+                            <div className="text-xs text-slate-400 mt-0.5">
+                              Vốn: {formatVND(cost)}
+                            </div>
+                          </td>
+
+                          {/* Stock Quantity & Status */}
+                          <td className="py-2.5 px-4 text-center whitespace-nowrap">
+                            <div className="font-medium text-slate-800 text-sm font-mono">
+                              {stock.toLocaleString('vi-VN')} {p.unit?.name || ''}
+                            </div>
+                            <div className="mt-1">
+                              {isOutOfStock ? (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                  Hết hàng
+                                </span>
+                              ) : isLowStock ? (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                  Sắp hết
+                                </span>
+                              ) : (
+                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                  Đủ hàng
+                                </span>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Actions */}
+                          <td
+                            className="py-2.5 px-4 text-right whitespace-nowrap"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            <div className="inline-flex items-center justify-end gap-1.5">
+                              <button
+                                onClick={() => setActiveDrawerProduct(p)}
+                                className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                                title="Xem chi tiết"
+                              >
+                                <Eye className="w-4 h-4" />
+                              </button>
+
+                              {isManagerOrAdmin && (
+                                <button
+                                  onClick={() => openEditModal(p)}
+                                  className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                                  title="Chỉnh sửa sản phẩm"
+                                >
+                                  <Edit3 className="w-4 h-4" />
+                                </button>
+                              )}
+
+                              {isAdmin && (
+                                <button
+                                  onClick={() => setDeleteTarget(p)}
+                                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                                  title="Xóa sản phẩm"
+                                >
+                                  <Trash2 className="w-4 h-4" />
+                                </button>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* MOBILE CARD VIEW (Dành riêng cho điện thoại - Tinh gọn, rõ ràng, 0% tràn viền) */}
+              <div className="md:hidden divide-y divide-slate-100 animate-tab-enter">
                 {paginatedProducts.map((p) => {
-                  const cost = Number(p.cost_price || 0);
                   const sell = Number(p.selling_price || 0);
                   const stock = p.current_stock ?? 0;
                   const threshold = p.low_stock_threshold ?? 10;
@@ -601,131 +742,68 @@ export const ProductsPage: React.FC = () => {
                   const primaryImg = p.images?.find((img) => img.is_primary)?.image_url || p.images?.[0]?.image_url;
 
                   return (
-                    <tr
-                      key={p.id}
+                    <div
+                      key={`mobile-${p.id}`}
                       onClick={() => setActiveDrawerProduct(p)}
-                      className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                      className="p-3 sm:p-4 hover:bg-slate-50/80 transition-colors flex items-center gap-3 cursor-pointer"
                     >
-                      {/* Name, SKU & Unit */}
-                      <td className="py-2.5 px-4">
-                        <div className="flex items-center gap-3">
-                          {primaryImg ? (
-                            <img
-                              src={formatImageUrl(primaryImg)}
-                              alt={p.name}
-                              title="Bấm để xem phóng to"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setLightboxImageUrl(formatImageUrl(primaryImg));
-                                setLightboxImageTitle(p.name);
-                              }}
-                              onError={(e) => {
-                                e.currentTarget.style.display = 'none';
-                              }}
-                              className="w-10 h-10 rounded-xl object-cover border border-slate-200/80 shrink-0 bg-slate-50 shadow-2xs hover:scale-105 transition-transform"
-                            />
-                          ) : (
-                            <div className="w-10 h-10 rounded-xl bg-slate-100 border border-slate-200/80 flex items-center justify-center shrink-0 text-slate-400">
-                              <Package className="w-5 h-5 stroke-[1.5]" />
-                            </div>
-                          )}
-                          <div className="min-w-0">
-                            <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
-                              {p.name}
-                            </div>
-                            <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
-                              <span className="font-mono text-xs text-slate-600 bg-slate-100 border border-slate-200/80 px-1.5 py-0.5 rounded">
-                                {p.sku}
+                      {/* Thumbnail */}
+                      {primaryImg ? (
+                        <img
+                          src={formatImageUrl(primaryImg)}
+                          alt={p.name}
+                          className="w-12 h-12 rounded-xl object-cover border border-slate-200 shrink-0 bg-slate-50 shadow-2xs"
+                          onError={(e) => {
+                            e.currentTarget.style.display = 'none';
+                          }}
+                        />
+                      ) : (
+                        <div className="w-12 h-12 rounded-xl bg-slate-100 border border-slate-200 flex items-center justify-center shrink-0 text-slate-400">
+                          <Package className="w-6 h-6 stroke-[1.5]" />
+                        </div>
+                      )}
+
+                      {/* Info */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-2">
+                          <span className="font-mono text-[11px] font-bold text-slate-600 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200">
+                            {p.sku}
+                          </span>
+                          <span className="font-mono font-bold text-slate-900 text-sm">
+                            {formatVND(sell)}
+                          </span>
+                        </div>
+
+                        <div className="font-semibold text-slate-800 text-sm truncate mt-1">
+                          {p.name}
+                        </div>
+
+                        <div className="flex items-center justify-between text-xs mt-1.5">
+                          <span className="text-slate-400 truncate max-w-[130px]">
+                            {p.category?.name || 'Chưa phân loại'}
+                          </span>
+                          <div>
+                            {isOutOfStock ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-rose-100 text-rose-700 border border-rose-200">
+                                Hết hàng (0)
                               </span>
-                              {p.unit && <span>• {p.unit.name}</span>}
-                              {p.barcode && <span className="font-mono text-xs hidden sm:inline">• {p.barcode}</span>}
-                            </div>
+                            ) : isLowStock ? (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-amber-100 text-amber-800 border border-amber-200">
+                                Sắp hết ({stock})
+                              </span>
+                            ) : (
+                              <span className="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                Tồn: {stock} {p.unit?.name || ''}
+                              </span>
+                            )}
                           </div>
                         </div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="py-2.5 px-4 text-slate-600">
-                        <span className="line-clamp-1 text-sm">
-                          {p.category?.name || '—'}
-                        </span>
-                      </td>
-
-                      {/* Selling Price & Cost */}
-                      <td className="py-2.5 px-4 text-right whitespace-nowrap">
-                        <div className="font-medium text-slate-800 text-sm font-mono">
-                          {formatVND(sell)}
-                        </div>
-                        <div className="text-xs text-slate-400 mt-0.5">
-                          Vốn: {formatVND(cost)}
-                        </div>
-                      </td>
-
-                      {/* Stock Quantity & Status */}
-                      <td className="py-2.5 px-4 text-center whitespace-nowrap">
-                        <div className="font-medium text-slate-800 text-sm font-mono">
-                          {stock.toLocaleString('vi-VN')} {p.unit?.name || ''}
-                        </div>
-                        <div className="mt-1">
-                          {isOutOfStock ? (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-rose-50 text-rose-700 border border-rose-200">
-                              <span className="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
-                              Hết hàng
-                            </span>
-                          ) : isLowStock ? (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-800 border border-amber-200">
-                              <span className="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
-                              Sắp hết
-                            </span>
-                          ) : (
-                            <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-50 text-emerald-700 border border-emerald-200">
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
-                              Đủ hàng
-                            </span>
-                          )}
-                        </div>
-                      </td>
-
-                      {/* Actions */}
-                      <td
-                        className="py-2.5 px-4 text-right whitespace-nowrap"
-                        onClick={(e) => e.stopPropagation()}
-                      >
-                        <div className="inline-flex items-center justify-end gap-1.5">
-                          <button
-                            onClick={() => setActiveDrawerProduct(p)}
-                            className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                            title="Xem chi tiết"
-                          >
-                            <Eye className="w-4 h-4" />
-                          </button>
-
-                          {isManagerOrAdmin && (
-                            <button
-                              onClick={() => openEditModal(p)}
-                              className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
-                              title="Chỉnh sửa sản phẩm"
-                            >
-                              <Edit3 className="w-4 h-4" />
-                            </button>
-                          )}
-
-                          {isAdmin && (
-                            <button
-                              onClick={() => setDeleteTarget(p)}
-                              className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
-                              title="Xóa sản phẩm"
-                            >
-                              <Trash2 className="w-4 h-4" />
-                            </button>
-                          )}
-                        </div>
-                      </td>
-                    </tr>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
+              </div>
+            </>
           )}
         </div>
 

@@ -12,14 +12,11 @@ import {
   CustomersPage,
   StockTransactionsPage,
   ProfilePage,
-  PlaceholderPage,
+  AuditLogsPage,
+  MyTasksPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
-import {
-  FileText,
-  History,
-} from 'lucide-react';
 
 export default function App() {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
@@ -61,17 +58,8 @@ export default function App() {
             {/* 7. Xử lý xuất / nhập (Real data from PostgreSQL) */}
             <Route path="stock-transactions" element={<StockTransactionsPage />} />
 
-            {/* 7. Phiếu của tôi */}
-            <Route
-              path="my-tasks"
-              element={
-                <PlaceholderPage
-                  title="Phiếu của tôi"
-                  description="Danh sách các phiếu kho được giao xử lý hoặc cần phê duyệt"
-                  icon={FileText}
-                />
-              }
-            />
+            {/* 7. Phiếu của tôi (Real data from PostgreSQL) */}
+            <Route path="my-tasks" element={<MyTasksPage />} />
 
             {/* 8. Hồ sơ cá nhân */}
             <Route path="profile" element={<ProfilePage />} />
@@ -79,17 +67,8 @@ export default function App() {
             {/* 9. Quản trị tài khoản & quyền */}
             <Route path="users" element={<UsersPage />} />
 
-            {/* 10. Nhật ký hệ thống */}
-            <Route
-              path="audit-logs"
-              element={
-                <PlaceholderPage
-                  title="Nhật ký hệ thống"
-                  description="Lịch sử thao tác, truy cập và thay đổi dữ liệu của người dùng"
-                  icon={History}
-                />
-              }
-            />
+            {/* 10. Nhật ký hệ thống (Real data from PostgreSQL) */}
+            <Route path="audit-logs" element={<AuditLogsPage />} />
           </Route>
         </Route>
 

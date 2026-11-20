@@ -8,4 +8,6 @@ export { SuppliersPage } from './SuppliersPage';
 export { CustomersPage } from './CustomersPage';
 export { StockTransactionsPage } from './StockTransactionsPage';
 export { ProfilePage } from './ProfilePage';
+export { AuditLogsPage } from './AuditLogsPage';
+export { MyTasksPage } from './MyTasksPage';
 export { PlaceholderPage } from './PlaceholderPage';

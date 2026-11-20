@@ -83,11 +83,13 @@ export const WarehousesPage: React.FC = () => {
   const fetchWarehouses = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await warehousesService.getAll({ limit: 100 });
-      setWarehouses(res.data || []);
+      const res: any = await warehousesService.getAll({ limit: 100 });
+      const list = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+      setWarehouses(list);
     } catch (err) {
       console.error('Lỗi tải kho hàng:', err);
       showNotify('error', 'Không thể tải danh sách kho hàng từ máy chủ');
+      setWarehouses([]);
     } finally {
       setLoading(false);
     }
@@ -96,9 +98,16 @@ export const WarehousesPage: React.FC = () => {
   // Load Managers (if Admin)
   useEffect(() => {
     if (isAdmin) {
-      usersService.getAll({ limit: 50 }).then((res) => {
-        setManagers(res.data || []);
-      });
+      usersService
+        .getAll({ limit: 50 })
+        .then((res: any) => {
+          const list = Array.isArray(res?.data) ? res.data : Array.isArray(res) ? res : [];
+          setManagers(list);
+        })
+        .catch((err) => {
+          console.error('Lỗi tải danh sách quản lý:', err);
+          setManagers([]);
+        });
     }
     fetchWarehouses();
   }, [isAdmin, fetchWarehouses]);
@@ -127,13 +136,15 @@ export const WarehousesPage: React.FC = () => {
 
   // Filter & Search Logic
   const filteredWarehouses = useMemo(() => {
-    return warehouses.filter((wh) => {
+    const list = Array.isArray(warehouses) ? warehouses : [];
+    return list.filter((wh) => {
+      if (!wh) return false;
       const q = search.trim().toLowerCase();
-      const matchSearch =
-        !q ||
-        wh.name.toLowerCase().includes(q) ||
-        wh.code.toLowerCase().includes(q) ||
-        (wh.address && wh.address.toLowerCase().includes(q));
+      const name = (wh.name || '').toLowerCase();
+      const code = (wh.code || '').toLowerCase();
+      const addr = (wh.address || '').toLowerCase();
+
+      const matchSearch = !q || name.includes(q) || code.includes(q) || addr.includes(q);
 
       const matchStatus =
         statusFilter === 'all' ||

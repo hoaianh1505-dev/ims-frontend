@@ -315,7 +315,7 @@ export const Dashboard: React.FC = () => {
         {/* Card 4: Cảnh báo tồn kho */}
         <Link
           to="/products"
-          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full border-rose-200/90 group hover:border-rose-400 bg-gradient-to-br from-white via-white to-rose-50/30 transition-all cursor-pointer block"
+          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full border-rose-200/90 dark:border-rose-900/50 group hover:border-rose-400 dark:hover:border-rose-700 bg-white dark:bg-[#161b22] transition-all cursor-pointer block"
           title="Xem danh sách các sản phẩm đang hết hàng hoặc dưới ngưỡng tối thiểu"
         >
           <div>

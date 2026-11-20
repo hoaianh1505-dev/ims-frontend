@@ -3,10 +3,14 @@ import ReactDOM from 'react-dom/client';
 import App from './App';
 import './styles/index.css';
 
-// Đảm bảo chỉ có sidebar là tối màu, toàn bộ giao diện sáng đồng nhất
+// Khôi phục giao diện Sáng / Tối từ localStorage ngay khi nạp ứng dụng
 if (typeof window !== 'undefined') {
-  document.documentElement.classList.remove('dark');
-  localStorage.removeItem('ims_theme');
+  const savedTheme = localStorage.getItem('ims_theme');
+  if (savedTheme === 'dark') {
+    document.documentElement.classList.add('dark');
+  } else {
+    document.documentElement.classList.remove('dark');
+  }
 }
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -14,4 +18,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
     <App />
   </React.StrictMode>,
 );
+
 

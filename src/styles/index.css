@@ -191,8 +191,21 @@ html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
 
 /* Inputs & dropdowns */
 html.dark input,
-html.dark select {
+html.dark select,
+html.dark textarea {
   background-color: #21262d !important;
   border-color: #30363d !important;
   color: #f0f6fc !important;
+}
+
+/* Clear bright gradient backgrounds in dark mode */
+html.dark [class*="from-white"] {
+  background-image: none !important;
+  background-color: #161b22 !important;
+}
+
+/* Dark mode drawer & modal shadows */
+html.dark .shadow-2xl,
+html.dark .shadow-xl {
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8) !important;
 }

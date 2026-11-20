@@ -149,7 +149,9 @@ apiClient.interceptors.response.use(
           { withCredentials: true },
         );
 
-        const newAccessToken = refreshResponse.data?.access_token;
+        const newAccessToken =
+          refreshResponse.data?.data?.access_token ||
+          refreshResponse.data?.access_token;
         if (newAccessToken) {
           localStorage.setItem('ims_access_token', newAccessToken);
           originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;

@@ -13,11 +13,13 @@ import {
   Camera,
   Loader2,
   Menu,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
+import { useThemeStore } from '../../stores/theme.store';
 import { UserAvatar } from '../common/UserAvatar';
 import { NotificationDropdown } from './NotificationDropdown';
-import { SettingsDropdown } from './SettingsDropdown';
 import { usersService } from '../../services/users.service';
 import { warehousesService } from '../../services/warehouses.service';
 import { showToast } from '../../utils/toast.util';
@@ -34,6 +36,7 @@ interface HeaderProps {
 
 export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
   const { user, logout, updateUser } = useAuthStore();
+  const { theme, toggleTheme } = useThemeStore();
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('Toàn hệ thống');
   const [warehousesList, setWarehousesList] = useState<string[]>(['Toàn hệ thống']);
@@ -225,8 +228,19 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
         {/* Realtime Notification Bell */}
         <NotificationDropdown />
 
-        {/* Settings & Customization Dropdown */}
-        <SettingsDropdown />
+        {/* Nút chuyển đổi Theme Sáng / Tối 1 chạm */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="p-1.5 sm:p-2 text-slate-500 hover:text-slate-800 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+          title={theme === 'dark' ? 'Chuyển sang giao diện Sáng' : 'Chuyển sang giao diện Tối'}
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-5 h-5 text-amber-400 transition-transform duration-200 hover:rotate-45" />
+          ) : (
+            <Moon className="w-5 h-5 text-slate-600 transition-transform duration-200 hover:-rotate-12" />
+          )}
+        </button>
 
         {/* Hidden File Input for Avatar */}
         <input

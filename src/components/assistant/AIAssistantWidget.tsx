@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import {
   Bot,
   X,
@@ -11,6 +11,9 @@ import {
   TrendingUp,
   Database,
   Loader2,
+  Minus,
+  Maximize2,
+  GripHorizontal,
 } from 'lucide-react';
 import { assistantService, ChatHistoryItem, AssistantToolCall } from '../../services/assistant.service';
 import { useAuthStore } from '../../stores/auth.store';
@@ -49,6 +52,7 @@ const QUICK_PROMPTS = [
 export const AIAssistantWidget: React.FC = () => {
   const { user } = useAuthStore();
   const [isOpen, setIsOpen] = useState(false);
+  const [isMinimized, setIsMinimized] = useState(false);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
@@ -60,6 +64,17 @@ export const AIAssistantWidget: React.FC = () => {
     },
   ]);
 
+  // Vị trí kéo thả (null = mặc định góc dưới bên phải)
+  const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
+  const isDraggingRef = useRef(false);
+  const dragStartRef = useRef<{ mouseX: number; mouseY: number; startX: number; startY: number }>({
+    mouseX: 0,
+    mouseY: 0,
+    startX: 0,
+    startY: 0,
+  });
+  const dialogRef = useRef<HTMLDivElement>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -68,18 +83,75 @@ export const AIAssistantWidget: React.FC = () => {
   };
 
   useEffect(() => {
-    if (isOpen) {
+    if (isOpen && !isMinimized) {
       scrollToBottom();
       setTimeout(() => inputRef.current?.focus(), 120);
     }
-  }, [isOpen, messages, loading]);
+  }, [isOpen, isMinimized, messages, loading]);
 
   // Lắng nghe sự kiện mở từ Sidebar hoặc Settings
   useEffect(() => {
-    const handleOpen = () => setIsOpen(true);
+    const handleOpen = () => {
+      setIsOpen(true);
+      setIsMinimized(false);
+    };
     window.addEventListener('open-ai-assistant', handleOpen);
     return () => window.removeEventListener('open-ai-assistant', handleOpen);
   }, []);
+
+  // Xử lý kéo thả (Drag and Drop)
+  const handleStartDrag = useCallback(
+    (e: React.MouseEvent | React.TouchEvent) => {
+      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+
+      const rect = dialogRef.current?.getBoundingClientRect();
+      const currentX = rect ? rect.left : window.innerWidth - 490;
+      const currentY = rect ? rect.top : window.innerHeight - 640;
+
+      isDraggingRef.current = true;
+      dragStartRef.current = {
+        mouseX: clientX,
+        mouseY: clientY,
+        startX: currentX,
+        startY: currentY,
+      };
+
+      const handleMove = (moveEv: MouseEvent | TouchEvent) => {
+        if (!isDraggingRef.current) return;
+        const curClientX = 'touches' in moveEv ? moveEv.touches[0].clientX : moveEv.clientX;
+        const curClientY = 'touches' in moveEv ? moveEv.touches[0].clientY : moveEv.clientY;
+
+        const deltaX = curClientX - dragStartRef.current.mouseX;
+        const deltaY = curClientY - dragStartRef.current.mouseY;
+
+        let nextX = dragStartRef.current.startX + deltaX;
+        let nextY = dragStartRef.current.startY + deltaY;
+
+        // Giới hạn trong khung nhìn màn hình
+        const width = dialogRef.current?.offsetWidth || 440;
+        const height = dialogRef.current?.offsetHeight || 500;
+        nextX = Math.max(10, Math.min(window.innerWidth - width - 10, nextX));
+        nextY = Math.max(10, Math.min(window.innerHeight - height - 10, nextY));
+
+        setPosition({ x: nextX, y: nextY });
+      };
+
+      const handleEnd = () => {
+        isDraggingRef.current = false;
+        window.removeEventListener('mousemove', handleMove);
+        window.removeEventListener('mouseup', handleEnd);
+        window.removeEventListener('touchmove', handleMove);
+        window.removeEventListener('touchend', handleEnd);
+      };
+
+      window.addEventListener('mousemove', handleMove);
+      window.addEventListener('mouseup', handleEnd);
+      window.addEventListener('touchmove', handleMove);
+      window.addEventListener('touchend', handleEnd);
+    },
+    [],
+  );
 
   // Đóng khi bấm phím Esc
   useEffect(() => {
@@ -216,158 +288,248 @@ export const AIAssistantWidget: React.FC = () => {
   return (
     <>
       {/* ========================================================
-          1. CHAT DIALOG (Nằm ngay ngắn góc dưới bên phải - Kích thước rộng rãi, chữ to rõ)
+          1. CHAT DIALOG (Hỗ trợ Kéo-Thả tự do & Thu nhỏ / Ẩn gọn)
          ======================================================== */}
       {isOpen ? (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[420px] sm:w-[480px] max-w-[calc(100vw-32px)] h-[620px] max-h-[calc(100vh-80px)] bg-white rounded-2xl shadow-2xl border border-slate-300/80 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 select-text">
-          {/* Header */}
-          <div className="bg-[#1B2129] text-white p-3.5 px-4 flex items-center justify-between border-b border-[#262E38] shrink-0">
-            <div className="flex items-center gap-3">
-              <div className="relative">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#EE3D43] to-rose-400 flex items-center justify-center text-white shadow-xs">
-                  <Bot className="w-5 h-5" />
-                </div>
-                <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#1B2129]" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-base tracking-tight text-white leading-tight">
-                  Trợ lý kho AI
-                </h3>
-                <p className="text-xs text-slate-300 font-medium mt-0.5">
-                  Tra cứu dữ liệu kho hàng thời gian thực
-                </p>
-              </div>
+        isMinimized ? (
+          /* TRẠNG THÁI THU NHỎ (Floating Mini Pill) */
+          <div
+            ref={dialogRef}
+            style={
+              position
+                ? { left: `${position.x}px`, top: `${position.y}px` }
+                : undefined
+            }
+            className={`fixed ${
+              !position ? 'bottom-4 right-4 sm:bottom-6 sm:right-6' : ''
+            } z-50 flex items-center gap-2.5 px-3.5 py-2.5 bg-[#1B2129] border border-[#30363d] text-white rounded-2xl shadow-2xl select-none animate-in fade-in zoom-in-95 duration-150`}
+          >
+            {/* Drag Handle */}
+            <div
+              onMouseDown={handleStartDrag}
+              onTouchStart={handleStartDrag}
+              className="cursor-move p-1 text-slate-400 hover:text-white"
+              title="Kéo thả đến bất cứ đâu"
+            >
+              <GripHorizontal className="w-4 h-4" />
             </div>
 
-            <div className="flex items-center gap-1.5">
+            <div
+              onClick={() => setIsMinimized(false)}
+              className="flex items-center gap-2 cursor-pointer"
+            >
+              <div className="w-6 h-6 rounded-lg bg-[#EE3D43] text-white flex items-center justify-center text-xs">
+                <Bot className="w-3.5 h-3.5" />
+              </div>
+              <span className="text-xs font-bold text-white">Trợ lý AI Kho</span>
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+            </div>
+
+            <div className="flex items-center gap-1 ml-1 border-l border-slate-700 pl-2">
               <button
                 type="button"
-                onClick={handleResetChat}
-                title="Đoạn chat mới"
-                className="p-1.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                onClick={() => setIsMinimized(false)}
+                title="Mở rộng hộp thoại"
+                className="p-1 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
               >
-                <RotateCcw className="w-4 h-4" />
+                <Maximize2 className="w-3.5 h-3.5" />
               </button>
               <button
                 type="button"
                 onClick={() => setIsOpen(false)}
-                title="Đóng hộp thoại"
-                className="p-1.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                title="Đóng hoàn toàn"
+                className="p-1 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
               >
-                <X className="w-5 h-5" />
+                <X className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
-
-          {/* Quick Prompt Chips */}
-          <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
-            {QUICK_PROMPTS.map((qp, idx) => (
-              <button
-                key={idx}
-                type="button"
-                onClick={() => handleSendMessage(qp.prompt)}
-                disabled={loading}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-rose-300 text-slate-800 hover:text-[#EE3D43] hover:bg-rose-50 text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
-              >
-                {qp.icon}
-                <span>{qp.label}</span>
-              </button>
-            ))}
-          </div>
-
-          {/* Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar bg-slate-50/60">
-            {messages.map((m) => {
-              const isUser = m.role === 'user';
-              return (
-                <div
-                  key={m.id}
-                  className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
-                >
-                  <div
-                    className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm shadow-xs ${
-                      isUser
-                        ? 'bg-[#EE3D43] text-white rounded-br-xs font-medium'
-                        : 'bg-white border border-slate-200/90 text-slate-900 rounded-bl-xs'
-                    }`}
-                  >
-                    {isUser ? (
-                      <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
-                    ) : (
-                      <div className="space-y-1.5">
-                        {renderFormattedContent(m.content)}
-
-                        {/* Tool Calls Badge */}
-                        {m.toolCalls && m.toolCalls.length > 0 && (
-                          <div className="pt-2 mt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                            {m.toolCalls.map((tc, tIdx) => (
-                              <span
-                                key={tIdx}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-mono font-medium border border-slate-200"
-                              >
-                                <Database className="w-3 h-3 text-emerald-600" />
-                                {tc.name}
-                              </span>
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    )}
+        ) : (
+          /* TRẠNG THÁI MỞ ĐẦY ĐỦ (Full Dialog - Draggable Header) */
+          <div
+            ref={dialogRef}
+            style={
+              position
+                ? {
+                    left: `${position.x}px`,
+                    top: `${position.y}px`,
+                    bottom: 'auto',
+                    right: 'auto',
+                  }
+                : undefined
+            }
+            className={`fixed ${
+              !position ? 'bottom-4 right-4 sm:bottom-6 sm:right-6' : ''
+            } z-50 w-[420px] sm:w-[480px] max-w-[calc(100vw-32px)] h-[620px] max-h-[calc(100vh-80px)] bg-white dark:bg-[#161b22] rounded-2xl shadow-2xl border border-slate-300/80 dark:border-[#30363d] flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 select-text`}
+          >
+            {/* Header - Kéo Thả (Drag Handle) */}
+            <div
+              onMouseDown={handleStartDrag}
+              onTouchStart={handleStartDrag}
+              className="bg-[#1B2129] text-white p-3.5 px-4 flex items-center justify-between border-b border-[#262E38] shrink-0 cursor-move select-none"
+              title="Giữ chuột và kéo để di chuyển hộp thoại"
+            >
+              <div className="flex items-center gap-3">
+                <GripHorizontal className="w-4 h-4 text-slate-500 shrink-0" />
+                <div className="relative">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#EE3D43] to-rose-400 flex items-center justify-center text-white shadow-xs">
+                    <Bot className="w-5 h-5" />
                   </div>
-                  <span className="text-xs text-slate-500 font-medium mt-1 px-1">
-                    {new Date(m.timestamp).toLocaleTimeString('vi-VN', {
-                      hour: '2-digit',
-                      minute: '2-digit',
-                    })}
-                  </span>
+                  <span className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-[#1B2129]" />
                 </div>
-              );
-            })}
 
-            {/* Loading Indicator */}
-            {loading && (
-              <div className="flex items-center gap-2.5 text-sm text-slate-600 bg-white border border-slate-200 rounded-2xl px-4 py-3 w-fit shadow-xs font-medium">
-                <Loader2 className="w-4 h-4 text-[#EE3D43] animate-spin" />
-                <span>Đang truy vấn số liệu thực tế...</span>
+                <div>
+                  <h3 className="font-bold text-base tracking-tight text-white leading-tight">
+                    Trợ lý kho AI
+                  </h3>
+                  <p className="text-xs text-slate-300 font-medium mt-0.5">
+                    Kéo thả di chuyển tự do • Tra cứu số liệu thực
+                  </p>
+                </div>
               </div>
-            )}
 
-            <div ref={messagesEndRef} />
-          </div>
-
-          {/* Input Footer */}
-          <div className="p-3.5 bg-white border-t border-slate-200 shrink-0">
-            <div className="flex items-center gap-2.5">
-              <input
-                ref={inputRef}
-                type="text"
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                onKeyDown={handleKeyDown}
-                placeholder="Hỏi trợ lý (ví dụ: Mặt hàng nào tồn kho nhiều nhất?)..."
-                disabled={loading}
-                className="flex-1 bg-slate-100 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all font-medium"
-              />
-              <button
-                type="button"
-                onClick={() => handleSendMessage()}
-                disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-xl bg-[#EE3D43] hover:bg-[#d63439] disabled:bg-slate-200 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
-                title="Gửi câu hỏi"
+              {/* Action buttons (Minimize, Reset, Close) */}
+              <div
+                className="flex items-center gap-1"
+                onMouseDown={(e) => e.stopPropagation()}
+                onTouchStart={(e) => e.stopPropagation()}
               >
-                <Send className="w-4 h-4" />
-              </button>
+                <button
+                  type="button"
+                  onClick={() => setIsMinimized(true)}
+                  title="Thu nhỏ thành thanh nổi gọn"
+                  className="p-1.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                >
+                  <Minus className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={handleResetChat}
+                  title="Đoạn chat mới"
+                  className="p-1.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-4 h-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setIsOpen(false)}
+                  title="Đóng hộp thoại"
+                  className="p-1.5 text-slate-300 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              </div>
             </div>
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mt-2 px-1">
-              <span>Nhấn Enter để gửi câu hỏi</span>
-              <span className="flex items-center gap-1.5 font-semibold text-emerald-600">
-                <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
-                Trực tuyến
-              </span>
+
+            {/* Quick Prompt Chips */}
+            <div className="bg-slate-50 dark:bg-[#0d1117] border-b border-slate-200 dark:border-[#30363d] px-3 py-2 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
+              {QUICK_PROMPTS.map((qp, idx) => (
+                <button
+                  key={idx}
+                  type="button"
+                  onClick={() => handleSendMessage(qp.prompt)}
+                  disabled={loading}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] hover:border-rose-300 dark:hover:border-rose-500 text-slate-800 dark:text-slate-200 hover:text-[#EE3D43] text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                >
+                  {qp.icon}
+                  <span>{qp.label}</span>
+                </button>
+              ))}
+            </div>
+
+            {/* Messages Body */}
+            <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar bg-slate-50/60 dark:bg-[#0d1117]">
+              {messages.map((m) => {
+                const isUser = m.role === 'user';
+                return (
+                  <div
+                    key={m.id}
+                    className={`flex flex-col ${isUser ? 'items-end' : 'items-start'}`}
+                  >
+                    <div
+                      className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm shadow-xs ${
+                        isUser
+                          ? 'bg-[#EE3D43] text-white rounded-br-xs font-medium'
+                          : 'bg-white dark:bg-[#161b22] border border-slate-200/90 dark:border-[#30363d] text-slate-900 dark:text-slate-100 rounded-bl-xs'
+                      }`}
+                    >
+                      {isUser ? (
+                        <p className="whitespace-pre-wrap leading-relaxed">{m.content}</p>
+                      ) : (
+                        <div className="space-y-1.5">
+                          {renderFormattedContent(m.content)}
+
+                          {/* Tool Calls Badge */}
+                          {m.toolCalls && m.toolCalls.length > 0 && (
+                            <div className="pt-2 mt-2 border-t border-slate-100 dark:border-[#30363d] flex flex-wrap gap-1.5">
+                              {m.toolCalls.map((tc, tIdx) => (
+                                <span
+                                  key={tIdx}
+                                  className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-[#21262d] text-slate-700 dark:text-slate-300 text-xs font-mono font-medium border border-slate-200 dark:border-[#30363d]"
+                                >
+                                  <Database className="w-3 h-3 text-emerald-600" />
+                                  {tc.name}
+                                </span>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <span className="text-xs text-slate-500 font-medium mt-1 px-1">
+                      {new Date(m.timestamp).toLocaleTimeString('vi-VN', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                      })}
+                    </span>
+                  </div>
+                );
+              })}
+
+              {/* Loading Indicator */}
+              {loading && (
+                <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[#30363d] rounded-2xl px-4 py-3 w-fit shadow-xs font-medium">
+                  <Loader2 className="w-4 h-4 text-[#EE3D43] animate-spin" />
+                  <span>Đang truy vấn số liệu thực tế...</span>
+                </div>
+              )}
+
+              <div ref={messagesEndRef} />
+            </div>
+
+            {/* Input Footer */}
+            <div className="p-3.5 bg-white dark:bg-[#161b22] border-t border-slate-200 dark:border-[#30363d] shrink-0">
+              <div className="flex items-center gap-2.5">
+                <input
+                  ref={inputRef}
+                  type="text"
+                  value={input}
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  placeholder="Hỏi trợ lý (ví dụ: Mặt hàng nào tồn kho nhiều nhất?)..."
+                  disabled={loading}
+                  className="flex-1 bg-slate-100 dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all font-medium"
+                />
+                <button
+                  type="button"
+                  onClick={() => handleSendMessage()}
+                  disabled={!input.trim() || loading}
+                  className="w-10 h-10 rounded-xl bg-[#EE3D43] hover:bg-[#d63439] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
+                  title="Gửi câu hỏi"
+                >
+                  <Send className="w-4 h-4" />
+                </button>
+              </div>
+              <div className="flex items-center justify-between text-xs text-slate-500 font-medium mt-2 px-1">
+                <span>Nhấn Enter để gửi câu hỏi</span>
+                <span className="flex items-center gap-1.5 font-semibold text-emerald-600">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
+                  Trực tuyến
+                </span>
+              </div>
             </div>
           </div>
-        </div>
+        )
       ) : (
         /* ========================================================
             2. FLOATING CHAT BUBBLE (Bóng tròn nổi góc dưới khi đóng)
@@ -375,9 +537,12 @@ export const AIAssistantWidget: React.FC = () => {
         <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none">
           <button
             type="button"
-            onClick={() => setIsOpen(true)}
+            onClick={() => {
+              setIsOpen(true);
+              setIsMinimized(false);
+            }}
             className="relative group p-4 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#EE3D43] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/25"
-            title="Mở Trợ lý kho AI"
+            title="Mở Trợ lý kho AI (Có thể kéo thả di chuyển tự do)"
           >
             <Bot className="w-7 h-7 stroke-[2.2]" />
             <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-amber-400 text-slate-900 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs">

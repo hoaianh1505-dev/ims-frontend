@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
+import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import {
   Bell,
@@ -114,13 +115,29 @@ export const NotificationDropdown: React.FC = () => {
           }
         };
 
-        eventSource.onerror = () => {
+        eventSource.onerror = async () => {
           if (eventSource) {
             eventSource.close();
             eventSource = null;
           }
-          // Retry after 5s
-          retryTimer = setTimeout(connectSSE, 5000);
+          // Thử làm mới token nếu kết nối bị gián đoạn do token hết hạn
+          try {
+            const baseURL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:5000';
+            const refreshRes = await axios.post(
+              `${baseURL}/auth/refresh`,
+              {},
+              { withCredentials: true }
+            );
+            const freshToken =
+              refreshRes.data?.data?.access_token || refreshRes.data?.access_token;
+            if (freshToken) {
+              localStorage.setItem('ims_access_token', freshToken);
+            }
+          } catch {
+            // Nếu không thể refresh thì không spam lặp lại liên tục
+          }
+          // Thử kết nối lại sau 10 giây
+          retryTimer = setTimeout(connectSSE, 10000);
         };
       } catch (err) {
         console.error('Lỗi kết nối SSE stream:', err);

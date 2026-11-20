@@ -3,10 +3,22 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { AIAssistantWidget } from '../assistant/AIAssistantWidget';
+import { useAuthStore } from '../../stores/auth.store';
+import { authService } from '../../services/auth.service';
 
 export const AppLayout: React.FC = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const location = useLocation();
+  const { updateUser, isAuthenticated } = useAuthStore();
+
+  // Luôn đồng bộ hồ sơ & avatar mới nhất từ server khi vào layout
+  useEffect(() => {
+    if (isAuthenticated) {
+      authService.getProfile().then((fresh) => {
+        if (fresh) updateUser(fresh);
+      }).catch(() => {});
+    }
+  }, [isAuthenticated]);
 
   // Đóng sidebar trên mobile mỗi khi chuyển trang
   useEffect(() => {

@@ -35,9 +35,18 @@ export const useAuthStore = create<AuthState>((set) => ({
     try {
       const data = await authService.login(payload);
       localStorage.setItem('ims_access_token', data.access_token);
-      localStorage.setItem('ims_user', JSON.stringify(data.user));
+      let userObj = data.user;
+      try {
+        const fresh = await authService.getProfile();
+        if (fresh) {
+          userObj = { ...userObj, ...fresh };
+        }
+      } catch {
+        // fallback to data.user
+      }
+      localStorage.setItem('ims_user', JSON.stringify(userObj));
       set({
-        user: data.user,
+        user: userObj,
         token: data.access_token,
         isAuthenticated: true,
         isLoading: false,

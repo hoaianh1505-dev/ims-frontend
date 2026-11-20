@@ -106,9 +106,10 @@ export const ProfilePage: React.FC = () => {
 
     try {
       setIsUploadingAvatar(true);
-      const updated = await usersService.uploadAvatar(user.id, file);
-      if (updated.avatar) {
-        updateUser({ avatar: updated.avatar });
+      const updated: any = await usersService.uploadAvatar(user.id, file);
+      const newAvatar = updated?.avatar || updated?.data?.avatar;
+      if (newAvatar) {
+        updateUser({ avatar: newAvatar });
       }
       showToast.success('Cập nhật ảnh đại diện thành công!');
     } catch (err: any) {

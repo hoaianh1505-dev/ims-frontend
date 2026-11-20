@@ -76,31 +76,31 @@ export const usersService = {
   },
 
   update: async (id: string, data: UpdateUserData) => {
-    const res = await apiClient.patch<UserItem>(`/users/${id}`, data);
-    return res.data;
+    const res = await apiClient.patch<any>(`/users/${id}`, data);
+    return res.data?.data || res.data;
   },
 
   resetPassword: async (id: string, new_password?: string) => {
-    const res = await apiClient.patch<ResetPasswordResponse>(
+    const res = await apiClient.patch<any>(
       `/users/${id}/reset-password`,
       new_password ? { new_password } : {}
     );
-    return res.data;
+    return res.data?.data || res.data;
   },
 
   delete: async (id: string) => {
-    const res = await apiClient.delete<{ success: boolean; message?: string }>(`/users/${id}`);
-    return res.data;
+    const res = await apiClient.delete<any>(`/users/${id}`);
+    return res.data?.data || res.data;
   },
 
   uploadAvatar: async (id: string, file: File) => {
     const formData = new FormData();
     formData.append('file', file);
-    const res = await apiClient.post<UserItem>(`/users/${id}/avatar`, formData, {
+    const res = await apiClient.post<any>(`/users/${id}/avatar`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
-    return res.data;
+    return res.data?.data || res.data;
   },
 };

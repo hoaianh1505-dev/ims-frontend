@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
+import { AIAssistantWidget } from '../assistant/AIAssistantWidget';
 
 export const AppLayout: React.FC = () => {
   const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
@@ -13,7 +14,7 @@ export const AppLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="h-full w-full bg-[#F4F5F7] flex overflow-hidden">
+    <div className="h-full w-full bg-[#F4F5F7] flex overflow-hidden relative">
       {/* Sidebar (Responsive cho desktop & mobile) */}
       <Sidebar
         isMobileOpen={isMobileSidebarOpen}
@@ -30,7 +31,9 @@ export const AppLayout: React.FC = () => {
           </div>
         </main>
       </div>
+
+      {/* Trợ lý AI Quản Lý Kho Hàng (Bóng chat nổi góc dưới bên phải - Stateless) */}
+      <AIAssistantWidget />
     </div>
   );
 };
-

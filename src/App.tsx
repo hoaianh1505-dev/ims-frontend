@@ -1,7 +1,7 @@
 import { Component, ErrorInfo, ReactNode } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { AlertTriangle, RefreshCw } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
 import { useAuthStore } from './stores/auth.store';
 import {
   LoginPage,
@@ -46,30 +46,57 @@ class GlobalErrorBoundary extends Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 text-slate-100">
-          <div className="max-w-md w-full bg-[#161b22] border border-[#30363d] rounded-2xl p-6 text-center space-y-4 shadow-2xl">
-            <div className="w-12 h-12 rounded-full bg-rose-500/10 border border-rose-500/20 text-rose-500 flex items-center justify-center mx-auto">
-              <AlertTriangle className="w-6 h-6" />
+        <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f17] flex items-center justify-center p-6 text-slate-800 dark:text-slate-200">
+          <div className="max-w-md w-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[#384252] rounded-3xl p-7 text-center space-y-5 shadow-xl animate-in fade-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 text-[#EE3D43] flex items-center justify-center mx-auto shadow-xs">
+              <AlertTriangle className="w-7 h-7" />
             </div>
-            <h2 className="text-lg font-bold text-white">Đã xảy ra lỗi hiển thị</h2>
-            <p className="text-xs text-slate-400">
-              Hệ thống đã tự động ghi nhận sự cố để tránh trắng màn hình. Bạn có thể nhấn tải lại trang để tiếp tục làm việc.
-            </p>
+
+            <div>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+                Đã xảy ra sự cố hiển thị
+              </h2>
+              <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1.5 leading-relaxed">
+                Hệ thống đã tự động bảo vệ để tránh lỗi trắng màn hình. Bạn có thể nhấn tải lại trang để tiếp tục làm việc bình thường.
+              </p>
+            </div>
+
             {this.state.error && (
-              <pre className="text-[11px] font-mono text-rose-300 bg-rose-950/30 p-2.5 rounded-lg text-left overflow-x-auto border border-rose-900/40">
-                {this.state.error.message}
-              </pre>
+              <div className="p-3 bg-slate-50 dark:bg-[#0d1117] rounded-xl border border-slate-200 dark:border-[#384252] text-left">
+                <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 block mb-1">
+                  Chi tiết kỹ thuật:
+                </span>
+                <p className="text-xs font-mono text-rose-600 dark:text-rose-400 truncate">
+                  {this.state.error.message}
+                </p>
+              </div>
             )}
-            <button
-              onClick={() => {
-                this.setState({ hasError: false, error: null });
-                window.location.reload();
-              }}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold transition-colors cursor-pointer"
-            >
-              <RefreshCw className="w-3.5 h-3.5" />
-              <span>Tải lại trang</span>
-            </button>
+
+            <div className="flex items-center justify-center gap-3 pt-1">
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({ hasError: false, error: null });
+                  window.location.reload();
+                }}
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+              >
+                <RefreshCw className="w-4 h-4" />
+                <span>Tải lại trang</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  this.setState({ hasError: false, error: null });
+                  window.location.href = '/';
+                }}
+                className="inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 dark:bg-[#21262d] dark:hover:bg-[#30363d] text-slate-700 dark:text-slate-300 rounded-xl text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
+              >
+                <Home className="w-4 h-4" />
+                <span>Về trang chủ</span>
+              </button>
+            </div>
           </div>
         </div>
       );

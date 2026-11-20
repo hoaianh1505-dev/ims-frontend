@@ -1,9 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
   Plus,
   History,
-  HelpCircle,
   ChevronDown,
   Building2,
   Package,
@@ -19,6 +18,7 @@ import { useAuthStore } from '../../stores/auth.store';
 import { UserAvatar } from '../common/UserAvatar';
 import { NotificationDropdown } from './NotificationDropdown';
 import { usersService } from '../../services/users.service';
+import { warehousesService } from '../../services/warehouses.service';
 import { showToast } from '../../utils/toast.util';
 
 const ROLE_LABELS: Record<string, string> = {
@@ -34,12 +34,38 @@ interface HeaderProps {
 export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
   const { user, logout, updateUser } = useAuthStore();
   const [showQuickAdd, setShowQuickAdd] = useState(false);
-  const [selectedBranch, setSelectedBranch] = useState('Kho Tổng Hà Nội');
+  const [selectedBranch, setSelectedBranch] = useState('Toàn hệ thống');
+  const [warehousesList, setWarehousesList] = useState<string[]>(['Toàn hệ thống']);
   const [showBranchMenu, setShowBranchMenu] = useState(false);
   const [showProfileMenu, setShowProfileMenu] = useState(false);
   const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const avatarInputRef = useRef<HTMLInputElement>(null);
   const roleLabel = ROLE_LABELS[user?.role || ''] || user?.role || '';
+
+  // Load real warehouses list from PostgreSQL
+  useEffect(() => {
+    let isMounted = true;
+    const fetchWarehouses = async () => {
+      try {
+        const res = await warehousesService.getAll({ limit: 50 });
+        const list = Array.isArray((res as any)?.data)
+          ? (res as any).data
+          : Array.isArray(res)
+          ? res
+          : [];
+        if (isMounted && list.length > 0) {
+          const names = list.map((w: any) => w.name || w.code);
+          setWarehousesList(['Toàn hệ thống', ...names]);
+        }
+      } catch (err) {
+        // Fallback to default
+      }
+    };
+    fetchWarehouses();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleAvatarSelect = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -171,24 +197,22 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                 <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Chọn chi nhánh kho
                 </div>
-                {['Kho Tổng Hà Nội', 'Kho Miền Nam - Tân Tạo', 'Kho Đà Nẵng', 'Toàn hệ thống'].map(
-                  (branch) => (
-                    <button
-                      key={branch}
-                      onClick={() => {
-                        setSelectedBranch(branch);
-                        setShowBranchMenu(false);
-                      }}
-                      className={`w-full text-left px-4 py-2.5 font-medium transition-colors ${
-                        selectedBranch === branch
-                          ? 'bg-rose-50 text-[#EE3D43] font-bold'
-                          : 'text-slate-700 hover:bg-slate-50'
-                      }`}
-                    >
-                      {branch}
-                    </button>
-                  )
-                )}
+                {warehousesList.map((branch) => (
+                  <button
+                    key={branch}
+                    onClick={() => {
+                      setSelectedBranch(branch);
+                      setShowBranchMenu(false);
+                    }}
+                    className={`w-full text-left px-4 py-2.5 font-medium transition-colors ${
+                      selectedBranch === branch
+                        ? 'bg-rose-50 text-[#EE3D43] font-bold'
+                        : 'text-slate-700 hover:bg-slate-50'
+                    }`}
+                  >
+                    {branch}
+                  </button>
+                ))}
               </div>
             </>
           )}
@@ -199,14 +223,6 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
 
         {/* Realtime Notification Bell */}
         <NotificationDropdown />
-
-        {/* Help (hidden on mobile) */}
-        <button
-          title="Trợ giúp"
-          className="hidden md:flex p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
-        >
-          <HelpCircle className="w-5 h-5" />
-        </button>
 
         {/* Hidden File Input for Avatar */}
         <input

@@ -28,3 +28,4 @@ export const assistantService = {
     return res.data?.data || res.data;
   },
 };
+

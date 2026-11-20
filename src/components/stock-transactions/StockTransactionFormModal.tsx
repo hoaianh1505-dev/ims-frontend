@@ -4,10 +4,7 @@ import {
   Plus,
   Trash2,
   Loader2,
-  ArrowDownLeft,
-  ArrowUpRight,
   ArrowLeftRight,
-  ClipboardCheck,
 } from 'lucide-react';
 import {
   StockTransactionType,
@@ -48,31 +45,35 @@ interface FormRowItem {
   unit_price: number;
 }
 
+const truncateOption = (text: string, maxLen = 25) => {
+  if (!text) return '';
+  return text.length > maxLen ? `${text.slice(0, maxLen - 1)}…` : text;
+};
+
 const PRESET_REASONS: Record<StockTransactionType, string[]> = {
   IMPORT: [
-    'Nhập hàng mua mới từ nhà cung cấp',
-    'Nhập bổ sung tồn kho định kỳ',
-    'Nhập hàng khách trả lại / hoàn trả',
-    'Nhập hàng điều chuyển từ chi nhánh',
-    'Nhập cân đối dư thừa sau kiểm kê',
+    'Nhập mua mới từ NCC',
+    'Nhập bù tồn kho định kỳ',
+    'Khách hoàn trả / đổi bảo hành',
+    'Nhập điều chuyển chi nhánh',
+    'Nhập cân đối sau kiểm kê',
   ],
   EXPORT: [
     'Xuất bán hàng cho khách lẻ',
     'Xuất hàng đại lý / bán buôn',
-    'Xuất điều chuyển sang chi nhánh khác',
-    'Xuất trả hàng lỗi cho nhà cung cấp',
-    'Xuất hủy hàng hỏng hóc / quá hạn',
-    'Xuất hàng mẫu / quà tặng khuyến mãi',
+    'Xuất chuyển sang chi nhánh',
+    'Xuất trả hàng lỗi cho NCC',
+    'Xuất hủy hàng hỏng / quá hạn',
   ],
   TRANSFER: [
-    'Điều chuyển cân bằng tồn kho giữa các chi nhánh',
-    'Điều chuyển hàng hóa phục vụ đơn hàng tỉnh',
-    'Điều chuyển hàng về kho trung tâm',
+    'Điều chuyển cân bằng kho',
+    'Chuyển hàng phục vụ đơn tỉnh',
+    'Chuyển hàng về kho trung tâm',
   ],
   ADJUSTMENT: [
-    'Cân bằng tồn kho định kỳ cuối tháng',
-    'Điều chỉnh hao hụt hàng hóa trong lưu kho',
-    'Xử lý chênh lệch số liệu kiểm kê thực tế',
+    'Kiểm kê định kỳ cuối tháng',
+    'Hao hụt hàng hóa lưu kho',
+    'Xử lý chênh lệch thực tế',
   ],
 };
 
@@ -432,68 +433,9 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
           </button>
         </div>
 
-        {/* Transaction Type Segmented Control */}
-        <div className="px-6 py-2.5 bg-slate-50/40 dark:bg-[#0d1117]/60 border-b border-slate-100 dark:border-[#30363d] shrink-0">
-          <div className="inline-flex p-1 bg-slate-200/60 dark:bg-[#0d1117] rounded-xl border border-slate-200/80 dark:border-[#30363d] gap-1 overflow-x-auto max-w-full">
-            <button
-              type="button"
-              onClick={() => setTxType('IMPORT')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                txType === 'IMPORT'
-                  ? 'bg-emerald-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/5'
-              }`}
-            >
-              <ArrowDownLeft className="w-3.5 h-3.5" />
-              <span>Phiếu nhập kho</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTxType('EXPORT')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                txType === 'EXPORT'
-                  ? 'bg-[#EE3D43] text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/5'
-              }`}
-            >
-              <ArrowUpRight className="w-3.5 h-3.5" />
-              <span>Phiếu xuất kho</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setTxType('TRANSFER')}
-              className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                txType === 'TRANSFER'
-                  ? 'bg-blue-600 text-white shadow-xs'
-                  : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/5'
-              }`}
-            >
-              <ArrowLeftRight className="w-3.5 h-3.5" />
-              <span>Chuyển kho nội bộ</span>
-            </button>
-
-            {isManagerOrAdmin && (
-              <button
-                type="button"
-                onClick={() => setTxType('ADJUSTMENT')}
-                className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                  txType === 'ADJUSTMENT'
-                    ? 'bg-amber-600 text-white shadow-xs'
-                    : 'text-slate-600 dark:text-slate-300 hover:text-slate-900 dark:hover:text-white hover:bg-white/60 dark:hover:bg-white/5'
-                }`}
-              >
-                <ClipboardCheck className="w-3.5 h-3.5" />
-                <span>Điều chỉnh kiểm kê</span>
-              </button>
-            )}
-          </div>
-        </div>
-
         {/* Form Body */}
         <form onSubmit={handleSubmit} className="flex-1 min-h-0 flex flex-col overflow-hidden">
-          {/* General Voucher Metadata - Tối ưu 100% thành dropdowns */}
+          {/* General Voucher Metadata - Tối ưu 100% thành dropdowns gọn đẹp */}
           <div className="px-6 py-4 space-y-3 bg-slate-50/40 dark:bg-[#161b22]/50 border-b border-slate-100 dark:border-[#30363d] shrink-0">
             {/* Row 1: 3 columns */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5">
@@ -505,13 +447,13 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                 <select
                   value={txType}
                   onChange={(e) => setTxType(e.target.value as StockTransactionType)}
-                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-bold text-slate-900 dark:text-white bg-white dark:bg-[#0d1117] focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] shadow-2xs cursor-pointer"
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-bold text-slate-900 dark:text-white bg-white dark:bg-[#0d1117] focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] shadow-2xs cursor-pointer truncate"
                 >
-                  <option value="IMPORT">📥 Phiếu nhập kho (Nhập NCC / Bù tồn)</option>
-                  <option value="EXPORT">📤 Phiếu xuất kho (Xuất bán / Đại lý)</option>
-                  <option value="TRANSFER">🔄 Chuyển kho nội bộ (Giữa các kho)</option>
+                  <option value="IMPORT">Phiếu nhập kho</option>
+                  <option value="EXPORT">Phiếu xuất kho</option>
+                  <option value="TRANSFER">Chuyển kho nội bộ</option>
                   {isManagerOrAdmin && (
-                    <option value="ADJUSTMENT">📋 Điều chỉnh kiểm kê (Cân bằng thực tế)</option>
+                    <option value="ADJUSTMENT">Điều chỉnh kiểm kê</option>
                   )}
                 </select>
               </div>
@@ -532,12 +474,12 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                   value={warehouseId}
                   onChange={(e) => setWarehouseId(e.target.value)}
                   required
-                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                 >
                   <option value="">-- Chọn kho hàng --</option>
                   {warehouses.map((w) => (
-                    <option key={w.id} value={w.id}>
-                      {w.name} ({w.code})
+                    <option key={w.id} value={w.id} title={w.name}>
+                      {truncateOption(w.name, 20)} ({w.code})
                     </option>
                   ))}
                 </select>
@@ -553,12 +495,12 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     <select
                       value={supplierId}
                       onChange={(e) => setSupplierId(e.target.value)}
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                     >
                       <option value="">-- Không chọn / Nhập lẻ --</option>
                       {activeSuppliers.map((s) => (
-                        <option key={s.id} value={s.id}>
-                          {s.name} {s.code ? `(${s.code})` : ''}
+                        <option key={s.id} value={s.id} title={s.name}>
+                          {s.code ? `[${s.code}] ` : ''}{truncateOption(s.name, 20)}
                         </option>
                       ))}
                     </select>
@@ -571,14 +513,14 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     <select
                       value={customerId}
                       onChange={(e) => setCustomerId(e.target.value)}
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                     >
-                      <option value="">-- Khách vãng lai / Bán lẻ trực tiếp --</option>
+                      <option value="">-- Khách vãng lai / Bán lẻ --</option>
                       {internalCustomers
                         .filter((c) => c.is_active !== false)
                         .map((c) => (
-                          <option key={c.id} value={c.id}>
-                            {c.name} {c.code ? `(${c.code})` : ''} {c.phone ? `- ${c.phone}` : ''}
+                          <option key={c.id} value={c.id} title={c.name}>
+                            {truncateOption(c.name, 20)} {c.phone ? `(${c.phone})` : ''}
                           </option>
                         ))}
                     </select>
@@ -592,14 +534,14 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                       value={targetWarehouseId}
                       onChange={(e) => setTargetWarehouseId(e.target.value)}
                       required
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                     >
                       <option value="">-- Chọn kho đích --</option>
                       {warehouses
                         .filter((w) => w.id !== warehouseId)
                         .map((w) => (
-                          <option key={w.id} value={w.id}>
-                            {w.name} ({w.code})
+                          <option key={w.id} value={w.id} title={w.name}>
+                            {truncateOption(w.name, 20)} ({w.code})
                           </option>
                         ))}
                     </select>
@@ -611,16 +553,16 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                     </label>
                     <select
                       defaultValue="Kiểm kê định kỳ & Cân bằng tồn kho"
-                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                      className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                     >
                       <option value="Kiểm kê định kỳ & Cân bằng tồn kho">
-                        Kiểm kê định kỳ & Cân bằng tồn kho
+                        Kiểm kê định kỳ
                       </option>
                       <option value="Kiểm kê đột xuất cuối tháng">
-                        Kiểm kê đột xuất cuối tháng
+                        Kiểm kê đột xuất
                       </option>
                       <option value="Cân đối hao hụt & hàng hỏng">
-                        Cân đối hao hụt & hàng hỏng
+                        Cân đối hao hụt
                       </option>
                       <option value="Bàn giao ca thủ kho">
                         Bàn giao ca thủ kho
@@ -644,7 +586,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                       setNote(e.target.value);
                     }
                   }}
-                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer"
+                  className="w-full h-9 px-3 border border-slate-200 dark:border-[#30363d] rounded-lg text-xs font-medium text-slate-800 dark:text-slate-100 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] focus:border-[#EE3D43] bg-white dark:bg-[#0d1117] shadow-2xs cursor-pointer truncate"
                 >
                   <option value="">-- Chọn lý do nghiệp vụ --</option>
                   {PRESET_REASONS[txType]?.map((reason) => (
@@ -756,8 +698,8 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                           >
                             <option value="">-- Chọn sản phẩm --</option>
                             {products.map((p) => (
-                              <option key={p.id} value={p.id}>
-                                [{p.sku}] {p.name}
+                              <option key={p.id} value={p.id} title={`[${p.sku}] ${p.name}`}>
+                                [{p.sku}] {truncateOption(p.name, 26)}
                               </option>
                             ))}
                           </select>

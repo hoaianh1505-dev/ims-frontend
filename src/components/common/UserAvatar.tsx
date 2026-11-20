@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { formatImageUrl } from '../../utils/image.util';
 
 interface UserAvatarProps {
@@ -17,6 +17,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   className = '',
 }) => {
   const [hasError, setHasError] = useState(false);
+
+  useEffect(() => {
+    setHasError(false);
+  }, [src]);
 
   const sizeClasses = {
     xs: 'w-6 h-6',

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   User,
   Mail,
@@ -18,7 +18,7 @@ import { useAuthStore } from '../stores/auth.store';
 import { usersService } from '../services/users.service';
 import { authService } from '../services/auth.service';
 import { showToast } from '../utils/toast.util';
-import { UserAvatar } from '../components/common/UserAvatar';
+import { formatImageUrl } from '../utils/image.util';
 
 const ROLE_LABELS: Record<string, { label: string; badge: string; desc: string }> = {
   ADMIN: {
@@ -48,6 +48,27 @@ export const ProfilePage: React.FC = () => {
   const [phone, setPhone] = useState(user?.phone || '');
   const [isUpdatingProfile, setIsUpdatingProfile] = useState(false);
   const [isUploadingAvatar, setIsUploadingAvatar] = useState(false);
+  const [previewAvatar, setPreviewAvatar] = useState<string | null>(null);
+  const [avatarError, setAvatarError] = useState(false);
+
+  // Sync fresh profile from server on mount
+  useEffect(() => {
+    authService.getProfile().then((fresh) => {
+      if (fresh) {
+        updateUser(fresh);
+        if (fresh.display_name) setDisplayName(fresh.display_name);
+        if (fresh.email) setEmail(fresh.email);
+        if (fresh.phone) setPhone(fresh.phone);
+      }
+    }).catch(() => {});
+  }, []);
+
+  const activeAvatarSrc = previewAvatar || user?.avatar;
+  const resolvedAvatarUrl = formatImageUrl(activeAvatarSrc);
+
+  useEffect(() => {
+    setAvatarError(false);
+  }, [activeAvatarSrc]);
 
   // Password Form State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -78,6 +99,11 @@ export const ProfilePage: React.FC = () => {
       return;
     }
 
+    // Instant local preview
+    const objectUrl = URL.createObjectURL(file);
+    setPreviewAvatar(objectUrl);
+    setAvatarError(false);
+
     try {
       setIsUploadingAvatar(true);
       const updated = await usersService.uploadAvatar(user.id, file);
@@ -88,6 +114,7 @@ export const ProfilePage: React.FC = () => {
     } catch (err: any) {
       const msg = err.response?.data?.message || 'Không thể tải ảnh đại diện lên.';
       showToast.error(msg);
+      setPreviewAvatar(null);
     } finally {
       setIsUploadingAvatar(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -175,13 +202,17 @@ export const ProfilePage: React.FC = () => {
         <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
           {/* Avatar with Upload Badge */}
           <div className="relative group">
-            <div className="relative w-28 h-28 rounded-2xl overflow-hidden ring-4 ring-slate-100 shadow-md">
-              <UserAvatar
-                src={user?.avatar}
-                alt={user?.display_name || user?.username || 'Avatar'}
-                size="lg"
-                className="w-full h-full text-3xl font-bold rounded-none"
-              />
+            <div className="relative w-28 h-28 rounded-2xl overflow-hidden ring-4 ring-slate-100 shadow-md bg-slate-100 flex items-center justify-center">
+              {resolvedAvatarUrl && !avatarError ? (
+                <img
+                  src={resolvedAvatarUrl}
+                  alt={user?.display_name || user?.username || 'Avatar'}
+                  onError={() => setAvatarError(true)}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <User className="w-12 h-12 text-slate-400" />
+              )}
               {isUploadingAvatar && (
                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white">
                   <Loader2 className="w-8 h-8 animate-spin" />
@@ -193,7 +224,7 @@ export const ProfilePage: React.FC = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingAvatar}
-              className="absolute -bottom-2 -right-2 p-2 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
+              className="absolute -bottom-2 -right-2 p-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
               title="Đổi ảnh đại diện"
             >
               <Camera className="w-4 h-4" />

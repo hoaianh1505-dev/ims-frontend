@@ -212,7 +212,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: Tổng giá trị lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-emerald-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng giá trị tồn kho
@@ -232,7 +232,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 2: Hàng hóa lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-blue-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng số lượng hàng
@@ -253,7 +253,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 3: Giao dịch trong tháng */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-indigo-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Giao dịch xuất / nhập
@@ -274,7 +274,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 4: Cảnh báo tồn kho */}
-        <div className="bg-white rounded-2xl border border-rose-200/80 p-5 shadow-xs bg-gradient-to-br from-white to-rose-50/40 hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-rose-200 border-t-4 border-t-rose-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all bg-gradient-to-br from-white to-rose-50/40">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">
               Cảnh báo tồn kho
@@ -300,7 +300,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 1: AreaChart Biến động xuất nhập kho */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -419,7 +419,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* CHART 2: Donut Chart Cơ cấu danh mục */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -514,7 +514,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 3: BarChart Phân bổ theo từng kho hàng */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -588,7 +588,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Cảnh báo thiếu hàng & Sắp hết */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -674,7 +674,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Top 5 Sản phẩm xuất sắc */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -751,7 +751,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Nhật ký giao dịch gần nhất */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">

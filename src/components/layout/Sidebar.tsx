@@ -93,10 +93,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         className={({ isActive }) =>
           `w-full relative group flex items-center ${
             isCollapsed ? 'justify-center px-2 py-3' : 'justify-between px-3.5 py-2.5'
-          } rounded-xl transition-all ${
+          } rounded-xl transition-all duration-150 ${
             isActive
-              ? 'bg-[#EE3D43] text-white font-bold shadow-xs'
-              : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900 font-medium'
+              ? 'bg-[#EE3D43] text-white font-bold shadow-sm shadow-red-500/20'
+              : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-2xs font-semibold'
           }`
         }
       >
@@ -199,15 +199,15 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* 1. Desktop Static Sidebar (Tone màu sáng đồng bộ, thanh lịch) */}
+      {/* 1. Desktop Static Sidebar (Tone màu sáng thanh lịch, rõ nét) */}
       <aside
         className={`hidden lg:flex ${
           isCollapsed ? 'w-20' : 'w-64'
-        } bg-white border-r border-slate-200 h-full flex-col shrink-0 z-20 select-none transition-all duration-300 relative shadow-2xs`}
+        } bg-[#F0F4F8] border-r border-slate-200/90 h-full flex-col shrink-0 z-20 select-none transition-all duration-300 relative shadow-2xs`}
       >
         {/* Brand Header */}
         <div
-          className={`p-4 pb-3.5 border-b border-slate-100 flex items-center ${
+          className={`p-4 pb-3.5 bg-white border-b border-slate-200/80 flex items-center ${
             isCollapsed ? 'justify-center' : 'justify-between'
           }`}
         >
@@ -226,7 +226,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Nút mở rộng khi đã co lại */}
         {isCollapsed && (
-          <div className="px-3 py-2 border-b border-slate-100 flex justify-center">
+          <div className="px-3 py-2 border-b border-slate-200/60 flex justify-center bg-white/50">
             <button
               type="button"
               onClick={toggleCollapse}
@@ -242,12 +242,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer Collapse Button */}
         {!isCollapsed && (
-          <div className="p-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-400">
-            <span>Phiên bản v2.6 Pro</span>
+          <div className="p-3 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500 bg-white/50">
+            <span className="font-medium">Phiên bản v2.6 Pro</span>
             <button
               type="button"
               onClick={toggleCollapse}
-              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg transition-colors cursor-pointer"
               title="Thu nhỏ thanh bên"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -267,11 +267,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* 3. Mobile Slide-out Drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none border-r border-slate-200 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#F0F4F8] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none border-r border-slate-200 ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 pb-3.5 border-b border-slate-100 flex items-center justify-between">
+        <div className="p-4 pb-3.5 bg-white border-b border-slate-200/80 flex items-center justify-between">
           <Logo variant="light" />
           <button
             type="button"

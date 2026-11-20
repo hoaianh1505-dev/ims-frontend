@@ -14,7 +14,7 @@ export const AppLayout: React.FC = () => {
   }, [location.pathname]);
 
   return (
-    <div className="h-full w-full bg-[#F4F6F8] text-slate-800 flex overflow-hidden relative">
+    <div className="h-full w-full bg-[#EEF2F6] text-slate-800 flex overflow-hidden relative">
       {/* Sidebar (Responsive cho desktop & mobile) */}
       <Sidebar
         isMobileOpen={isMobileSidebarOpen}

@@ -255,14 +255,18 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
         <div className="relative pl-1">
           <button
             onClick={() => setShowProfileMenu(!showProfileMenu)}
-            className="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+            className="flex items-center gap-2.5 pl-1 pr-2 py-1 rounded-xl hover:bg-slate-100 dark:hover:bg-[#21262d] transition-colors cursor-pointer"
           >
-            <UserAvatar src={user?.avatar} size="md" alt={user?.username || 'User'} />
+            <UserAvatar
+              src={user?.avatar}
+              size="md"
+              alt={user?.display_name || user?.full_name || user?.username || 'Admin'}
+            />
             <div className="hidden md:block text-left leading-tight">
-              <div className="text-sm font-semibold text-slate-800 max-w-[160px] truncate">
-                {user?.full_name || user?.username}
+              <div className="text-sm font-semibold text-slate-800 dark:text-slate-100 max-w-[160px] truncate">
+                {user?.display_name || user?.full_name || user?.username}
               </div>
-              <div className="text-xs text-slate-500">{roleLabel}</div>
+              <div className="text-xs text-slate-500 dark:text-slate-400">{roleLabel}</div>
             </div>
             <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
           </button>
@@ -270,10 +274,14 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
           {showProfileMenu && (
             <>
               <div className="fixed inset-0 z-20" onClick={() => setShowProfileMenu(false)} />
-              <div className="absolute right-0 top-12 z-30 w-64 bg-white rounded-2xl shadow-xl border border-slate-200 py-1.5 animate-in fade-in zoom-in-95 duration-100 text-sm overflow-hidden">
-                <div className="px-4 py-3 border-b border-slate-100 flex items-center gap-3 bg-slate-50/50">
+              <div className="absolute right-0 top-12 z-30 w-64 bg-white dark:bg-[#161b22] rounded-2xl shadow-xl border border-slate-200 dark:border-[#333d4b] py-1.5 animate-in fade-in zoom-in-95 duration-100 text-sm overflow-hidden">
+                <div className="px-4 py-3 border-b border-slate-100 dark:border-[#262f3d] flex items-center gap-3 bg-slate-50/70 dark:bg-[#1c222b]">
                   <div className="relative group shrink-0">
-                    <UserAvatar src={user?.avatar} size="lg" alt={user?.username || 'User'} />
+                    <UserAvatar
+                      src={user?.avatar}
+                      size="lg"
+                      alt={user?.display_name || user?.full_name || user?.username || 'Admin'}
+                    />
                     <button
                       type="button"
                       disabled={uploadingAvatar}
@@ -289,10 +297,10 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                     </button>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <div className="font-semibold text-slate-800 truncate">
-                      {user?.full_name || user?.username}
+                    <div className="font-semibold text-slate-800 dark:text-slate-100 truncate">
+                      {user?.display_name || user?.full_name || user?.username}
                     </div>
-                    <div className="text-xs text-slate-500 truncate">
+                    <div className="text-xs text-slate-500 dark:text-slate-400 truncate">
                       @{user?.username} · {roleLabel}
                     </div>
                     <button
@@ -318,19 +326,27 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                 <Link
                   to="/profile"
                   onClick={() => setShowProfileMenu(false)}
-                  className="flex items-center gap-2.5 px-4 py-2 text-slate-700 hover:bg-slate-50"
+                  className="flex items-center gap-2.5 px-4 py-2.5 text-slate-700 dark:text-slate-200 hover:bg-slate-50 dark:hover:bg-[#21262d] font-medium"
                 >
                   <UserIcon className="w-4 h-4 text-slate-400" />
                   Hồ sơ cá nhân
                 </Link>
-                <div className="my-1 border-t border-slate-100" />
+                <div className="my-1 border-t border-slate-100 dark:border-[#262f3d]" />
                 <button
+                  type="button"
                   onClick={async () => {
                     setShowProfileMenu(false);
-                    await logout();
-                    showToast.info('Đã đăng xuất khỏi hệ thống');
+                    try {
+                      await logout();
+                    } catch {
+                      // ignore logout error
+                    }
+                    localStorage.removeItem('ims_access_token');
+                    localStorage.removeItem('ims_refresh_token');
+                    localStorage.removeItem('ims_user');
+                    window.location.href = '/login';
                   }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-rose-600 hover:bg-rose-50 cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-4 py-2.5 text-rose-600 dark:text-rose-400 hover:bg-rose-50 dark:hover:bg-rose-500/10 cursor-pointer font-medium transition-colors"
                 >
                   <LogOut className="w-4 h-4" />
                   Đăng xuất

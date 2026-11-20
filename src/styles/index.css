@@ -144,18 +144,23 @@ html.dark .bg-brand-bg {
   background-color: #0b0f17 !important;
 }
 
-/* Header */
+/* Header & Sidebar */
 html.dark header {
   background-color: #161b22 !important;
-  border-color: #30363d !important;
+  border-color: #384252 !important;
 }
 
-/* Cards & Elevated Containers */
+html.dark aside {
+  border-color: #384252 !important;
+}
+
+/* Cards & Elevated Containers with distinct borders and depth */
 html.dark .card-elevated,
 html.dark .card-elevated-static,
 html.dark .bg-white {
   background-color: #161b22 !important;
-  border-color: #30363d !important;
+  border-color: #384252 !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 16px -2px rgba(0, 0, 0, 0.4) !important;
   color: #e6edf3 !important;
 }
 
@@ -169,24 +174,26 @@ html.dark .text-slate-700 {
 html.dark .text-slate-600,
 html.dark .text-slate-500,
 html.dark .text-slate-400 {
-  color: #8b949e !important;
+  color: #9aa5b5 !important;
 }
 
-/* Borders */
+/* Crisp block borders and dividers */
 html.dark .border-slate-200,
-html.dark .border-slate-100 {
-  border-color: #30363d !important;
+html.dark .border-slate-100,
+html.dark .border-slate-300 {
+  border-color: #384252 !important;
 }
 
 /* Slate backgrounds (filter pills, table headers) */
 html.dark .bg-slate-50,
 html.dark .bg-slate-100 {
   background-color: #21262d !important;
-  border-color: #30363d !important;
+  border-color: #384252 !important;
 }
 
-html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]) {
-  border-color: #30363d !important;
+html.dark .divide-slate-100 > :not([hidden]) ~ :not([hidden]),
+html.dark .divide-slate-200 > :not([hidden]) ~ :not([hidden]) {
+  border-color: #384252 !important;
 }
 
 /* Inputs & dropdowns */
@@ -194,8 +201,15 @@ html.dark input,
 html.dark select,
 html.dark textarea {
   background-color: #21262d !important;
-  border-color: #30363d !important;
+  border-color: #384252 !important;
   color: #f0f6fc !important;
+}
+
+html.dark input:focus,
+html.dark select:focus,
+html.dark textarea:focus {
+  border-color: #EE3D43 !important;
+  box-shadow: 0 0 0 2px rgba(238, 61, 67, 0.25) !important;
 }
 
 /* Clear bright gradient backgrounds in dark mode */
@@ -204,8 +218,8 @@ html.dark [class*="from-white"] {
   background-color: #161b22 !important;
 }
 
-/* Dark mode drawer & modal shadows */
+/* Dark mode drawer & modal shadows with crisp border boundary */
 html.dark .shadow-2xl,
 html.dark .shadow-xl {
-  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8) !important;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 20px 40px -15px rgba(0, 0, 0, 0.8) !important;
 }

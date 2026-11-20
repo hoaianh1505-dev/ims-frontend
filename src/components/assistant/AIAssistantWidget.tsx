@@ -64,7 +64,7 @@ export const AIAssistantWidget: React.FC = () => {
     },
   ]);
 
-  // Vị trí kéo thả (null = mặc định góc dưới bên phải)
+  // Vị trí kéo thả hộp thoại (null = mặc định góc dưới bên phải)
   const [position, setPosition] = useState<{ x: number; y: number } | null>(null);
   const isDraggingRef = useRef(false);
   const dragStartRef = useRef<{ mouseX: number; mouseY: number; startX: number; startY: number }>({
@@ -74,6 +74,25 @@ export const AIAssistantWidget: React.FC = () => {
     startY: 0,
   });
   const dialogRef = useRef<HTMLDivElement>(null);
+
+  // Vị trí kéo thả nút tròn nổi (null = mặc định góc dưới bên phải)
+  const [btnPosition, setBtnPosition] = useState<{ x: number; y: number } | null>(null);
+  const btnDragRef = useRef<{
+    isDragging: boolean;
+    startX: number;
+    startY: number;
+    mouseX: number;
+    mouseY: number;
+    moved: boolean;
+  }>({
+    isDragging: false,
+    startX: 0,
+    startY: 0,
+    mouseX: 0,
+    mouseY: 0,
+    moved: false,
+  });
+  const floatingBtnRef = useRef<HTMLDivElement>(null);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
@@ -99,59 +118,121 @@ export const AIAssistantWidget: React.FC = () => {
     return () => window.removeEventListener('open-ai-assistant', handleOpen);
   }, []);
 
-  // Xử lý kéo thả (Drag and Drop)
-  const handleStartDrag = useCallback(
-    (e: React.MouseEvent | React.TouchEvent) => {
-      const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
-      const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+  // Xử lý kéo thả Hộp thoại (Dialog Drag and Drop)
+  const handleStartDrag = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const isTouch = 'touches' in e.nativeEvent;
+    const nativeTouch = isTouch ? (e.nativeEvent as TouchEvent).touches?.[0] : null;
+    if (!isTouch && (e as React.MouseEvent).button !== 0) return; // Only left click
 
-      const rect = dialogRef.current?.getBoundingClientRect();
-      const currentX = rect ? rect.left : window.innerWidth - 490;
-      const currentY = rect ? rect.top : window.innerHeight - 640;
+    const clientX = nativeTouch ? nativeTouch.clientX : (e as React.MouseEvent).clientX;
+    const clientY = nativeTouch ? nativeTouch.clientY : (e as React.MouseEvent).clientY;
 
-      isDraggingRef.current = true;
-      dragStartRef.current = {
-        mouseX: clientX,
-        mouseY: clientY,
-        startX: currentX,
-        startY: currentY,
-      };
+    const rect = dialogRef.current?.getBoundingClientRect();
+    const currentX = rect ? rect.left : window.innerWidth - 490;
+    const currentY = rect ? rect.top : window.innerHeight - 640;
 
-      const handleMove = (moveEv: MouseEvent | TouchEvent) => {
-        if (!isDraggingRef.current) return;
-        const curClientX = 'touches' in moveEv ? moveEv.touches[0].clientX : moveEv.clientX;
-        const curClientY = 'touches' in moveEv ? moveEv.touches[0].clientY : moveEv.clientY;
+    isDraggingRef.current = true;
+    dragStartRef.current = {
+      mouseX: clientX,
+      mouseY: clientY,
+      startX: currentX,
+      startY: currentY,
+    };
 
-        const deltaX = curClientX - dragStartRef.current.mouseX;
-        const deltaY = curClientY - dragStartRef.current.mouseY;
+    const handleMove = (moveEv: MouseEvent | TouchEvent) => {
+      if (!isDraggingRef.current) return;
+      const curTouch =
+        'touches' in moveEv && moveEv.touches?.length ? moveEv.touches[0] : null;
+      const curClientX = curTouch ? curTouch.clientX : (moveEv as MouseEvent).clientX;
+      const curClientY = curTouch ? curTouch.clientY : (moveEv as MouseEvent).clientY;
 
-        let nextX = dragStartRef.current.startX + deltaX;
-        let nextY = dragStartRef.current.startY + deltaY;
+      const deltaX = curClientX - dragStartRef.current.mouseX;
+      const deltaY = curClientY - dragStartRef.current.mouseY;
 
-        // Giới hạn trong khung nhìn màn hình
-        const width = dialogRef.current?.offsetWidth || 440;
-        const height = dialogRef.current?.offsetHeight || 500;
-        nextX = Math.max(10, Math.min(window.innerWidth - width - 10, nextX));
-        nextY = Math.max(10, Math.min(window.innerHeight - height - 10, nextY));
+      let nextX = dragStartRef.current.startX + deltaX;
+      let nextY = dragStartRef.current.startY + deltaY;
 
-        setPosition({ x: nextX, y: nextY });
-      };
+      // Giới hạn trong khung nhìn màn hình
+      const width = dialogRef.current?.offsetWidth || 440;
+      const height = dialogRef.current?.offsetHeight || 500;
+      nextX = Math.max(10, Math.min(window.innerWidth - width - 10, nextX));
+      nextY = Math.max(10, Math.min(window.innerHeight - height - 10, nextY));
 
-      const handleEnd = () => {
-        isDraggingRef.current = false;
-        window.removeEventListener('mousemove', handleMove);
-        window.removeEventListener('mouseup', handleEnd);
-        window.removeEventListener('touchmove', handleMove);
-        window.removeEventListener('touchend', handleEnd);
-      };
+      setPosition({ x: nextX, y: nextY });
+    };
 
-      window.addEventListener('mousemove', handleMove);
-      window.addEventListener('mouseup', handleEnd);
-      window.addEventListener('touchmove', handleMove);
-      window.addEventListener('touchend', handleEnd);
-    },
-    [],
-  );
+    const handleEnd = () => {
+      isDraggingRef.current = false;
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleMove, { passive: true });
+    window.addEventListener('touchend', handleEnd);
+  }, []);
+
+  // Xử lý kéo thả Nút tròn nổi (Floating Button Drag and Drop)
+  const handleStartDragButton = useCallback((e: React.MouseEvent | React.TouchEvent) => {
+    const isTouch = 'touches' in e.nativeEvent;
+    const nativeTouch = isTouch ? (e.nativeEvent as TouchEvent).touches?.[0] : null;
+    if (!isTouch && (e as React.MouseEvent).button !== 0) return;
+
+    const clientX = nativeTouch ? nativeTouch.clientX : (e as React.MouseEvent).clientX;
+    const clientY = nativeTouch ? nativeTouch.clientY : (e as React.MouseEvent).clientY;
+
+    const rect = floatingBtnRef.current?.getBoundingClientRect();
+    const currentX = rect ? rect.left : window.innerWidth - 80;
+    const currentY = rect ? rect.top : window.innerHeight - 80;
+
+    btnDragRef.current = {
+      isDragging: true,
+      startX: currentX,
+      startY: currentY,
+      mouseX: clientX,
+      mouseY: clientY,
+      moved: false,
+    };
+
+    const handleMove = (moveEv: MouseEvent | TouchEvent) => {
+      if (!btnDragRef.current.isDragging) return;
+      const curTouch =
+        'touches' in moveEv && moveEv.touches?.length ? moveEv.touches[0] : null;
+      const curClientX = curTouch ? curTouch.clientX : (moveEv as MouseEvent).clientX;
+      const curClientY = curTouch ? curTouch.clientY : (moveEv as MouseEvent).clientY;
+
+      const deltaX = curClientX - btnDragRef.current.mouseX;
+      const deltaY = curClientY - btnDragRef.current.mouseY;
+
+      if (Math.hypot(deltaX, deltaY) > 5) {
+        btnDragRef.current.moved = true;
+      }
+
+      let nextX = btnDragRef.current.startX + deltaX;
+      let nextY = btnDragRef.current.startY + deltaY;
+
+      nextX = Math.max(10, Math.min(window.innerWidth - 70, nextX));
+      nextY = Math.max(10, Math.min(window.innerHeight - 70, nextY));
+
+      setBtnPosition({ x: nextX, y: nextY });
+    };
+
+    const handleEnd = () => {
+      btnDragRef.current.isDragging = false;
+      window.removeEventListener('mousemove', handleMove);
+      window.removeEventListener('mouseup', handleEnd);
+      window.removeEventListener('touchmove', handleMove);
+      window.removeEventListener('touchend', handleEnd);
+    };
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseup', handleEnd);
+    window.addEventListener('touchmove', handleMove, { passive: true });
+    window.addEventListener('touchend', handleEnd);
+  }, []);
 
   // Đóng khi bấm phím Esc
   useEffect(() => {
@@ -532,26 +613,43 @@ export const AIAssistantWidget: React.FC = () => {
         )
       ) : (
         /* ========================================================
-            2. FLOATING CHAT BUBBLE (Bóng tròn nổi góc dưới khi đóng)
+            2. FLOATING CHAT BUBBLE (Bóng tròn nổi có thể kéo thả di chuyển tự do)
            ======================================================== */
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none">
+        <div
+          ref={floatingBtnRef}
+          style={
+            btnPosition
+              ? { left: `${btnPosition.x}px`, top: `${btnPosition.y}px`, bottom: 'auto', right: 'auto' }
+              : undefined
+          }
+          className={`fixed ${
+            !btnPosition ? 'bottom-4 right-4 sm:bottom-6 sm:right-6' : ''
+          } z-50 select-none cursor-move`}
+          onMouseDown={handleStartDragButton}
+          onTouchStart={handleStartDragButton}
+        >
           <button
             type="button"
-            onClick={() => {
+            onClick={(e) => {
+              if (btnDragRef.current.moved) {
+                e.preventDefault();
+                e.stopPropagation();
+                return;
+              }
               setIsOpen(true);
               setIsMinimized(false);
             }}
-            className="relative group p-4 rounded-2xl shadow-xl transition-all duration-300 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#EE3D43] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/25"
-            title="Mở Trợ lý kho AI (Có thể kéo thả di chuyển tự do)"
+            className="relative group p-4 rounded-2xl shadow-xl transition-transform duration-200 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#EE3D43] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/30"
+            title="Kéo thả di chuyển hoặc nhấp để mở Trợ lý kho AI"
           >
-            <Bot className="w-7 h-7 stroke-[2.2]" />
-            <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-amber-400 text-slate-900 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs">
+            <Bot className="w-7 h-7 stroke-[2.2] pointer-events-none" />
+            <span className="absolute -top-1 -right-1 w-4.5 h-4.5 bg-amber-400 text-slate-900 rounded-full flex items-center justify-center text-[10px] font-bold shadow-xs pointer-events-none">
               <Sparkles className="w-3 h-3" />
             </span>
 
-            {/* Tooltip khi chưa mở */}
+            {/* Tooltip khi hover */}
             <span className="absolute right-full mr-3 px-3 py-1.5 bg-[#1B2129] text-white text-xs font-semibold rounded-xl shadow-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none border border-slate-700">
-              Trợ lý kho AI 🤖
+              Trợ lý kho AI (Kéo thả di chuyển) 🤖
             </span>
           </button>
         </div>

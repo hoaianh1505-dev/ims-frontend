@@ -6,19 +6,18 @@ import {
   Shield,
   KeyRound,
   Camera,
-  CheckCircle2,
   Lock,
   Eye,
   EyeOff,
   Save,
   Loader2,
-  BadgeCheck,
 } from 'lucide-react';
 import { useAuthStore } from '../stores/auth.store';
 import { usersService } from '../services/users.service';
 import { authService } from '../services/auth.service';
 import { showToast } from '../utils/toast.util';
 import { formatImageUrl } from '../utils/image.util';
+import { UserAvatar } from '../components/common/UserAvatar';
 
 const ROLE_LABELS: Record<string, { label: string; badge: string; desc: string }> = {
   ADMIN: {
@@ -184,26 +183,24 @@ export const ProfilePage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6 sm:space-y-8 max-w-7xl mx-auto p-4 sm:p-6 lg:p-8 pb-16">
-      {/* Page Header */}
+    <div className="space-y-6 max-w-6xl mx-auto p-4 sm:p-6 lg:p-8 pb-16">
+      {/* Page Title & Subtitle */}
       <div>
-        <h1 className="text-2xl font-bold text-slate-900 tracking-tight flex items-center gap-2.5">
-          <User className="w-7 h-7 text-red-600" />
+        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2.5">
+          <User className="w-6 h-6 text-[#EE3D43]" />
           Hồ sơ cá nhân
         </h1>
-        <p className="text-slate-500 text-sm mt-1">
-          Quản lý thông tin tài khoản, cập nhật ảnh đại diện và thiết lập mật khẩu bảo mật
+        <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
+          Quản lý thông tin định danh, tài khoản và bảo mật hệ thống
         </p>
       </div>
 
-      {/* Main Profile Header Card */}
-      <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-8 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-red-500/5 rounded-full blur-3xl -z-0 pointer-events-none" />
-
-        <div className="relative z-10 flex flex-col sm:flex-row items-center sm:items-start gap-6">
-          {/* Avatar with Upload Badge */}
-          <div className="relative group">
-            <div className="relative w-28 h-28 rounded-2xl overflow-hidden ring-4 ring-slate-100 shadow-md bg-slate-100 flex items-center justify-center">
+      {/* Main Profile Header Card (Enterprise Linear style) */}
+      <div className="bg-white dark:bg-[#161b22] rounded-2xl border border-slate-200 dark:border-[#384252] shadow-sm p-6 sm:p-7">
+        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6">
+          {/* Avatar with Camera upload button */}
+          <div className="relative group shrink-0">
+            <div className="w-24 h-24 rounded-2xl overflow-hidden ring-4 ring-slate-100 dark:ring-[#21262d] shadow-sm bg-slate-100 dark:bg-[#21262d] flex items-center justify-center">
               {resolvedAvatarUrl && !avatarError ? (
                 <img
                   src={resolvedAvatarUrl}
@@ -212,11 +209,15 @@ export const ProfilePage: React.FC = () => {
                   className="w-full h-full object-cover"
                 />
               ) : (
-                <User className="w-12 h-12 text-slate-400" />
+                <UserAvatar
+                  src={null}
+                  alt={user?.display_name || user?.username || 'Admin'}
+                  className="w-full h-full text-2xl font-black rounded-none"
+                />
               )}
               {isUploadingAvatar && (
                 <div className="absolute inset-0 bg-black/60 flex items-center justify-center text-white">
-                  <Loader2 className="w-8 h-8 animate-spin" />
+                  <Loader2 className="w-7 h-7 animate-spin" />
                 </div>
               )}
             </div>
@@ -225,7 +226,7 @@ export const ProfilePage: React.FC = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingAvatar}
-              className="absolute -bottom-2 -right-2 p-2.5 bg-red-600 hover:bg-red-700 text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
+              className="absolute -bottom-2 -right-2 p-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
               title="Đổi ảnh đại diện"
             >
               <Camera className="w-4 h-4" />
@@ -239,29 +240,36 @@ export const ProfilePage: React.FC = () => {
             />
           </div>
 
-          {/* User Details Headline */}
-          <div className="text-center sm:text-left flex-1">
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2.5 justify-center sm:justify-start">
-              <h2 className="text-2xl font-bold text-slate-900">
+          {/* User Details */}
+          <div className="text-center sm:text-left flex-1 min-w-0">
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2.5">
+              <h2 className="text-xl sm:text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
                 {user?.display_name || user?.username || 'Người dùng'}
               </h2>
               <span
-                className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full border ${roleInfo.badge}`}
+                className={`inline-flex items-center gap-1.5 px-3 py-1 text-xs font-semibold rounded-full border ${roleInfo.badge} dark:bg-rose-500/10 dark:text-rose-300 dark:border-rose-500/20`}
               >
                 <Shield className="w-3.5 h-3.5" />
                 {roleInfo.label}
               </span>
             </div>
 
-            <p className="text-slate-500 text-sm mt-1.5 flex items-center justify-center sm:justify-start gap-1.5">
-              <span>@{user?.username}</span>
+            <div className="flex flex-wrap items-center justify-center sm:justify-start gap-3 text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-2">
+              <span className="font-medium text-slate-700 dark:text-slate-300">@{user?.username}</span>
               <span>•</span>
-              <span className="inline-flex items-center gap-1 text-emerald-600 font-medium">
-                <CheckCircle2 className="w-3.5 h-3.5" /> Tài khoản đang hoạt động
+              <span className="inline-flex items-center gap-1.5 text-emerald-600 dark:text-emerald-400 font-semibold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                Tài khoản đang hoạt động
               </span>
-            </p>
+              {email && (
+                <>
+                  <span>•</span>
+                  <span>{email}</span>
+                </>
+              )}
+            </div>
 
-            <p className="text-slate-600 text-sm mt-3 max-w-2xl bg-slate-50 border border-slate-200/60 rounded-xl p-3">
+            <p className="text-slate-600 dark:text-slate-400 text-xs sm:text-sm mt-3 leading-relaxed">
               {roleInfo.desc}
             </p>
           </div>
@@ -269,39 +277,41 @@ export const ProfilePage: React.FC = () => {
       </div>
 
       {/* Grid: 2 Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
-        {/* Left Column: Personal Information Form (7 Cols) */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-7">
-          <div className="flex items-center justify-between pb-5 border-b border-slate-100 mb-6">
-            <div className="flex items-center gap-2.5">
-              <div className="p-2 bg-red-50 text-red-600 rounded-xl">
-                <User className="w-5 h-5" />
-              </div>
-              <div>
-                <h3 className="font-bold text-slate-900 text-lg">Thông tin tài khoản</h3>
-                <p className="text-xs text-slate-500">Cập nhật thông tin định danh và liên hệ</p>
-              </div>
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8">
+        {/* Left Column: Account Details (7 Cols) */}
+        <div className="lg:col-span-7 bg-white dark:bg-[#161b22] rounded-2xl border border-slate-200 dark:border-[#384252] shadow-sm p-6 sm:p-7">
+          <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100 dark:border-[#262f3d] mb-6">
+            <div className="p-2 bg-rose-50 dark:bg-rose-500/10 text-[#EE3D43] rounded-xl">
+              <User className="w-5 h-5" />
+            </div>
+            <div>
+              <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base sm:text-lg">
+                Thông tin tài khoản
+              </h3>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                Cập nhật họ tên hiển thị và thông tin liên hệ
+              </p>
             </div>
           </div>
 
-          <form onSubmit={handleUpdateProfile} className="space-y-5">
+          <form onSubmit={handleUpdateProfile} className="space-y-4 sm:space-y-5">
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-600 dark:text-slate-400 mb-1.5">
                 Tên đăng nhập (Username)
               </label>
               <input
                 type="text"
                 disabled
                 value={user?.username || ''}
-                className="w-full px-4 py-2.5 bg-slate-100 border border-slate-200 rounded-xl text-slate-500 font-medium cursor-not-allowed select-none"
+                className="w-full px-4 py-2.5 bg-slate-50 dark:bg-[#21262d] border border-slate-200 dark:border-[#384252] rounded-xl text-slate-500 dark:text-slate-400 font-medium cursor-not-allowed select-none text-sm"
               />
-              <span className="text-[11px] text-slate-400 mt-1 block">
-                Tên đăng nhập được dùng cố định để định danh tài khoản trong hệ thống
+              <span className="text-[11px] text-slate-400 dark:text-slate-500 mt-1 block">
+                Mã định danh hệ thống cố định
               </span>
             </div>
 
             <div>
-              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+              <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                 Tên hiển thị (Họ và tên)
               </label>
               <div className="relative">
@@ -312,14 +322,14 @@ export const ProfilePage: React.FC = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Nhập họ và tên..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
                 />
               </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Địa chỉ Email
                 </label>
                 <div className="relative">
@@ -328,14 +338,14 @@ export const ProfilePage: React.FC = () => {
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    placeholder="email@ims.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                    placeholder="email@example.com"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Số điện thoại
                 </label>
                 <div className="relative">
@@ -345,7 +355,7 @@ export const ProfilePage: React.FC = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="0901 234 567"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -355,36 +365,39 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isUpdatingProfile}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-red-600 hover:bg-red-700 text-white font-medium rounded-xl shadow-sm transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white font-medium rounded-xl shadow-xs transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
               >
                 {isUpdatingProfile ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
                   <Save className="w-4 h-4" />
                 )}
-                Lưu thay đổi thông tin
+                Lưu thông tin
               </button>
             </div>
           </form>
         </div>
 
-        {/* Right Column: Change Password & Security (5 Cols) */}
-        <div className="lg:col-span-5 space-y-6">
-          {/* Password Card */}
-          <div className="bg-white rounded-2xl border border-slate-200/80 shadow-sm p-6 sm:p-7">
-            <div className="flex items-center gap-2.5 pb-5 border-b border-slate-100 mb-6">
-              <div className="p-2 bg-amber-50 text-amber-600 rounded-xl">
+        {/* Right Column: Security & Password (5 Cols) */}
+        <div className="lg:col-span-5 space-y-5">
+          <div className="bg-white dark:bg-[#161b22] rounded-2xl border border-slate-200 dark:border-[#384252] shadow-sm p-6 sm:p-7">
+            <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100 dark:border-[#262f3d] mb-6">
+              <div className="p-2 bg-amber-50 dark:bg-amber-500/10 text-amber-600 dark:text-amber-400 rounded-xl">
                 <KeyRound className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="font-bold text-slate-900 text-lg">Đổi mật khẩu</h3>
-                <p className="text-xs text-slate-500">Bảo vệ an toàn cho tài khoản cá nhân</p>
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-base sm:text-lg">
+                  Đổi mật khẩu
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-slate-400">
+                  Thiết lập mật khẩu mới để bảo vệ tài khoản
+                </p>
               </div>
             </div>
 
             <form onSubmit={handleChangePassword} className="space-y-4">
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Mật khẩu hiện tại
                 </label>
                 <div className="relative">
@@ -394,13 +407,13 @@ export const ProfilePage: React.FC = () => {
                     required
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
-                    placeholder="Nhập mật khẩu hiện tại..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    placeholder="Mật khẩu hiện tại..."
+                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
                   />
                   <button
                     type="button"
                     onClick={() => setShowCurrentPass(!showCurrentPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
                     {showCurrentPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -408,7 +421,7 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Mật khẩu mới
                 </label>
                 <div className="relative">
@@ -418,13 +431,13 @@ export const ProfilePage: React.FC = () => {
                     required
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
-                    placeholder="Ít nhất 6 ký tự..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    placeholder="Tối thiểu 6 ký tự..."
+                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
                   />
                   <button
                     type="button"
                     onClick={() => setShowNewPass(!showNewPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600 cursor-pointer"
                   >
                     {showNewPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -432,7 +445,7 @@ export const ProfilePage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 mb-1.5">
+                <label className="block text-xs font-bold uppercase tracking-wider text-slate-700 dark:text-slate-300 mb-1.5">
                   Xác nhận mật khẩu mới
                 </label>
                 <div className="relative">
@@ -443,7 +456,7 @@ export const ProfilePage: React.FC = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Nhập lại mật khẩu mới..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-300 rounded-xl text-slate-900 font-medium focus:outline-none focus:border-red-500 focus:ring-2 focus:ring-red-500/20 text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
                   />
                 </div>
               </div>
@@ -452,28 +465,24 @@ export const ProfilePage: React.FC = () => {
                 <button
                   type="submit"
                   disabled={isChangingPass}
-                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-medium rounded-xl shadow-sm transition-all cursor-pointer disabled:opacity-50 text-sm"
+                  className="w-full inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:text-slate-900 dark:hover:bg-white text-white font-medium rounded-xl shadow-xs transition-all cursor-pointer disabled:opacity-50 text-sm"
                 >
                   {isChangingPass ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
                   ) : (
                     <KeyRound className="w-4 h-4" />
                   )}
-                  Cập nhật mật khẩu mới
+                  Cập nhật mật khẩu
                 </button>
               </div>
             </form>
           </div>
 
-          {/* Quick Security Badge Box */}
-          <div className="bg-gradient-to-br from-slate-900 to-slate-800 text-white rounded-2xl p-5 shadow-sm space-y-3">
-            <div className="flex items-center gap-2 text-red-400 font-semibold text-sm">
-              <BadgeCheck className="w-5 h-5 text-red-500" />
-              Bảo mật hệ thống IMS
-            </div>
-            <p className="text-xs text-slate-300 leading-relaxed">
-              Mật khẩu được mã hóa chuẩn bcrypt 256-bit. Mọi phiên đăng nhập đều được bảo vệ bởi
-              JWT Token với thời hạn tự động làm mới an toàn.
+          {/* Clean Security Tip Box */}
+          <div className="bg-slate-50 dark:bg-[#161b22] border border-slate-200 dark:border-[#384252] rounded-xl p-4 text-xs text-slate-500 dark:text-slate-400 flex items-start gap-2.5">
+            <Shield className="w-4 h-4 text-slate-400 mt-0.5 shrink-0" />
+            <p className="leading-relaxed">
+              Mật khẩu cần tối thiểu 6 ký tự. Phiên làm việc được chứng thực qua giao thức an toàn JWT.
             </p>
           </div>
         </div>

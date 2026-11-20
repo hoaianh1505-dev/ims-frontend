@@ -11,7 +11,7 @@ interface UserAvatarProps {
 
 export const UserAvatar: React.FC<UserAvatarProps> = ({
   src,
-  alt = 'User Avatar',
+  alt = 'User',
   size = 'md',
   variant = 'light',
   className = '',
@@ -23,10 +23,10 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   }, [src]);
 
   const sizeClasses = {
-    xs: 'w-6 h-6',
-    sm: 'w-7 h-7',
-    md: 'w-8 h-8',
-    lg: 'w-9 h-9 sm:w-10 sm:h-10',
+    xs: 'w-6 h-6 text-[10px]',
+    sm: 'w-7 h-7 text-[11px]',
+    md: 'w-8 h-8 text-xs',
+    lg: 'w-10 h-10 text-sm font-bold',
   }[size];
 
   const resolvedUrl = formatImageUrl(src);
@@ -38,28 +38,30 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         alt={alt}
         onError={() => setHasError(true)}
         className={`${sizeClasses} rounded-full object-cover border ${
-          variant === 'dark' ? 'border-[#333D4B]' : 'border-slate-200'
+          variant === 'dark' ? 'border-[#384252]' : 'border-slate-200 dark:border-[#384252]'
         } shrink-0 ${className}`}
       />
     );
   }
 
+  // Fallback: Gradient avatar with user initials
+  const words = (alt || 'User').trim().split(/\s+/).filter(Boolean);
+  let initials = 'AD';
+  if (words.length >= 2) {
+    initials = (words[0][0] + words[1][0]).toUpperCase();
+  } else if (words.length === 1 && words[0].length >= 2) {
+    initials = words[0].slice(0, 2).toUpperCase();
+  } else if (words.length === 1 && words[0].length === 1) {
+    initials = words[0].toUpperCase();
+  }
+
   return (
     <span
-      className={`inline-flex items-center justify-center overflow-hidden rounded-full shrink-0 ${sizeClasses} ${
-        variant === 'dark'
-          ? 'bg-[#262E38] border border-[#333D4B] text-slate-400'
-          : 'bg-slate-100 border border-slate-200/80 text-slate-400'
-      } ${className}`}
+      className={`inline-flex items-center justify-center overflow-hidden rounded-full font-bold select-none shrink-0 bg-gradient-to-tr from-[#EE3D43] via-rose-500 to-amber-500 text-white shadow-xs border border-white/20 tracking-wider ${sizeClasses} ${className}`}
       aria-label={alt}
+      title={alt}
     >
-      <svg
-        className="h-full w-full"
-        fill="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
-      </svg>
+      {initials}
     </span>
   );
 };

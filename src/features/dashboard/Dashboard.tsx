@@ -18,6 +18,7 @@ import {
   BarChart3,
   PieChart as PieIcon,
   Activity,
+  Layers,
 } from 'lucide-react';
 import {
   ResponsiveContainer,
@@ -45,6 +46,10 @@ import {
 } from '../../services/dashboard.service';
 import { apiCache } from '../../services/api.client';
 import { showToast } from '../../utils/toast.util';
+
+const formatNumberVN = (num: number): string => {
+  return (num || 0).toLocaleString('vi-VN');
+};
 
 const formatVND = (amount: number): string => {
   return new Intl.NumberFormat('vi-VN', {
@@ -212,85 +217,111 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: Tổng giá trị lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-              Tổng giá trị tồn kho
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-              <Coins className="w-5 h-5" />
+        <div className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Tổng giá trị tồn kho
+              </span>
+              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/80 ring-4 ring-emerald-500/10 shrink-0 shadow-xs">
+                <Coins className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
+              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono">
+                {formatNumberVN(stats?.total_inventory_value || 0)}
+              </span>
+              <span className="text-xs font-bold text-slate-500 uppercase">VNĐ</span>
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-              {formatVND(stats?.total_inventory_value || 0)}
-            </div>
-            <p className="text-sm font-semibold text-slate-600 mt-1.5">
-              Phân bổ trên <strong className="text-slate-900 font-bold">{stats?.total_warehouses || 0}</strong> kho hàng
-            </p>
+          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-500 font-medium">Kho bãi lưu trữ</span>
+            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/60 shadow-xs">
+              <Building2 className="w-3.5 h-3.5" />
+              {stats?.total_warehouses || 0} kho hàng
+            </span>
           </div>
         </div>
 
         {/* Card 2: Hàng hóa lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-              Tổng số lượng hàng
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
-              <Package className="w-5 h-5" />
+        <div className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Tổng số lượng hàng
+              </span>
+              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/80 ring-4 ring-blue-500/10 shrink-0 shadow-xs">
+                <Package className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
+              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono">
+                {formatNumberVN(stats?.total_inventory_quantity || 0)}
+              </span>
+              <span className="text-xs font-bold text-slate-500">sản phẩm</span>
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-              {(stats?.total_inventory_quantity || 0).toLocaleString('vi-VN')}
-              <span className="text-sm font-semibold text-slate-500 ml-1.5 font-sans">sản phẩm</span>
-            </div>
-            <p className="text-sm font-semibold text-slate-600 mt-1.5">
-              Quản lý qua <strong className="text-slate-900 font-bold">{stats?.total_products || 0}</strong> mã SKU
-            </p>
+          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-500 font-medium">Danh mục quản lý</span>
+            <span className="inline-flex items-center gap-1.5 font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/60 shadow-xs">
+              <Layers className="w-3.5 h-3.5" />
+              {stats?.total_products || 0} mã SKU
+            </span>
           </div>
         </div>
 
         {/* Card 3: Giao dịch trong tháng */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
-              Giao dịch xuất / nhập
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
-              <ArrowLeftRight className="w-5 h-5" />
+        <div className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full">
+          <div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+                Giao dịch xuất / nhập
+              </span>
+              <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200/80 ring-4 ring-indigo-500/10 shrink-0 shadow-xs">
+                <ArrowLeftRight className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
+              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono">
+                {formatNumberVN(stats?.transactions_this_month || 0)}
+              </span>
+              <span className="text-xs font-bold text-slate-500">phiếu tháng này</span>
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
-              {stats?.transactions_this_month || 0}
-              <span className="text-sm font-semibold text-slate-500 ml-1.5 font-sans">phiếu tháng này</span>
-            </div>
-            <p className="text-sm font-semibold text-slate-600 mt-1.5">
-              <strong className="text-slate-900 font-bold">{stats?.transactions_today || 0}</strong> phiếu phát sinh hôm nay
-            </p>
+          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+            <span className="text-slate-500 font-medium">Phát sinh hôm nay</span>
+            <span className="inline-flex items-center gap-1.5 font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200/60 shadow-xs">
+              <Clock className="w-3.5 h-3.5" />
+              {stats?.transactions_today || 0} phiếu mới
+            </span>
           </div>
         </div>
 
         {/* Card 4: Cảnh báo tồn kho */}
-        <div className="bg-white rounded-2xl border border-rose-200/80 p-5 shadow-xs bg-gradient-to-br from-white to-rose-50/40 hover:shadow-md transition-shadow">
-          <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">
-              Cảnh báo tồn kho
-            </span>
-            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center animate-pulse">
-              <AlertTriangle className="w-5 h-5" />
+        <div className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full border-rose-200/90 bg-gradient-to-br from-white via-white to-rose-50/30">
+          <div>
+            <div className="flex items-center justify-between gap-3">
+              <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">
+                Cảnh báo tồn kho
+              </span>
+              <div className="w-11 h-11 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center border border-rose-200/80 ring-4 ring-rose-500/10 shrink-0 shadow-xs animate-pulse">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+            </div>
+            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
+              <span className="text-2xl sm:text-3xl font-extrabold text-rose-600 tracking-tight font-mono">
+                {formatNumberVN((stats?.low_stock_count || 0) + (stats?.out_of_stock_count || 0))}
+              </span>
+              <span className="text-xs font-bold text-rose-600">mặt hàng</span>
             </div>
           </div>
-          <div className="mt-3">
-            <div className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight font-mono">
-              {(stats?.low_stock_count || 0) + (stats?.out_of_stock_count || 0)}
-              <span className="text-sm font-semibold text-rose-500 ml-1.5 font-sans">mặt hàng</span>
-            </div>
-            <p className="text-sm font-semibold text-rose-700 mt-1.5">
-              <strong className="text-rose-700 font-bold">{stats?.out_of_stock_count || 0}</strong> hết hàng · <strong className="text-amber-700 font-bold">{stats?.low_stock_count || 0}</strong> dưới định mức
-            </p>
+          <div className="mt-4 pt-3.5 border-t border-rose-100 flex items-center justify-between text-xs gap-2">
+            <span className="inline-flex items-center gap-1 font-bold text-rose-700 bg-rose-100/90 px-2.5 py-1 rounded-lg border border-rose-200 shadow-xs">
+              {stats?.out_of_stock_count || 0} hết hàng
+            </span>
+            <span className="inline-flex items-center gap-1 font-bold text-amber-700 bg-amber-100/90 px-2.5 py-1 rounded-lg border border-amber-200 shadow-xs">
+              {stats?.low_stock_count || 0} dưới mức
+            </span>
           </div>
         </div>
       </div>
@@ -300,7 +331,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 1: AreaChart Biến động xuất nhập kho */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-8 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -350,12 +381,14 @@ export const Dashboard: React.FC = () => {
                 <AreaChart data={formattedMovementData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="importGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
+                      <stop offset="0%" stopColor="#10B981" stopOpacity={0.55} />
+                      <stop offset="50%" stopColor="#10B981" stopOpacity={0.15} />
+                      <stop offset="100%" stopColor="#10B981" stopOpacity={0.0} />
                     </linearGradient>
                     <linearGradient id="exportGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#EE3D43" stopOpacity={0.4} />
-                      <stop offset="95%" stopColor="#EE3D43" stopOpacity={0.0} />
+                      <stop offset="0%" stopColor="#EE3D43" stopOpacity={0.55} />
+                      <stop offset="50%" stopColor="#EE3D43" stopOpacity={0.15} />
+                      <stop offset="100%" stopColor="#EE3D43" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
                   <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
@@ -374,31 +407,54 @@ export const Dashboard: React.FC = () => {
                     tickFormatter={(val) => `${val}`}
                   />
                   <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#0F172A',
-                      borderColor: '#1E293B',
-                      borderRadius: '12px',
-                      color: '#F8FAFC',
-                      fontSize: '12px',
-                      boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
+                    content={({ active, payload, label }) => {
+                      if (active && payload && payload.length) {
+                        return (
+                          <div className="bg-slate-900/95 backdrop-blur-md text-white p-3.5 rounded-xl shadow-2xl border border-slate-700/80 text-xs space-y-2 min-w-[190px]">
+                            <div className="font-bold text-slate-300 pb-1.5 border-b border-slate-800 flex items-center justify-between">
+                              <span>Ngày: {label}</span>
+                              <span className="text-[10px] text-slate-400">Giao dịch kho</span>
+                            </div>
+                            {payload.map((entry: any, index: number) => (
+                              <div key={`entry-${index}`} className="flex items-center justify-between gap-4">
+                                <div className="flex items-center gap-1.5">
+                                  <span className="w-2.5 h-2.5 rounded-full" style={{ backgroundColor: entry.color }} />
+                                  <span className="text-slate-300 font-medium">{entry.name}:</span>
+                                </div>
+                                <span className="font-mono font-bold text-white text-sm">
+                                  {Number(entry.value).toLocaleString('vi-VN')} <span className="text-[10px] font-sans font-normal text-slate-400">cái</span>
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
-                    labelStyle={{ color: '#94A3B8', fontWeight: 'bold', marginBottom: '4px' }}
                   />
                   <Area
                     type="monotone"
                     dataKey="Nhập kho"
                     stroke="#10B981"
-                    strokeWidth={2.5}
+                    strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#importGrad)"
+                    isAnimationActive={true}
+                    animationDuration={1500}
+                    animationEasing="ease-out"
+                    activeDot={{ r: 6, fill: '#10B981', stroke: '#ffffff', strokeWidth: 2.5 }}
                   />
                   <Area
                     type="monotone"
                     dataKey="Xuất kho"
                     stroke="#EE3D43"
-                    strokeWidth={2.5}
+                    strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#exportGrad)"
+                    isAnimationActive={true}
+                    animationDuration={1900}
+                    animationEasing="ease-out"
+                    activeDot={{ r: 6, fill: '#EE3D43', stroke: '#ffffff', strokeWidth: 2.5 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -419,7 +475,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* CHART 2: Donut Chart Cơ cấu danh mục */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-4 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -465,9 +521,14 @@ export const Dashboard: React.FC = () => {
                     nameKey="name"
                     cx="50%"
                     cy="50%"
-                    innerRadius={55}
-                    outerRadius={85}
-                    paddingAngle={3}
+                    innerRadius={56}
+                    outerRadius={86}
+                    paddingAngle={4}
+                    stroke="#ffffff"
+                    strokeWidth={2.5}
+                    isAnimationActive={true}
+                    animationDuration={1500}
+                    animationEasing="ease-out"
                   >
                     {formattedCategoryData.map((_, index) => (
                       <Cell
@@ -514,7 +575,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 3: BarChart Phân bổ theo từng kho hàng */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-7 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -559,22 +620,45 @@ export const Dashboard: React.FC = () => {
                     tickFormatter={(val) => formatShortNumber(val)}
                   />
                   <Tooltip
-                    contentStyle={{
-                      backgroundColor: '#0F172A',
-                      borderColor: '#1E293B',
-                      borderRadius: '12px',
-                      color: '#F8FAFC',
-                      fontSize: '12px',
+                    content={({ active, payload }) => {
+                      if (active && payload && payload.length) {
+                        const data = payload[0].payload;
+                        return (
+                          <div className="bg-slate-900/95 backdrop-blur-md text-white p-3.5 rounded-xl shadow-2xl border border-slate-700/80 text-xs space-y-1.5 min-w-[210px]">
+                            <div className="font-bold text-slate-200 pb-1 border-b border-slate-800">
+                              {data.fullName}
+                            </div>
+                            <div className="flex items-center justify-between gap-3 pt-0.5">
+                              <span className="text-slate-400">Số lượng hàng:</span>
+                              <span className="font-mono font-bold text-emerald-400 text-sm">
+                                {Number(data['Số lượng']).toLocaleString('vi-VN')} cái
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between gap-3">
+                              <span className="text-slate-400">Tổng giá trị:</span>
+                              <span className="font-mono font-bold text-amber-400">
+                                {formatVND(data['Giá trị'])}
+                              </span>
+                            </div>
+                          </div>
+                        );
+                      }
+                      return null;
                     }}
-                    formatter={(val: any, _name: any, item: any) => [
-                      `${Number(val).toLocaleString('vi-VN')} cái (${formatVND(item.payload['Giá trị'])})`,
-                      item.payload.fullName,
-                    ]}
                   />
+                  <defs>
+                    <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
+                      <stop offset="0%" stopColor="#EE3D43" stopOpacity={0.95} />
+                      <stop offset="100%" stopColor="#FF6B6B" stopOpacity={0.75} />
+                    </linearGradient>
+                  </defs>
                   <Bar
                     dataKey="Số lượng"
-                    fill="#EE3D43"
-                    radius={[6, 6, 0, 0]}
+                    fill="url(#barGradient)"
+                    radius={[8, 8, 2, 2]}
+                    isAnimationActive={true}
+                    animationDuration={1500}
+                    animationEasing="ease-out"
                   />
                 </BarChart>
               </ResponsiveContainer>
@@ -588,7 +672,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Cảnh báo thiếu hàng & Sắp hết */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-5 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -674,7 +758,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Top 5 Sản phẩm xuất sắc */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-7 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
@@ -751,7 +835,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Nhật ký giao dịch gần nhất */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="lg:col-span-5 card-elevated-static p-5 sm:p-6 flex flex-col justify-between">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">

@@ -10,6 +10,14 @@ export const formatImageUrl = (url?: string | null): string => {
   if (url.startsWith('data:') || url.startsWith('blob:')) {
     return url;
   }
+  // Nếu URL trỏ về localhost (do backend sinh URL mặc định chưa gán domain), tự động thay thế bằng BASE_URL
+  if (url.includes('localhost:5000') || url.includes('localhost:3000')) {
+    return url.replace(/https?:\/\/localhost:\d+/, BASE_URL);
+  }
+  // Nếu là đường dẫn tương đối
+  if (url.startsWith('/upload/file')) {
+    return `${BASE_URL}${url}`;
+  }
   // Nếu là đường dẫn S3 trực tiếp
   if (url.includes('.amazonaws.com/')) {
     const key = url.split('.amazonaws.com/')[1];

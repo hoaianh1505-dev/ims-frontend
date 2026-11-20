@@ -44,24 +44,24 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     );
   }
 
-  // Fallback: Gradient avatar with user initials
-  const words = (alt || 'User').trim().split(/\s+/).filter(Boolean);
-  let initials = 'AD';
-  if (words.length >= 2) {
-    initials = (words[0][0] + words[1][0]).toUpperCase();
-  } else if (words.length === 1 && words[0].length >= 2) {
-    initials = words[0].slice(0, 2).toUpperCase();
-  } else if (words.length === 1 && words[0].length === 1) {
-    initials = words[0].toUpperCase();
-  }
-
+  // Fallback: Default clean SVG user avatar (như cũ)
   return (
     <span
-      className={`inline-flex items-center justify-center overflow-hidden rounded-full font-bold select-none shrink-0 bg-gradient-to-tr from-[#EE3D43] via-rose-500 to-amber-500 text-white shadow-xs border border-white/20 tracking-wider ${sizeClasses} ${className}`}
+      className={`inline-flex items-center justify-center overflow-hidden rounded-full shrink-0 ${sizeClasses} ${
+        variant === 'dark'
+          ? 'bg-[#262E38] border border-[#384252] text-slate-400'
+          : 'bg-slate-100 dark:bg-[#21262d] border border-slate-200 dark:border-[#384252] text-slate-400 dark:text-slate-500'
+      } ${className}`}
       aria-label={alt}
       title={alt}
     >
-      {initials}
+      <svg
+        className="h-full w-full"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+      >
+        <path d="M24 20.993V24H0v-2.996A14.977 14.977 0 0112.004 15c4.904 0 9.26 2.354 11.996 5.993zM16.002 8.999a4 4 0 11-8 0 4 4 0 018 0z" />
+      </svg>
     </span>
   );
 };

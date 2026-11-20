@@ -212,7 +212,7 @@ export const ProfilePage: React.FC = () => {
                 <UserAvatar
                   src={null}
                   alt={user?.display_name || user?.username || 'Admin'}
-                  className="w-full h-full text-2xl font-black rounded-none"
+                  className="w-full h-full border-none rounded-none"
                 />
               )}
               {isUploadingAvatar && (

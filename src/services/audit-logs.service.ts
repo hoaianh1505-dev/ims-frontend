@@ -67,3 +67,4 @@ export const auditLogsService = {
     return res.data?.data || res.data;
   },
 };
+

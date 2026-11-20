@@ -13,8 +13,10 @@ export interface DashboardStats {
 
 export interface StockMovementItem {
   date: string;
-  imports: number;
-  exports: number;
+  import_qty: number;
+  export_qty: number;
+  transfer_qty: number;
+  adjustment_qty: number;
 }
 
 export interface InventoryByWarehouse {
@@ -67,13 +69,20 @@ export interface RecentTransaction {
 }
 
 export const dashboardService = {
-  getStats: async (): Promise<DashboardStats> => {
-    const res = await apiClient.get<any>('/dashboard/stats');
+  getStats: async (warehouse_id?: string): Promise<DashboardStats> => {
+    const res = await apiClient.get<any>('/dashboard/stats', {
+      params: warehouse_id ? { warehouse_id } : undefined,
+    });
     return res.data?.data || res.data;
   },
 
-  getStockMovement: async (period = '7d'): Promise<StockMovementItem[]> => {
-    const res = await apiClient.get<any>('/dashboard/stock-movement', { params: { period } });
+  getStockMovement: async (period = '7d', warehouse_id?: string): Promise<StockMovementItem[]> => {
+    const res = await apiClient.get<any>('/dashboard/stock-movement', {
+      params: {
+        period,
+        ...(warehouse_id ? { warehouse_id } : {}),
+      },
+    });
     return res.data?.data || res.data || [];
   },
 
@@ -87,18 +96,24 @@ export const dashboardService = {
     return res.data?.data || res.data || [];
   },
 
-  getTopProducts: async (): Promise<TopProduct[]> => {
-    const res = await apiClient.get<any>('/dashboard/top-products');
+  getTopProducts: async (warehouse_id?: string): Promise<TopProduct[]> => {
+    const res = await apiClient.get<any>('/dashboard/top-products', {
+      params: warehouse_id ? { warehouse_id } : undefined,
+    });
     return res.data?.data || res.data || [];
   },
 
-  getLowStockAlerts: async (): Promise<LowStockAlert[]> => {
-    const res = await apiClient.get<any>('/dashboard/low-stock-alerts');
+  getLowStockAlerts: async (warehouse_id?: string): Promise<LowStockAlert[]> => {
+    const res = await apiClient.get<any>('/dashboard/low-stock-alerts', {
+      params: warehouse_id ? { warehouse_id } : undefined,
+    });
     return res.data?.data || res.data || [];
   },
 
-  getRecentTransactions: async (): Promise<RecentTransaction[]> => {
-    const res = await apiClient.get<any>('/dashboard/recent-transactions');
+  getRecentTransactions: async (warehouse_id?: string): Promise<RecentTransaction[]> => {
+    const res = await apiClient.get<any>('/dashboard/recent-transactions', {
+      params: warehouse_id ? { warehouse_id } : undefined,
+    });
     return res.data?.data || res.data || [];
   },
 };

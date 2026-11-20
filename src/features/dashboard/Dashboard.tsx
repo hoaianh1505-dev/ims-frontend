@@ -209,7 +209,7 @@ export const Dashboard: React.FC = () => {
         {/* Card 1: Tổng giá trị lưu kho */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng giá trị tồn kho
             </span>
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -220,8 +220,8 @@ export const Dashboard: React.FC = () => {
             <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {formatVND(stats?.total_inventory_value || 0)}
             </div>
-            <p className="text-xs text-slate-500 font-medium mt-1">
-              Phân bổ trên {stats?.total_warehouses || 0} kho hàng
+            <p className="text-sm font-semibold text-slate-600 mt-1.5">
+              Phân bổ trên <strong className="text-slate-900 font-bold">{stats?.total_warehouses || 0}</strong> kho hàng
             </p>
           </div>
         </div>
@@ -229,7 +229,7 @@ export const Dashboard: React.FC = () => {
         {/* Card 2: Hàng hóa lưu kho */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng số lượng hàng
             </span>
             <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
@@ -239,10 +239,10 @@ export const Dashboard: React.FC = () => {
           <div className="mt-3">
             <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {(stats?.total_inventory_quantity || 0).toLocaleString('vi-VN')}
-              <span className="text-sm font-semibold text-slate-400 ml-1.5 font-sans">sản phẩm</span>
+              <span className="text-sm font-semibold text-slate-500 ml-1.5 font-sans">sản phẩm</span>
             </div>
-            <p className="text-xs text-slate-500 font-medium mt-1">
-              Quản lý qua {stats?.total_products || 0} mã SKU
+            <p className="text-sm font-semibold text-slate-600 mt-1.5">
+              Quản lý qua <strong className="text-slate-900 font-bold">{stats?.total_products || 0}</strong> mã SKU
             </p>
           </div>
         </div>
@@ -250,7 +250,7 @@ export const Dashboard: React.FC = () => {
         {/* Card 3: Giao dịch trong tháng */}
         <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Giao dịch xuất / nhập
             </span>
             <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
@@ -260,10 +260,10 @@ export const Dashboard: React.FC = () => {
           <div className="mt-3">
             <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {stats?.transactions_this_month || 0}
-              <span className="text-sm font-semibold text-slate-400 ml-1.5 font-sans">phiếu tháng này</span>
+              <span className="text-sm font-semibold text-slate-500 ml-1.5 font-sans">phiếu tháng này</span>
             </div>
-            <p className="text-xs text-slate-500 font-medium mt-1">
-              {stats?.transactions_today || 0} phiếu phát sinh hôm nay
+            <p className="text-sm font-semibold text-slate-600 mt-1.5">
+              <strong className="text-slate-900 font-bold">{stats?.transactions_today || 0}</strong> phiếu phát sinh hôm nay
             </p>
           </div>
         </div>
@@ -281,10 +281,10 @@ export const Dashboard: React.FC = () => {
           <div className="mt-3">
             <div className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight font-mono">
               {(stats?.low_stock_count || 0) + (stats?.out_of_stock_count || 0)}
-              <span className="text-sm font-semibold text-rose-400 ml-1.5 font-sans">mặt hàng</span>
+              <span className="text-sm font-semibold text-rose-500 ml-1.5 font-sans">mặt hàng</span>
             </div>
-            <p className="text-xs text-rose-600/80 font-medium mt-1">
-              {stats?.out_of_stock_count || 0} hết hàng · {stats?.low_stock_count || 0} dưới định mức
+            <p className="text-sm font-semibold text-rose-700 mt-1.5">
+              <strong className="text-rose-700 font-bold">{stats?.out_of_stock_count || 0}</strong> hết hàng · <strong className="text-amber-700 font-bold">{stats?.low_stock_count || 0}</strong> dưới định mức
             </p>
           </div>
         </div>

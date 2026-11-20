@@ -172,7 +172,7 @@ export const AIAssistantWidget: React.FC = () => {
       return (
         <div
           key={lIdx}
-          className={`leading-relaxed mb-1.5 last:mb-0 text-sm text-slate-800 ${
+          className={`leading-relaxed mb-1.5 last:mb-0 text-sm text-slate-800 dark:text-slate-200 ${
             isBullet ? 'flex items-start gap-2 pl-1' : ''
           }`}
         >
@@ -183,7 +183,7 @@ export const AIAssistantWidget: React.FC = () => {
             {parts.map((part, pIdx) => {
               if (part.startsWith('**') && part.endsWith('**')) {
                 return (
-                  <strong key={pIdx} className="font-bold text-slate-900">
+                  <strong key={pIdx} className="font-bold text-slate-900 dark:text-white">
                     {part.slice(2, -2)}
                   </strong>
                 );
@@ -192,7 +192,7 @@ export const AIAssistantWidget: React.FC = () => {
                 return (
                   <code
                     key={pIdx}
-                    className="bg-slate-100 text-[#EE3D43] px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-slate-200"
+                    className="bg-slate-100 dark:bg-slate-900 text-[#EE3D43] px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-slate-200 dark:border-slate-700"
                   >
                     {part.slice(1, -1)}
                   </code>
@@ -212,7 +212,7 @@ export const AIAssistantWidget: React.FC = () => {
           1. CHAT DIALOG (Nằm ngay ngắn góc dưới bên phải - Kích thước rộng rãi, chữ to rõ)
          ======================================================== */}
       {isOpen ? (
-        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[420px] sm:w-[480px] max-w-[calc(100vw-32px)] h-[620px] max-h-[calc(100vh-80px)] bg-white rounded-2xl shadow-2xl border border-slate-300/80 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 select-text">
+        <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 w-[420px] sm:w-[480px] max-w-[calc(100vw-32px)] h-[620px] max-h-[calc(100vh-80px)] bg-white dark:bg-[#151D2C] rounded-2xl shadow-2xl border border-slate-300/80 dark:border-slate-800 flex flex-col overflow-hidden animate-in fade-in zoom-in-95 duration-200 select-text">
           {/* Header */}
           <div className="bg-[#1B2129] text-white p-3.5 px-4 flex items-center justify-between border-b border-[#262E38] shrink-0">
             <div className="flex items-center gap-3">
@@ -254,14 +254,14 @@ export const AIAssistantWidget: React.FC = () => {
           </div>
 
           {/* Quick Prompt Chips */}
-          <div className="bg-slate-50 border-b border-slate-200 px-3 py-2 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
+          <div className="bg-slate-50 dark:bg-slate-900/60 border-b border-slate-200 dark:border-slate-800 px-3 py-2 flex items-center gap-2 overflow-x-auto custom-scrollbar shrink-0">
             {QUICK_PROMPTS.map((qp, idx) => (
               <button
                 key={idx}
                 type="button"
                 onClick={() => handleSendMessage(qp.prompt)}
                 disabled={loading}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white border border-slate-300 hover:border-rose-300 text-slate-800 hover:text-[#EE3D43] hover:bg-rose-50 text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-slate-800 border border-slate-300 dark:border-slate-700 hover:border-rose-300 dark:hover:border-rose-500/50 text-slate-800 dark:text-slate-200 hover:text-[#EE3D43] dark:hover:text-[#EE3D43] hover:bg-rose-50 dark:hover:bg-slate-700 text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
               >
                 {qp.icon}
                 <span>{qp.label}</span>
@@ -270,7 +270,7 @@ export const AIAssistantWidget: React.FC = () => {
           </div>
 
           {/* Messages Body */}
-          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar bg-slate-50/60">
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-4 custom-scrollbar bg-slate-50/60 dark:bg-[#0B111E]">
             {messages.map((m) => {
               const isUser = m.role === 'user';
               return (
@@ -282,7 +282,7 @@ export const AIAssistantWidget: React.FC = () => {
                     className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm shadow-xs ${
                       isUser
                         ? 'bg-[#EE3D43] text-white rounded-br-xs font-medium'
-                        : 'bg-white border border-slate-200/90 text-slate-900 rounded-bl-xs'
+                        : 'bg-white dark:bg-slate-800/90 border border-slate-200/90 dark:border-slate-700 text-slate-900 dark:text-slate-100 rounded-bl-xs'
                     }`}
                   >
                     {isUser ? (
@@ -293,13 +293,13 @@ export const AIAssistantWidget: React.FC = () => {
 
                         {/* Tool Calls Badge */}
                         {m.toolCalls && m.toolCalls.length > 0 && (
-                          <div className="pt-2 mt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                          <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-700 flex flex-wrap gap-1.5">
                             {m.toolCalls.map((tc, tIdx) => (
                               <span
                                 key={tIdx}
-                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 text-slate-700 text-xs font-mono font-medium border border-slate-200"
+                                className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 text-xs font-mono font-medium border border-slate-200 dark:border-slate-700"
                               >
-                                <Database className="w-3 h-3 text-emerald-600" />
+                                <Database className="w-3 h-3 text-emerald-600 dark:text-emerald-400" />
                                 {tc.name}
                               </span>
                             ))}
@@ -308,7 +308,7 @@ export const AIAssistantWidget: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  <span className="text-xs text-slate-500 font-medium mt-1 px-1">
+                  <span className="text-xs text-slate-500 dark:text-slate-400 font-medium mt-1 px-1">
                     {new Date(m.timestamp).toLocaleTimeString('vi-VN', {
                       hour: '2-digit',
                       minute: '2-digit',
@@ -320,7 +320,7 @@ export const AIAssistantWidget: React.FC = () => {
 
             {/* Loading Indicator */}
             {loading && (
-              <div className="flex items-center gap-2.5 text-sm text-slate-600 bg-white border border-slate-200 rounded-2xl px-4 py-3 w-fit shadow-xs font-medium">
+              <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-2xl px-4 py-3 w-fit shadow-xs font-medium">
                 <Loader2 className="w-4 h-4 text-[#EE3D43] animate-spin" />
                 <span>Đang truy vấn số liệu thực tế...</span>
               </div>
@@ -330,7 +330,7 @@ export const AIAssistantWidget: React.FC = () => {
           </div>
 
           {/* Input Footer */}
-          <div className="p-3.5 bg-white border-t border-slate-200 shrink-0">
+          <div className="p-3.5 bg-white dark:bg-[#151D2C] border-t border-slate-200 dark:border-slate-800 shrink-0">
             <div className="flex items-center gap-2.5">
               <input
                 ref={inputRef}
@@ -340,21 +340,21 @@ export const AIAssistantWidget: React.FC = () => {
                 onKeyDown={handleKeyDown}
                 placeholder="Hỏi trợ lý (ví dụ: Mặt hàng nào tồn kho nhiều nhất?)..."
                 disabled={loading}
-                className="flex-1 bg-slate-100 border border-slate-300 rounded-xl px-4 py-2.5 text-sm text-slate-900 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all font-medium"
+                className="flex-1 bg-slate-100 dark:bg-slate-800/80 border border-slate-300 dark:border-slate-700 rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-white placeholder-slate-500 dark:placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all font-medium"
               />
               <button
                 type="button"
                 onClick={() => handleSendMessage()}
                 disabled={!input.trim() || loading}
-                className="w-10 h-10 rounded-xl bg-[#EE3D43] hover:bg-[#d63439] disabled:bg-slate-200 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
+                className="w-10 h-10 rounded-xl bg-[#EE3D43] hover:bg-[#d63439] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 dark:disabled:text-slate-600 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
                 title="Gửi câu hỏi"
               >
                 <Send className="w-4 h-4" />
               </button>
             </div>
-            <div className="flex items-center justify-between text-xs text-slate-500 font-medium mt-2 px-1">
+            <div className="flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 font-medium mt-2 px-1">
               <span>Nhấn Enter để gửi câu hỏi</span>
-              <span className="flex items-center gap-1.5 font-semibold text-emerald-600">
+              <span className="flex items-center gap-1.5 font-semibold text-emerald-600 dark:text-emerald-400">
                 <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse" />
                 Trực tuyến
               </span>

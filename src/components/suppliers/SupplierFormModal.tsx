@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { X, Loader2 } from 'lucide-react';
 import { Supplier, CreateSupplierPayload } from '../../types/supplier.types';
 import { suppliersService } from '../../services/suppliers.service';
@@ -128,7 +128,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="vd: Công ty TNHH Phân phối Synnex FPT"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -142,7 +142,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={code}
                 onChange={(e) => setCode(e.target.value.toUpperCase().trim())}
                 placeholder="vd: SUP-FPT"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 font-mono focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -156,7 +156,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={contactName}
                 onChange={(e) => setContactName(e.target.value)}
                 placeholder="vd: Nguyễn Văn Hùng"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -170,7 +170,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="vd: 02473000911"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -184,7 +184,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="vd: contact@synnexfpt.com.vn"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all"
               />
             </div>
 
@@ -198,7 +198,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="vd: Tòa nhà FPT, Phố Duy Tân, Cầu Giấy, Hà Nội"
-                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/20 focus:bg-white transition-all resize-none"
+                className="w-full px-3.5 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:bg-white transition-all resize-none"
               />
             </div>
           </div>
@@ -226,7 +226,7 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
             <button
               type="submit"
               disabled={loading}
-              className="px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
+              className="px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold transition-all shadow-sm flex items-center gap-1.5 cursor-pointer disabled:opacity-50"
             >
               {loading && <Loader2 className="w-3.5 h-3.5 animate-spin" />}
               <span>{isEdit ? 'Lưu thay đổi' : 'Thêm nhà cung cấp'}</span>
@@ -237,5 +237,4 @@ export const SupplierFormModal: React.FC<SupplierFormModalProps> = ({
     </div>
   );
 };
-
 

@@ -1,4 +1,4 @@
-﻿import React from 'react';
+import React from 'react';
 import { NavLink } from 'react-router-dom';
 import {
   LayoutGrid,
@@ -43,13 +43,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
         <div
           key={to}
           title={`Tính năng yêu cầu quyền ${requiredRoleLabel || 'Admin'}`}
-          className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium text-slate-400 cursor-not-allowed select-none opacity-60"
+          className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium text-slate-500 cursor-not-allowed select-none opacity-50"
         >
           <div className="flex items-center gap-3">
-            <span className="text-slate-400">{icon}</span>
+            <span className="text-slate-500">{icon}</span>
             <span>{label}</span>
           </div>
-          <Lock className="w-3.5 h-3.5 text-slate-400" />
+          <Lock className="w-3.5 h-3.5 text-slate-500" />
         </div>
       );
     }
@@ -60,17 +60,17 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
         to={to}
         onClick={() => onClose?.()}
         className={({ isActive }) =>
-          `w-full flex items-center justify-between px-3 py-2.5 rounded-xl text-xs font-medium transition-all group ${
+          `w-full flex items-center justify-between px-3.5 py-2.5 rounded-lg text-xs font-medium transition-all group ${
             isActive
-              ? 'bg-blue-50 text-blue-700 font-bold border-r-2 border-blue-600 shadow-2xs'
-              : 'text-slate-700 hover:bg-slate-100 hover:text-slate-900 font-medium'
+              ? 'bg-[#EE3D43] text-white font-semibold shadow-xs'
+              : 'text-slate-300 hover:bg-white/5 hover:text-white'
           }`
         }
       >
         {({ isActive }) => (
           <>
             <div className="flex items-center gap-3">
-              <span className={isActive ? 'text-blue-600' : 'text-slate-500 group-hover:text-slate-900 transition-colors'}>
+              <span className={isActive ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'}>
                 {icon}
               </span>
               <span>{label}</span>
@@ -78,7 +78,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
             {hasSubmenu && (
               <ChevronRight
                 className={`w-3.5 h-3.5 transition-transform ${
-                  isActive ? 'text-blue-600' : 'text-slate-400 group-hover:text-slate-600'
+                  isActive ? 'text-white/80' : 'text-slate-500 group-hover:text-slate-300'
                 }`}
               />
             )}
@@ -97,7 +97,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
 
       {/* Nhóm KHO HÀNG & SẢN PHẨM */}
       <div>
-        <div className="px-3 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Kho hàng & Sản phẩm
         </div>
         <div className="space-y-1">
@@ -111,7 +111,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
 
       {/* Nhóm XUẤT NHẬP & VẬN HÀNH */}
       <div>
-        <div className="px-3 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Xuất nhập & Bán hàng
         </div>
         <div className="space-y-1">
@@ -122,7 +122,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
 
       {/* Nhóm HỆ THỐNG */}
       <div>
-        <div className="px-3 mb-2 text-xs font-bold text-slate-500 uppercase tracking-wider">
+        <div className="px-3 mb-1.5 text-[10px] font-bold text-slate-400 uppercase tracking-wider">
           Hệ thống & Phân quyền
         </div>
         <div className="space-y-1">
@@ -135,11 +135,11 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
 
   return (
     <>
-      {/* 1. Desktop Static Sidebar (Tone sáng đồng bộ toàn hệ thống, dễ nhìn, thanh lịch) */}
-      <aside className="hidden lg:flex w-64 bg-white border-r border-slate-200 h-full flex-col shrink-0 z-20 select-none shadow-2xs">
+      {/* 1. Desktop Static Sidebar */}
+      <aside className="hidden lg:flex w-64 bg-[#1B2129] border-r border-[#262E38] h-full flex-col shrink-0 z-20 select-none">
         {/* Brand Header */}
-        <div className="p-4 pb-3.5 border-b border-slate-200">
-          <Logo variant="light" />
+        <div className="p-5 pb-4 border-b border-[#262E38]/80">
+          <Logo variant="dark" />
         </div>
         {renderNavContent()}
       </aside>
@@ -147,24 +147,24 @@ export const Sidebar: React.FC<SidebarProps> = ({ isMobileOpen = false, onClose 
       {/* 2. Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 backdrop-blur-xs lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/60 z-40 backdrop-blur-xs lg:hidden transition-opacity duration-300"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* 3. Mobile Slide-out Drawer (Tone sáng) */}
+      {/* 3. Mobile Slide-out Drawer */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-white border-r border-slate-200 shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#1B2129] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 pb-3.5 border-b border-slate-200 flex items-center justify-between">
-          <Logo variant="light" />
+        <div className="p-4 pb-3 border-b border-[#262E38] flex items-center justify-between">
+          <Logo variant="dark" />
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-500 hover:text-slate-800 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors"
             title="Đóng menu"
           >
             <X className="w-5 h-5" />

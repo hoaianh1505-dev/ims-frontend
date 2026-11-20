@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import {
   History,
   Search,
@@ -109,7 +109,7 @@ export const AuditLogsPage: React.FC = () => {
       <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight flex items-center gap-2.5">
-            <History className="w-7 h-7 text-blue-600" />
+            <History className="w-7 h-7 text-red-600" />
             Nhật ký hệ thống (Audit Logs)
           </h1>
           <p className="text-sm font-medium text-slate-500 mt-1">
@@ -143,7 +143,7 @@ export const AuditLogsPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm kiếm người dùng, IP, ghi chú..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#2563EB]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -344,7 +344,7 @@ export const AuditLogsPage: React.FC = () => {
             {/* Modal Header */}
             <div className="p-4 sm:p-5 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
               <div className="flex items-center gap-2.5">
-                <Code className="w-5 h-5 text-blue-600" />
+                <Code className="w-5 h-5 text-red-600" />
                 <h3 className="font-bold text-slate-900 text-base sm:text-lg">
                   Chi tiết bản ghi Audit Log
                 </h3>
@@ -415,5 +415,3 @@ export const AuditLogsPage: React.FC = () => {
     </div>
   );
 };
-
-

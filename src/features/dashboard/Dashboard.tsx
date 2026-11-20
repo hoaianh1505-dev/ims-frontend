@@ -60,16 +60,15 @@ const formatShortNumber = (num: number): string => {
   return num.toString();
 };
 
-// Bảng màu dịu mắt, độ tương phản cao, rõ ràng trên nền trắng
-const PASTEL_PALETTE = [
-  '#4F46E5', // Indigo đậm
-  '#0284C7', // Sky blue
-  '#059669', // Emerald
-  '#D97706', // Amber ấm
-  '#7C3AED', // Violet
-  '#DB2777', // Pink rose
-  '#0D9488', // Teal
-  '#475569', // Slate
+const CHART_COLORS = [
+  '#EE3D43', // Red (Brand)
+  '#2563EB', // Blue
+  '#10B981', // Emerald
+  '#F59E0B', // Amber
+  '#8B5CF6', // Purple
+  '#EC4899', // Pink
+  '#06B6D4', // Cyan
+  '#6366F1', // Indigo
 ];
 
 export const Dashboard: React.FC = () => {
@@ -163,21 +162,21 @@ export const Dashboard: React.FC = () => {
   }, [categories]);
 
   return (
-    <div className="p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 text-slate-800 bg-[#F8FAFC]">
+    <div className="p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 text-slate-800">
       {/* ========================================================
-          1. CLEAN PAGE HEADER (Độ tương phản cao, dễ nhìn)
+          1. CLEAN PAGE HEADER (Không còn banner đen to)
          ======================================================== */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-xs">
-              <Activity className="w-5 h-5 text-white" />
+            <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-xs">
+              <Activity className="w-4 h-4" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
+            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Tổng quan điều hành kho
             </h1>
           </div>
-          <p className="text-xs sm:text-sm font-medium text-slate-600 mt-1">
+          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
             Số liệu tồn kho, biến động xuất nhập và trạng thái kho hàng thời gian thực
           </p>
         </div>
@@ -186,16 +185,16 @@ export const Dashboard: React.FC = () => {
           <button
             onClick={() => fetchDashboardData()}
             disabled={loading}
-            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-100 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-300 shadow-2xs transition-all cursor-pointer flex items-center gap-2"
+            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 shadow-2xs transition-all cursor-pointer flex items-center gap-2"
             title="Làm mới dữ liệu từ server"
           >
-            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-blue-600' : 'text-slate-600'}`} />
+            <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-slate-900' : 'text-slate-500'}`} />
             <span>Cập nhật</span>
           </button>
 
           <Link
             to="/stock-transactions?action=import"
-            className="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+            className="px-4 py-2 rounded-xl bg-[#EE3D43] hover:bg-[#D9343A] text-white text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Tạo phiếu mới</span>
@@ -204,88 +203,88 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* ========================================================
-          2. CORE KPI CARDS (Độ tương phản cao, số to rõ ràng)
+          2. CORE KPI CARDS (4 CARDS)
          ======================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: Tổng giá trị lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Tổng giá trị tồn kho
             </span>
-            <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-700 flex items-center justify-center">
-              <Coins className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+              <Coins className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight font-mono">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {formatVND(stats?.total_inventory_value || 0)}
             </div>
-            <p className="text-xs text-slate-600 font-medium mt-1">
-              Phân bổ trên <strong className="text-slate-900 font-semibold">{stats?.total_warehouses || 0}</strong> kho hàng
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Phân bổ trên {stats?.total_warehouses || 0} kho hàng
             </p>
           </div>
         </div>
 
         {/* Card 2: Hàng hóa lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Tổng số lượng hàng
             </span>
-            <div className="w-9 h-9 rounded-xl bg-blue-50 text-blue-700 flex items-center justify-center">
-              <Package className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Package className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight font-mono">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {(stats?.total_inventory_quantity || 0).toLocaleString('vi-VN')}
-              <span className="text-xs font-semibold text-slate-500 ml-1.5 font-sans">sản phẩm</span>
+              <span className="text-sm font-semibold text-slate-400 ml-1.5 font-sans">sản phẩm</span>
             </div>
-            <p className="text-xs text-slate-600 font-medium mt-1">
-              Quản lý qua <strong className="text-slate-900 font-semibold">{stats?.total_products || 0}</strong> mã SKU
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              Quản lý qua {stats?.total_products || 0} mã SKU
             </p>
           </div>
         </div>
 
         {/* Card 3: Giao dịch trong tháng */}
-        <div className="bg-white rounded-2xl border border-slate-200 p-5 shadow-xs hover:shadow-md transition-shadow">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
+            <span className="text-xs font-bold text-slate-500 uppercase tracking-wider">
               Giao dịch xuất / nhập
             </span>
-            <div className="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-700 flex items-center justify-center">
-              <ArrowLeftRight className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+              <ArrowLeftRight className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl sm:text-[26px] font-bold text-slate-900 tracking-tight font-mono">
+            <div className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight font-mono">
               {stats?.transactions_this_month || 0}
-              <span className="text-xs font-semibold text-slate-500 ml-1.5 font-sans">phiếu tháng này</span>
+              <span className="text-sm font-semibold text-slate-400 ml-1.5 font-sans">phiếu tháng này</span>
             </div>
-            <p className="text-xs text-slate-600 font-medium mt-1">
-              <strong className="text-slate-900 font-semibold">{stats?.transactions_today || 0}</strong> phiếu phát sinh hôm nay
+            <p className="text-xs text-slate-500 font-medium mt-1">
+              {stats?.transactions_today || 0} phiếu phát sinh hôm nay
             </p>
           </div>
         </div>
 
         {/* Card 4: Cảnh báo tồn kho */}
-        <div className="bg-white rounded-2xl border border-amber-200/90 p-5 shadow-xs hover:shadow-md transition-shadow bg-gradient-to-br from-white to-amber-50/20">
+        <div className="bg-white rounded-2xl border border-rose-200/80 p-5 shadow-xs bg-gradient-to-br from-white to-rose-50/40 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-bold text-amber-800 uppercase tracking-wider">
+            <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">
               Cảnh báo tồn kho
             </span>
-            <div className="w-9 h-9 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
-              <AlertTriangle className="w-4 h-4" />
+            <div className="w-10 h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center animate-pulse">
+              <AlertTriangle className="w-5 h-5" />
             </div>
           </div>
           <div className="mt-3">
-            <div className="text-2xl sm:text-[26px] font-bold text-amber-800 tracking-tight font-mono">
+            <div className="text-2xl sm:text-3xl font-black text-rose-600 tracking-tight font-mono">
               {(stats?.low_stock_count || 0) + (stats?.out_of_stock_count || 0)}
-              <span className="text-xs font-semibold text-amber-700 ml-1.5 font-sans">mặt hàng</span>
+              <span className="text-sm font-semibold text-rose-400 ml-1.5 font-sans">mặt hàng</span>
             </div>
-            <p className="text-xs text-slate-600 font-medium mt-1">
-              <strong className="text-rose-600 font-bold">{stats?.out_of_stock_count || 0}</strong> hết hàng · <strong className="text-amber-700 font-bold">{stats?.low_stock_count || 0}</strong> dưới định mức
+            <p className="text-xs text-rose-600/80 font-medium mt-1">
+              {stats?.out_of_stock_count || 0} hết hàng · {stats?.low_stock_count || 0} dưới định mức
             </p>
           </div>
         </div>
@@ -296,27 +295,27 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 1: AreaChart Biến động xuất nhập kho */}
-        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-200">
+        <div className="lg:col-span-8 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-blue-600" />
+                <BarChart3 className="w-5 h-5 text-red-600" />
                 <span>Biến động Xuất - Nhập kho (Stock Movement)</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 So sánh số lượng hàng nhập vào và xuất ra theo chu kỳ
               </p>
             </div>
 
             {/* Period switcher */}
-            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-bold border border-slate-200">
+            <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-semibold">
               <button
                 type="button"
                 onClick={() => setMovementPeriod('7d')}
                 className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   movementPeriod === '7d'
-                    ? 'bg-white text-blue-700 shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 font-medium'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 7 ngày qua
@@ -326,8 +325,8 @@ export const Dashboard: React.FC = () => {
                 onClick={() => setMovementPeriod('30d')}
                 className={`px-3 py-1.5 rounded-lg transition-all cursor-pointer ${
                   movementPeriod === '30d'
-                    ? 'bg-white text-blue-700 shadow-xs font-bold'
-                    : 'text-slate-600 hover:text-slate-900 font-medium'
+                    ? 'bg-white text-slate-900 shadow-xs'
+                    : 'text-slate-500 hover:text-slate-900'
                 }`}
               >
                 30 ngày qua
@@ -338,7 +337,7 @@ export const Dashboard: React.FC = () => {
           {/* Area Chart Container */}
           <div className="h-[280px] sm:h-[320px] w-full pt-4">
             {formattedMovementData.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-sm font-medium">
+              <div className="h-full flex items-center justify-center text-slate-400 text-sm">
                 Đang nạp dữ liệu biểu đồ...
               </div>
             ) : (
@@ -346,27 +345,25 @@ export const Dashboard: React.FC = () => {
                 <AreaChart data={formattedMovementData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="importGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#0D9488" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#0D9488" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#10B981" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#10B981" stopOpacity={0.0} />
                     </linearGradient>
                     <linearGradient id="exportGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="5%" stopColor="#2563EB" stopOpacity={0.3} />
-                      <stop offset="95%" stopColor="#2563EB" stopOpacity={0.0} />
+                      <stop offset="5%" stopColor="#EE3D43" stopOpacity={0.4} />
+                      <stop offset="95%" stopColor="#EE3D43" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
                   <XAxis
                     dataKey="date"
-                    stroke="#475569"
-                    fontSize={12}
-                    fontWeight={500}
+                    stroke="#94A3B8"
+                    fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: '#CBD5E1' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
                   />
                   <YAxis
-                    stroke="#475569"
-                    fontSize={12}
-                    fontWeight={500}
+                    stroke="#94A3B8"
+                    fontSize={11}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(val) => `${val}`}
@@ -374,18 +371,18 @@ export const Dashboard: React.FC = () => {
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0F172A',
-                      borderColor: '#334155',
+                      borderColor: '#1E293B',
                       borderRadius: '12px',
-                      color: '#FFFFFF',
+                      color: '#F8FAFC',
                       fontSize: '12px',
-                      boxShadow: '0 8px 20px -4px rgba(0,0,0,0.2)',
+                      boxShadow: '0 10px 25px -5px rgba(0,0,0,0.3)',
                     }}
                     labelStyle={{ color: '#94A3B8', fontWeight: 'bold', marginBottom: '4px' }}
                   />
                   <Area
                     type="monotone"
                     dataKey="Nhập kho"
-                    stroke="#0D9488"
+                    stroke="#10B981"
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill="url(#importGrad)"
@@ -393,7 +390,7 @@ export const Dashboard: React.FC = () => {
                   <Area
                     type="monotone"
                     dataKey="Xuất kho"
-                    stroke="#2563EB"
+                    stroke="#EE3D43"
                     strokeWidth={2.5}
                     fillOpacity={1}
                     fill="url(#exportGrad)"
@@ -403,34 +400,34 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-medium">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <div className="flex items-center gap-4">
-              <span className="flex items-center gap-1.5 font-bold text-slate-800">
-                <span className="w-2.5 h-2.5 rounded-full bg-teal-600" /> Nhập kho
+              <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Nhập kho
               </span>
-              <span className="flex items-center gap-1.5 font-bold text-slate-800">
-                <span className="w-2.5 h-2.5 rounded-full bg-blue-600" /> Xuất kho
+              <span className="flex items-center gap-1.5 font-semibold text-slate-700">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500" /> Xuất kho
               </span>
             </div>
-            <span className="text-slate-500 font-medium">Chu kỳ: {movementPeriod === '7d' ? '7 ngày' : '30 ngày'}</span>
+            <span className="font-medium text-slate-400">Chu kỳ: {movementPeriod === '7d' ? '7 ngày' : '30 ngày'}</span>
           </div>
         </div>
 
         {/* CHART 2: Donut Chart Cơ cấu danh mục */}
-        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="lg:col-span-4 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <PieIcon className="w-5 h-5 text-blue-600" />
+                <PieIcon className="w-5 h-5 text-red-600" />
                 <span>Cơ cấu danh mục</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Tỷ trọng số lượng hàng theo ngành
               </p>
             </div>
             <Link
               to="/categories"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-0.5"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
             >
               <span>Chi tiết</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -440,21 +437,21 @@ export const Dashboard: React.FC = () => {
           {/* Donut Chart */}
           <div className="h-[200px] w-full relative flex items-center justify-center my-2">
             {formattedCategoryData.length === 0 ? (
-              <div className="text-slate-500 text-sm font-medium">Đang nạp dữ liệu...</div>
+              <div className="text-slate-400 text-sm">Đang nạp dữ liệu...</div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <PieChart>
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0F172A',
-                      borderColor: '#334155',
+                      borderColor: '#1E293B',
                       borderRadius: '10px',
-                      color: '#FFFFFF',
-                      fontSize: '12px',
+                      color: '#F8FAFC',
+                      fontSize: '11px',
                     }}
-                    formatter={(val: any, _: any, item: any) => [
+                    formatter={(val: any, name: any, item: any) => [
                       `${val} cái (${item.payload.percentage}%)`,
-                      item.payload.name,
+                      name,
                     ]}
                   />
                   <Pie
@@ -470,7 +467,7 @@ export const Dashboard: React.FC = () => {
                     {formattedCategoryData.map((_, index) => (
                       <Cell
                         key={`cell-${index}`}
-                        fill={PASTEL_PALETTE[index % PASTEL_PALETTE.length]}
+                        fill={CHART_COLORS[index % CHART_COLORS.length]}
                       />
                     ))}
                   </Pie>
@@ -479,24 +476,24 @@ export const Dashboard: React.FC = () => {
             )}
             {/* Center label */}
             <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xs text-slate-500 font-medium">Tổng số</span>
-              <span className="text-xl font-bold text-slate-900 font-mono">
+              <span className="text-xs text-slate-400 font-semibold">Tổng số</span>
+              <span className="text-lg font-black text-slate-800 font-mono">
                 {formattedCategoryData.length}
               </span>
-              <span className="text-xs text-slate-500 font-medium">ngành hàng</span>
+              <span className="text-[10px] text-slate-400">ngành hàng</span>
             </div>
           </div>
 
           {/* Legend List */}
-          <div className="space-y-2 pt-2 border-t border-slate-200 max-h-[140px] overflow-y-auto custom-scrollbar">
+          <div className="space-y-2 pt-2 border-t border-slate-100 max-h-[140px] overflow-y-auto custom-scrollbar">
             {formattedCategoryData.slice(0, 5).map((cat, idx) => (
               <div key={cat.name} className="flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 truncate max-w-[170px]">
                   <span
                     className="w-2.5 h-2.5 rounded-full shrink-0"
-                    style={{ backgroundColor: PASTEL_PALETTE[idx % PASTEL_PALETTE.length] }}
+                    style={{ backgroundColor: CHART_COLORS[idx % CHART_COLORS.length] }}
                   />
-                  <span className="text-slate-700 font-semibold truncate">{cat.name}</span>
+                  <span className="text-slate-700 font-medium truncate">{cat.name}</span>
                 </div>
                 <span className="font-bold text-slate-900 font-mono">
                   {cat.percentage}%
@@ -508,24 +505,24 @@ export const Dashboard: React.FC = () => {
       </div>
 
       {/* ========================================================
-          4. CHARTS ROW 2: BAR CHART KHO HÀNG + CẢNH BÁO
+          4. CHARTS ROW 2: BAR CHART KHO HÀNG + DANH SÁCH CẢNH BÁO
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* CHART 3: BarChart Phân bổ theo từng kho hàng */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-blue-600" />
+                <Building2 className="w-5 h-5 text-red-600" />
                 <span>Phân bổ số lượng lưu kho theo chi nhánh (Kho bãi)</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 So sánh sức chứa và số lượng hàng hóa tại các kho tổng & chi nhánh
               </p>
             </div>
             <Link
               to="/warehouses"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-0.5"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
             >
               <span>Xem kho</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -535,25 +532,23 @@ export const Dashboard: React.FC = () => {
           {/* Bar Chart Container */}
           <div className="h-[280px] w-full pt-4">
             {formattedWarehouseData.length === 0 ? (
-              <div className="h-full flex items-center justify-center text-slate-500 text-sm font-medium">
+              <div className="h-full flex items-center justify-center text-slate-400 text-sm">
                 Đang nạp dữ liệu kho...
               </div>
             ) : (
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={formattedWarehouseData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#E2E8F0" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
                   <XAxis
                     dataKey="name"
-                    stroke="#475569"
-                    fontSize={12}
-                    fontWeight={500}
+                    stroke="#94A3B8"
+                    fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: '#CBD5E1' }}
+                    axisLine={{ stroke: '#E2E8F0' }}
                   />
                   <YAxis
-                    stroke="#475569"
-                    fontSize={12}
-                    fontWeight={500}
+                    stroke="#94A3B8"
+                    fontSize={11}
                     tickLine={false}
                     axisLine={false}
                     tickFormatter={(val) => formatShortNumber(val)}
@@ -561,9 +556,9 @@ export const Dashboard: React.FC = () => {
                   <Tooltip
                     contentStyle={{
                       backgroundColor: '#0F172A',
-                      borderColor: '#334155',
+                      borderColor: '#1E293B',
                       borderRadius: '12px',
-                      color: '#FFFFFF',
+                      color: '#F8FAFC',
                       fontSize: '12px',
                     }}
                     formatter={(val: any, _name: any, item: any) => [
@@ -573,7 +568,7 @@ export const Dashboard: React.FC = () => {
                   />
                   <Bar
                     dataKey="Số lượng"
-                    fill="#3B82F6"
+                    fill="#EE3D43"
                     radius={[6, 6, 0, 0]}
                   />
                 </BarChart>
@@ -581,27 +576,27 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-medium">
+          <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <span>Dữ liệu thực tế từ cơ sở dữ liệu PostgreSQL</span>
-            <span className="font-bold text-slate-800">Tổng cộng {warehouses.length} kho</span>
+            <span className="font-semibold text-slate-700">Tổng cộng {warehouses.length} kho</span>
           </div>
         </div>
 
         {/* Cảnh báo thiếu hàng & Sắp hết */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-200">
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <ShieldAlert className="w-5 h-5 text-amber-600" />
+                <ShieldAlert className="w-5 h-5 text-rose-600" />
                 <span>Cảnh báo cần nhập hàng khẩn</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Các sản phẩm chạm ngưỡng tồn kho tối thiểu
               </p>
             </div>
             <Link
               to="/products"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-0.5"
+              className="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-0.5"
             >
               <span>Xem tất cả</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -610,8 +605,8 @@ export const Dashboard: React.FC = () => {
 
           <div className="space-y-2.5 py-3 flex-1 overflow-y-auto max-h-[290px] custom-scrollbar">
             {alerts.length === 0 ? (
-              <div className="text-center py-12 text-slate-600 text-sm font-medium">
-                <CheckCircle2 className="w-9 h-9 text-emerald-600 mx-auto mb-2" />
+              <div className="text-center py-12 text-slate-400 text-sm">
+                <CheckCircle2 className="w-10 h-10 text-emerald-500 mx-auto mb-2 opacity-80" />
                 Tuyệt vời! Không có sản phẩm nào bị thiếu hụt
               </div>
             ) : (
@@ -620,34 +615,34 @@ export const Dashboard: React.FC = () => {
                 return (
                   <div
                     key={item.product_id}
-                    className="p-3 rounded-xl border border-slate-200 bg-slate-50/70 hover:bg-slate-100 transition-colors flex items-center justify-between gap-3 text-xs"
+                    className="p-3 rounded-xl border border-slate-200 bg-slate-50/60 hover:bg-slate-50 transition-colors flex items-center justify-between gap-3 text-xs"
                   >
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2">
-                        <span className="font-mono font-bold text-slate-800 bg-white px-2 py-0.5 rounded border border-slate-300 text-xs">
+                        <span className="font-mono font-bold text-slate-700 bg-white px-2 py-0.5 rounded border border-slate-200">
                           {item.sku}
                         </span>
                         <span
-                          className={`text-xs font-bold px-2 py-0.5 rounded-full ${
+                          className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
                             isOut
-                              ? 'bg-rose-100 text-rose-800 border border-rose-300'
-                              : 'bg-amber-100 text-amber-800 border border-amber-300'
+                              ? 'bg-rose-100 text-rose-700'
+                              : 'bg-amber-100 text-amber-700'
                           }`}
                         >
                           {isOut ? 'HẾT HÀNG' : 'SẮP HẾT'}
                         </span>
                       </div>
-                      <div className="font-bold text-slate-900 truncate mt-1 text-sm">
+                      <div className="font-semibold text-slate-800 truncate mt-1">
                         {item.name}
                       </div>
-                      <div className="text-xs text-slate-600 font-medium mt-0.5">
-                        Tồn: <strong className="text-rose-700 font-bold">{item.current_stock}</strong> {item.unit_name} · Ngưỡng: {item.low_stock_threshold} {item.unit_name}
+                      <div className="text-[11px] text-slate-500 mt-0.5">
+                        Tồn: <strong className="text-rose-600">{item.current_stock}</strong> {item.unit_name} · Ngưỡng: {item.low_stock_threshold} {item.unit_name}
                       </div>
                     </div>
 
                     <Link
                       to="/stock-transactions?action=import"
-                      className="px-3 py-1.5 rounded-lg bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-bold shrink-0 transition-colors cursor-pointer"
+                      className="px-3 py-1.5 rounded-lg bg-white hover:bg-slate-100 border border-slate-200 font-bold text-slate-800 shrink-0 transition-colors"
                     >
                       Nhập hàng
                     </Link>
@@ -657,12 +652,12 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-3 border-t border-slate-200 text-center">
+          <div className="pt-3 border-t border-slate-100 text-center">
             <Link
               to="/stock-transactions?action=import"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-blue-700 hover:text-blue-800"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700"
             >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
+              <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Khởi tạo phiếu nhập hàng bổ sung</span>
             </Link>
           </div>
@@ -674,20 +669,20 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-stretch">
         {/* Top 5 Sản phẩm xuất sắc */}
-        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="lg:col-span-7 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-blue-600" />
+                <TrendingUp className="w-5 h-5 text-red-600" />
                 <span>Top sản phẩm xuất kho nhiều nhất</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Các sản phẩm có thanh khoản và khối lượng lưu chuyển cao nhất
               </p>
             </div>
             <Link
               to="/products"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-0.5"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
             >
               <span>Xem danh mục</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -695,8 +690,8 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="overflow-x-auto pt-2 flex-1">
-            <table className="w-full text-left text-xs text-slate-800">
-              <thead className="bg-slate-100 text-xs font-bold text-slate-700 uppercase tracking-wider">
+            <table className="w-full text-left text-xs text-slate-700">
+              <thead className="bg-slate-50/70 text-[11px] font-semibold text-slate-500 uppercase tracking-wider">
                 <tr>
                   <th className="px-3 py-2.5">Hạng</th>
                   <th className="px-3 py-2.5">Mã SKU</th>
@@ -705,41 +700,41 @@ export const Dashboard: React.FC = () => {
                   <th className="px-3 py-2.5 text-right">Tổng giá trị</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-200">
+              <tbody className="divide-y divide-slate-100">
                 {topProducts.length === 0 ? (
                   <tr>
-                    <td colSpan={5} className="text-center py-8 text-slate-500 font-medium">
+                    <td colSpan={5} className="text-center py-8 text-slate-400">
                       Chưa có dữ liệu sản phẩm luân chuyển
                     </td>
                   </tr>
                 ) : (
                   topProducts.slice(0, 5).map((prod, idx) => (
-                    <tr key={prod.product_id} className="hover:bg-slate-50 transition-colors">
+                    <tr key={prod.product_id} className="hover:bg-slate-50/50">
                       <td className="px-3 py-2.5 font-bold text-slate-900">
                         <span
-                          className={`w-6 h-6 rounded-md inline-flex items-center justify-center text-xs font-bold ${
+                          className={`w-6 h-6 rounded-full inline-flex items-center justify-center text-[11px] font-bold ${
                             idx === 0
                               ? 'bg-amber-100 text-amber-800 border border-amber-300'
                               : idx === 1
-                              ? 'bg-slate-200 text-slate-800 border border-slate-300'
+                              ? 'bg-slate-100 text-slate-700 border border-slate-300'
                               : idx === 2
                               ? 'bg-orange-100 text-orange-800 border border-orange-300'
-                              : 'bg-slate-100 text-slate-600'
+                              : 'bg-slate-50 text-slate-500'
                           }`}
                         >
                           {idx + 1}
                         </span>
                       </td>
-                      <td className="px-3 py-2.5 font-mono font-bold text-slate-800">
+                      <td className="px-3 py-2.5 font-mono font-bold text-slate-700">
                         {prod.sku}
                       </td>
-                      <td className="px-3 py-2.5 font-semibold text-slate-900 truncate max-w-[200px]">
+                      <td className="px-3 py-2.5 font-semibold text-slate-800 truncate max-w-[180px]">
                         {prod.name}
                       </td>
                       <td className="px-3 py-2.5 text-right font-bold text-slate-900">
                         {prod.total_quantity.toLocaleString('vi-VN')} {prod.unit_name}
                       </td>
-                      <td className="px-3 py-2.5 text-right font-bold text-slate-900 font-mono">
+                      <td className="px-3 py-2.5 text-right font-bold text-red-600 font-mono">
                         {formatVND(prod.total_value)}
                       </td>
                     </tr>
@@ -751,20 +746,20 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Nhật ký giao dịch gần nhất */}
-        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
-          <div className="flex items-center justify-between pb-3 border-b border-slate-200">
+        <div className="lg:col-span-5 bg-white rounded-2xl border border-slate-200/90 p-5 sm:p-6 shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <Clock className="w-5 h-5 text-blue-600" />
+                <Clock className="w-5 h-5 text-red-600" />
                 <span>Giao dịch xuất nhập gần nhất</span>
               </h2>
-              <p className="text-xs text-slate-600 font-medium mt-0.5">
+              <p className="text-xs text-slate-500 mt-0.5">
                 Các phiếu xuất / nhập kho mới phát sinh
               </p>
             </div>
             <Link
               to="/stock-transactions"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 flex items-center gap-0.5"
+              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
             >
               <span>Xem tất cả</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -773,7 +768,7 @@ export const Dashboard: React.FC = () => {
 
           <div className="space-y-2 py-2 flex-1">
             {recentTxs.length === 0 ? (
-              <div className="text-center py-8 text-slate-500 font-medium text-sm">
+              <div className="text-center py-8 text-slate-400 text-sm">
                 Chưa có giao dịch kho gần đây
               </div>
             ) : (
@@ -782,27 +777,27 @@ export const Dashboard: React.FC = () => {
                 return (
                   <div
                     key={tx.id}
-                    className="p-2.5 rounded-xl border border-slate-200 bg-slate-50 hover:bg-slate-100 transition-colors flex items-center justify-between gap-3 text-xs"
+                    className="p-2.5 rounded-xl border border-slate-100 hover:border-slate-200 bg-slate-50/50 hover:bg-slate-50 transition-colors flex items-center justify-between gap-3 text-xs"
                   >
                     <div className="flex items-center gap-2.5">
                       <div
-                        className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                           isImport
-                            ? 'bg-teal-100 text-teal-800'
-                            : 'bg-blue-100 text-blue-800'
+                            ? 'bg-emerald-100 text-emerald-700'
+                            : 'bg-rose-100 text-rose-700'
                         }`}
                       >
                         {isImport ? (
-                          <ArrowDownLeft className="w-4 h-4 stroke-[2.5]" />
+                          <ArrowDownLeft className="w-3.5 h-3.5" />
                         ) : (
-                          <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
+                          <ArrowUpRight className="w-3.5 h-3.5" />
                         )}
                       </div>
                       <div>
-                        <div className="font-bold text-slate-900 font-mono text-sm">
+                        <div className="font-bold text-slate-800 font-mono">
                           {tx.reference_no}
                         </div>
-                        <div className="text-xs text-slate-600 font-medium">
+                        <div className="text-[11px] text-slate-400">
                           {tx.warehouse_name} · {tx.creator_name || 'Nhân viên'}
                         </div>
                       </div>
@@ -810,15 +805,15 @@ export const Dashboard: React.FC = () => {
 
                     <div className="text-right">
                       <span
-                        className={`font-bold px-2.5 py-0.5 rounded text-xs ${
+                        className={`font-bold px-2 py-0.5 rounded text-[10px] ${
                           isImport
-                            ? 'bg-teal-100 text-teal-800 border border-teal-300'
-                            : 'bg-blue-100 text-blue-800 border border-blue-300'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
+                            : 'bg-rose-50 text-rose-700 border border-rose-200'
                         }`}
                       >
                         {isImport ? 'Nhập' : 'Xuất'}
                       </span>
-                      <div className="text-xs text-slate-500 font-medium mt-0.5">
+                      <div className="text-[10px] text-slate-400 mt-0.5">
                         {new Date(tx.created_at).toLocaleDateString('vi-VN')}
                       </div>
                     </div>
@@ -828,10 +823,10 @@ export const Dashboard: React.FC = () => {
             )}
           </div>
 
-          <div className="pt-2 border-t border-slate-200 text-center">
+          <div className="pt-2 border-t border-slate-100 text-center">
             <Link
               to="/stock-transactions"
-              className="text-xs font-bold text-blue-700 hover:text-blue-800 transition-colors"
+              className="text-xs font-bold text-slate-700 hover:text-red-600 transition-colors"
             >
               Mở toàn bộ sổ cái xuất nhập kho →
             </Link>

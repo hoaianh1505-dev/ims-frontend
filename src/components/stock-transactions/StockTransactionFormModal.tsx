@@ -1,4 +1,4 @@
-﻿import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   X,
   Plus,
@@ -408,7 +408,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
             onClick={() => setTxType('EXPORT')}
             className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               txType === 'EXPORT'
-                ? 'bg-[#2563EB] text-white shadow-xs'
+                ? 'bg-[#EE3D43] text-white shadow-xs'
                 : 'bg-white border border-slate-200 text-slate-600 hover:bg-slate-50'
             }`}
           >
@@ -829,7 +829,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
                 <span className="text-xs font-bold uppercase text-slate-500">
                   Tổng giá trị chứng từ:
                 </span>
-                <span className="text-base font-black font-mono text-[#2563EB]">
+                <span className="text-base font-black font-mono text-[#EE3D43]">
                   {formatCurrency(totalAmount)}
                 </span>
               </div>
@@ -850,7 +850,7 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-[#2563EB] hover:bg-[#1D4ED8] disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               <span>
@@ -869,5 +869,4 @@ export const StockTransactionFormModal: React.FC<StockTransactionFormModalProps>
     </div>
   );
 };
-
 

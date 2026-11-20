@@ -10,4 +10,5 @@ export { StockTransactionsPage } from './StockTransactionsPage';
 export { ProfilePage } from './ProfilePage';
 export { AuditLogsPage } from './AuditLogsPage';
 export { MyTasksPage } from './MyTasksPage';
+export { PurchaseOrdersPage } from './PurchaseOrdersPage';
 export { PlaceholderPage } from './PlaceholderPage';

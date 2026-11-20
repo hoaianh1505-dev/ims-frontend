@@ -93,10 +93,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         className={({ isActive }) =>
           `w-full relative group flex items-center ${
             isCollapsed ? 'justify-center px-2 py-3' : 'justify-between px-3.5 py-2.5'
-          } rounded-xl transition-all duration-150 ${
+          } rounded-xl transition-all ${
             isActive
-              ? 'bg-[#EE3D43] text-white font-bold shadow-sm shadow-red-500/20'
-              : 'text-slate-700 hover:bg-white hover:text-slate-900 hover:shadow-2xs font-semibold'
+              ? 'bg-[#EE3D43] text-white font-bold shadow-xs'
+              : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
           }`
         }
       >
@@ -105,7 +105,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <div className="flex items-center gap-3 min-w-0">
               <span
                 className={`shrink-0 ${
-                  isActive ? 'text-white' : 'text-slate-500 group-hover:text-slate-800 transition-colors'
+                  isActive ? 'text-white' : 'text-slate-400 group-hover:text-white transition-colors'
                 }`}
               >
                 {icon}
@@ -118,14 +118,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
             {!isCollapsed && hasSubmenu && (
               <ChevronRight
                 className={`w-4 h-4 shrink-0 transition-transform ${
-                  isActive ? 'text-white/80' : 'text-slate-400 group-hover:text-slate-600'
+                  isActive ? 'text-white/80' : 'text-slate-500 group-hover:text-slate-300'
                 }`}
               />
             )}
 
             {/* Floating Tooltip khi Sidebar co lại (Collapsed) */}
             {isCollapsed && (
-              <div className="absolute left-full ml-3 px-3 py-1.5 bg-slate-900 text-white text-xs font-bold rounded-xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-slate-800">
+              <div className="absolute left-full ml-3 px-3 py-1.5 bg-[#1B2129] text-white text-xs font-bold rounded-xl shadow-xl whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-50 border border-[#262E38]">
                 {label}
               </div>
             )}
@@ -152,7 +152,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               Kho hàng & Sản phẩm
             </div>
           ) : (
-            <div className="border-t border-slate-200 my-3 mx-2" />
+            <div className="border-t border-[#262E38] my-3 mx-2" />
           )}
           <div className="space-y-1">
             {renderNavItem('/products', 'Sản phẩm', <Package className="w-5 h-5 shrink-0" />, true, true)}
@@ -170,7 +170,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               Xuất nhập & Bán hàng
             </div>
           ) : (
-            <div className="border-t border-slate-200 my-3 mx-2" />
+            <div className="border-t border-[#262E38] my-3 mx-2" />
           )}
           <div className="space-y-1">
             {renderNavItem('/purchase-orders', 'Đơn đặt hàng (PO)', <ShoppingCart className="w-5 h-5 shrink-0" />, true)}
@@ -186,7 +186,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               Hệ thống & Phân quyền
             </div>
           ) : (
-            <div className="border-t border-slate-200 my-3 mx-2" />
+            <div className="border-t border-[#262E38] my-3 mx-2" />
           )}
           <div className="space-y-1">
             {renderNavItem('/users', 'Tài khoản & quyền', <ShieldCheck className="w-5 h-5 shrink-0" />, isAdmin, false, 'Admin')}
@@ -199,24 +199,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
   return (
     <>
-      {/* 1. Desktop Static Sidebar (Tone màu sáng thanh lịch, rõ nét) */}
+      {/* 1. Desktop Static Sidebar (Hỗ trợ Co/Giãn tiện lợi) */}
       <aside
         className={`hidden lg:flex ${
           isCollapsed ? 'w-20' : 'w-64'
-        } bg-[#F0F4F8] border-r border-slate-200/90 h-full flex-col shrink-0 z-20 select-none transition-all duration-300 relative shadow-2xs`}
+        } bg-[#1B2129] border-r border-[#262E38] h-full flex-col shrink-0 z-20 select-none transition-all duration-300 relative`}
       >
         {/* Brand Header */}
         <div
-          className={`p-4 pb-3.5 bg-white border-b border-slate-200/80 flex items-center ${
+          className={`p-4 pb-3.5 border-b border-[#262E38]/80 flex items-center ${
             isCollapsed ? 'justify-center' : 'justify-between'
           }`}
         >
-          <Logo variant="light" showText={!isCollapsed} />
+          <Logo variant="dark" showText={!isCollapsed} />
           {!isCollapsed && (
             <button
               type="button"
               onClick={toggleCollapse}
-              className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
               title="Thu nhỏ thanh bên (Co lại)"
             >
               <PanelLeftClose className="w-4.5 h-4.5" />
@@ -226,11 +226,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Nút mở rộng khi đã co lại */}
         {isCollapsed && (
-          <div className="px-3 py-2 border-b border-slate-200/60 flex justify-center bg-white/50">
+          <div className="px-3 py-2 border-b border-[#262E38]/60 flex justify-center">
             <button
               type="button"
               onClick={toggleCollapse}
-              className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors cursor-pointer"
+              className="p-2 text-slate-400 hover:text-white rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
               title="Mở rộng thanh bên"
             >
               <PanelLeftOpen className="w-5 h-5" />
@@ -242,12 +242,12 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Footer Collapse Button */}
         {!isCollapsed && (
-          <div className="p-3 border-t border-slate-200/80 flex items-center justify-between text-xs text-slate-500 bg-white/50">
-            <span className="font-medium">Phiên bản v2.6 Pro</span>
+          <div className="p-3 border-t border-[#262E38]/80 flex items-center justify-between text-xs text-slate-400">
+            <span>Phiên bản v2.6 Pro</span>
             <button
               type="button"
               onClick={toggleCollapse}
-              className="p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-200/60 rounded-lg transition-colors cursor-pointer"
+              className="p-1 text-slate-400 hover:text-white hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
               title="Thu nhỏ thanh bên"
             >
               <ChevronLeft className="w-4 h-4" />
@@ -259,24 +259,24 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* 2. Mobile Backdrop */}
       {isMobileOpen && (
         <div
-          className="fixed inset-0 bg-slate-900/40 z-40 backdrop-blur-xs lg:hidden transition-opacity duration-300"
+          className="fixed inset-0 bg-black/60 z-40 backdrop-blur-xs lg:hidden transition-opacity duration-300"
           onClick={onClose}
           aria-hidden="true"
         />
       )}
 
-      {/* 3. Mobile Slide-out Drawer */}
+      {/* 3. Mobile Slide-out Drawer (Luôn mở rộng đầy đủ) */}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#F0F4F8] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none border-r border-slate-200 ${
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-[#1B2129] shadow-2xl flex flex-col transition-transform duration-300 ease-in-out lg:hidden select-none ${
           isMobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
-        <div className="p-4 pb-3.5 bg-white border-b border-slate-200/80 flex items-center justify-between">
-          <Logo variant="light" />
+        <div className="p-4 pb-3.5 border-b border-[#262E38] flex items-center justify-between">
+          <Logo variant="dark" />
           <button
             type="button"
             onClick={onClose}
-            className="p-1.5 text-slate-400 hover:text-slate-700 rounded-lg hover:bg-slate-100 transition-colors cursor-pointer"
+            className="p-1.5 text-slate-400 hover:text-white rounded-lg hover:bg-white/10 transition-colors cursor-pointer"
             title="Đóng menu"
           >
             <X className="w-5 h-5" />

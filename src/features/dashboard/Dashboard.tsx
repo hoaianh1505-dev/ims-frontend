@@ -212,7 +212,7 @@ export const Dashboard: React.FC = () => {
          ======================================================== */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         {/* Card 1: Tổng giá trị lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-emerald-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng giá trị tồn kho
@@ -232,7 +232,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 2: Hàng hóa lưu kho */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-blue-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Tổng số lượng hàng
@@ -253,7 +253,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 3: Giao dịch trong tháng */}
-        <div className="bg-white rounded-2xl border border-slate-200/90 border-t-4 border-t-indigo-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all">
+        <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-xs hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-slate-600 uppercase tracking-wider">
               Giao dịch xuất / nhập
@@ -274,7 +274,7 @@ export const Dashboard: React.FC = () => {
         </div>
 
         {/* Card 4: Cảnh báo tồn kho */}
-        <div className="bg-white rounded-2xl border border-rose-200 border-t-4 border-t-rose-500 p-5 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all bg-gradient-to-br from-white to-rose-50/40">
+        <div className="bg-white rounded-2xl border border-rose-200/80 p-5 shadow-xs bg-gradient-to-br from-white to-rose-50/40 hover:shadow-md transition-shadow">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-rose-700 uppercase tracking-wider">
               Cảnh báo tồn kho

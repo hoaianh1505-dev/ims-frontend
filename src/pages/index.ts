@@ -7,4 +7,5 @@ export { UsersPage } from './UsersPage';
 export { SuppliersPage } from './SuppliersPage';
 export { CustomersPage } from './CustomersPage';
 export { StockTransactionsPage } from './StockTransactionsPage';
+export { ProfilePage } from './ProfilePage';
 export { PlaceholderPage } from './PlaceholderPage';

@@ -11,13 +11,13 @@ import {
   SuppliersPage,
   CustomersPage,
   StockTransactionsPage,
+  ProfilePage,
   PlaceholderPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
 import {
   FileText,
-  User as UserIcon,
   History,
 } from 'lucide-react';
 
@@ -74,16 +74,7 @@ export default function App() {
             />
 
             {/* 8. Hồ sơ cá nhân */}
-            <Route
-              path="profile"
-              element={
-                <PlaceholderPage
-                  title="Hồ sơ cá nhân"
-                  description="Thông tin tài khoản, đổi mật khẩu và cài đặt bảo mật"
-                  icon={UserIcon}
-                />
-              }
-            />
+            <Route path="profile" element={<ProfilePage />} />
 
             {/* 9. Quản trị tài khoản & quyền */}
             <Route path="users" element={<UsersPage />} />

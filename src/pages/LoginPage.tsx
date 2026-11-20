@@ -33,7 +33,8 @@ export const LoginPage: React.FC = () => {
     if (success) {
       showToast.success('Đăng nhập thành công! Đang chuyển hướng...');
     } else {
-      showToast.error('Tên tài khoản hoặc mật khẩu không chính xác.');
+      const errorMsg = useAuthStore.getState().error || 'Tên tài khoản hoặc mật khẩu không chính xác.';
+      showToast.error(errorMsg);
     }
   };
 

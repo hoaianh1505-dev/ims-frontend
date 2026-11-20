@@ -2,7 +2,9 @@ export interface User {
   id: string;
   username: string;
   email: string;
-  full_name: string;
+  full_name?: string;
+  display_name?: string | null;
+  phone?: string | null;
   avatar?: string | null;
   role: 'ADMIN' | 'MANAGER' | 'STAFF';
   is_active?: boolean;

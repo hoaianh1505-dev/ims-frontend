@@ -50,5 +50,23 @@ export const productsService = {
     const res = await apiClient.patch(`/products/${productId}/images/${imageId}/primary`);
     return res.data;
   },
+
+  async exportInventoryExcel(params?: any): Promise<void> {
+    const res = await apiClient.get('/export/inventory', {
+      params,
+      responseType: 'blob',
+    });
+    const blob = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `Bao_Cao_Ton_Kho_${new Date().toISOString().slice(0, 10)}.xlsx`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
 };
 

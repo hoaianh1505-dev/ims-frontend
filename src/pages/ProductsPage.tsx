@@ -22,6 +22,7 @@ import {
   Upload,
   Maximize2,
   Download,
+  FileDown,
 } from 'lucide-react';
 import { BarcodeRenderer } from '../components/common/BarcodeRenderer';
 import { generateEAN13Barcode, printBarcodeLabel } from '../utils/barcode.utils';
@@ -42,6 +43,7 @@ export const ProductsPage: React.FC = () => {
   // Data State
   const [products, setProducts] = useState<Product[]>([]);
   const [loading, setLoading] = useState(false);
+  const [exportingExcel, setExportingExcel] = useState(false);
   const [categories, setCategories] = useState<Category[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
 
@@ -225,6 +227,18 @@ export const ProductsPage: React.FC = () => {
     setIsModalOpen(true);
   };
 
+  const handleExportExcel = async () => {
+    setExportingExcel(true);
+    try {
+      await productsService.exportInventoryExcel();
+      showNotify('success', 'Đã xuất file báo cáo tồn kho Excel (.xlsx) thành công');
+    } catch {
+      showNotify('error', 'Không thể xuất file Excel báo cáo tồn kho');
+    } finally {
+      setExportingExcel(false);
+    }
+  };
+
   // Drawer Image Upload & Actions
   const handleDrawerUploadImage = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -388,13 +402,25 @@ export const ProductsPage: React.FC = () => {
           </button>
 
           {isManagerOrAdmin && (
-            <button
-              onClick={openCreateModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
-            >
-              <Plus className="w-4 h-4 stroke-[2.5]" />
-              <span>Thêm sản phẩm</span>
-            </button>
+            <>
+              <button
+                onClick={handleExportExcel}
+                disabled={exportingExcel}
+                className="inline-flex items-center gap-2 px-3.5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
+                title="Xuất danh sách tồn kho ra file Excel (.xlsx)"
+              >
+                <FileDown className="w-4 h-4 text-emerald-600" />
+                <span>{exportingExcel ? 'Đang xuất...' : 'Xuất Excel'}</span>
+              </button>
+
+              <button
+                onClick={openCreateModal}
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5]" />
+                <span>Thêm sản phẩm</span>
+              </button>
+            </>
           )}
         </div>
       </div>

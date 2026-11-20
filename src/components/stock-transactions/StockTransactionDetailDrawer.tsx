@@ -369,7 +369,7 @@ export const StockTransactionDetailDrawer: React.FC<StockTransactionDetailDrawer
         </div>
 
         {/* Drawer Footer */}
-        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-3">
+        <div className="px-6 py-4 border-t border-slate-100 bg-slate-50/60 flex items-center justify-between gap-3 no-print">
           <button
             onClick={handlePrint}
             className="inline-flex items-center gap-2 px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-xs font-bold transition-colors shadow-2xs cursor-pointer"
@@ -384,6 +384,93 @@ export const StockTransactionDetailDrawer: React.FC<StockTransactionDetailDrawer
           >
             Đóng cửa sổ
           </button>
+        </div>
+      </div>
+
+      {/* ========================================================
+          PRINTABLE VOUCHER (Biểu mẫu chuẩn A4 khi in)
+         ======================================================== */}
+      <div className="hidden print:block fixed inset-0 bg-white p-8 z-[9999] text-black text-sm">
+        <div className="flex justify-between items-start pb-4 border-b-2 border-black">
+          <div>
+            <h1 className="text-lg font-black uppercase tracking-wider">HỆ THỐNG QUẢN LÝ KHO TỔNG IMS</h1>
+            <p className="text-xs">Đơn vị: Tổng kho vận hành IMS Logistics</p>
+            <p className="text-xs">Kho: {transaction.warehouse?.name} - {transaction.warehouse?.address || 'Hà Nội'}</p>
+          </div>
+          <div className="text-right">
+            <h2 className="text-base font-bold uppercase">{meta.voucherTitle}</h2>
+            <p className="text-xs font-mono">Mã số: <strong>{transaction.reference_no}</strong></p>
+            <p className="text-xs">Ngày lập: {new Date(transaction.created_at).toLocaleDateString('vi-VN')}</p>
+          </div>
+        </div>
+
+        <div className="my-4 text-xs space-y-1">
+          <p>Kho lưu trữ: <strong>{transaction.warehouse?.name} ({transaction.warehouse?.code})</strong></p>
+          {transaction.type === 'TRANSFER' && (
+            <p>Kho nhận điều chuyển: <strong>{transaction.target_warehouse?.name}</strong></p>
+          )}
+          {transaction.supplier && (
+            <p>Nhà cung cấp: <strong>{transaction.supplier.name}</strong> - SĐT: {transaction.supplier.phone || 'N/A'}</p>
+          )}
+          {transaction.customer && (
+            <p>Khách hàng: <strong>{transaction.customer.name}</strong> - SĐT: {transaction.customer.phone || 'N/A'}</p>
+          )}
+          <p>Người tạo phiếu: <strong>{transaction.creator?.display_name || transaction.creator?.username}</strong></p>
+          {transaction.note && <p>Ghi chú: {transaction.note}</p>}
+        </div>
+
+        <table className="w-full border-collapse border border-black text-xs my-4">
+          <thead>
+            <tr className="bg-slate-100 border-b border-black">
+              <th className="border border-black p-2 text-center w-12">STT</th>
+              <th className="border border-black p-2 text-left w-32">Mã SKU</th>
+              <th className="border border-black p-2 text-left">Tên sản phẩm</th>
+              <th className="border border-black p-2 text-center w-20">ĐVT</th>
+              <th className="border border-black p-2 text-right w-24">Số lượng</th>
+              <th className="border border-black p-2 text-right w-28">Đơn giá</th>
+              <th className="border border-black p-2 text-right w-32">Thành tiền</th>
+            </tr>
+          </thead>
+          <tbody>
+            {items.map((it, idx) => (
+              <tr key={it.id || idx}>
+                <td className="border border-black p-2 text-center">{idx + 1}</td>
+                <td className="border border-black p-2 font-mono">{it.product?.sku}</td>
+                <td className="border border-black p-2 font-medium">{it.product?.name}</td>
+                <td className="border border-black p-2 text-center">{it.product?.unit?.name || 'Cái'}</td>
+                <td className="border border-black p-2 text-right font-bold">{it.quantity}</td>
+                <td className="border border-black p-2 text-right">{formatCurrency(Number(it.unit_price || 0))}</td>
+                <td className="border border-black p-2 text-right font-bold">{formatCurrency(Number(it.total_price || 0))}</td>
+              </tr>
+            ))}
+          </tbody>
+          <tfoot>
+            <tr className="font-bold border-t border-black bg-slate-50">
+              <td colSpan={4} className="border border-black p-2 text-right">TỔNG CỘNG:</td>
+              <td className="border border-black p-2 text-right">{totalQuantity.toLocaleString('vi-VN')}</td>
+              <td className="border border-black p-2" />
+              <td className="border border-black p-2 text-right">{formatCurrency(totalAmount)}</td>
+            </tr>
+          </tfoot>
+        </table>
+
+        <div className="grid grid-cols-4 gap-4 text-center text-xs mt-10 pt-4">
+          <div>
+            <p className="font-bold">Người lập phiếu</p>
+            <p className="text-[10px] text-slate-500 italic mt-1">(Ký, họ tên)</p>
+          </div>
+          <div>
+            <p className="font-bold">Người nhận / giao</p>
+            <p className="text-[10px] text-slate-500 italic mt-1">(Ký, họ tên)</p>
+          </div>
+          <div>
+            <p className="font-bold">Thủ kho</p>
+            <p className="text-[10px] text-slate-500 italic mt-1">(Ký, họ tên)</p>
+          </div>
+          <div>
+            <p className="font-bold">Giám đốc / Kế toán</p>
+            <p className="text-[10px] text-slate-500 italic mt-1">(Ký, đóng dấu)</p>
+          </div>
         </div>
       </div>
     </div>

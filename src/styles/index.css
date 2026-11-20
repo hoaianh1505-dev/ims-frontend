@@ -78,3 +78,18 @@
   will-change: transform, opacity, filter;
   backface-visibility: hidden;
 }
+
+/* Biểu mẫu in chứng từ kho chuẩn A4 */
+@media print {
+  html, body, #root {
+    overflow: visible !important;
+    height: auto !important;
+    background: white !important;
+  }
+  .no-print,
+  aside,
+  header,
+  .print\\:hidden {
+    display: none !important;
+  }
+}

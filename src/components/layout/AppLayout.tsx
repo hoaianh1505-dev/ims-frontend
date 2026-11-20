@@ -1,19 +1,28 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 
 export const AppLayout: React.FC = () => {
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
   const location = useLocation();
+
+  // Đóng sidebar trên mobile mỗi khi chuyển trang
+  useEffect(() => {
+    setIsMobileSidebarOpen(false);
+  }, [location.pathname]);
 
   return (
     <div className="h-full w-full bg-[#F4F5F7] flex overflow-hidden">
-      {/* Sidebar cố định */}
-      <Sidebar />
+      {/* Sidebar (Responsive cho desktop & mobile) */}
+      <Sidebar
+        isMobileOpen={isMobileSidebarOpen}
+        onClose={() => setIsMobileSidebarOpen(false)}
+      />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 h-full overflow-hidden">
-        <Header />
+        <Header onOpenMobileSidebar={() => setIsMobileSidebarOpen(true)} />
 
         <main className="flex-1 flex flex-col min-h-0 overflow-y-auto">
           <div key={location.pathname} className="flex-1 flex flex-col min-h-0 animate-page-enter">

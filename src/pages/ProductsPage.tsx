@@ -365,10 +365,10 @@ export const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 px-6 sm:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
+    <div className="flex-1 flex flex-col min-h-0 px-3 sm:px-6 lg:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
 
       {/* PAGE HEADER */}
-      <div className="shrink-0 flex items-center justify-between gap-4 pb-2 border-b border-slate-100 min-h-[52px]">
+      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100 min-h-[52px]">
         <div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Danh mục hàng hóa
@@ -760,8 +760,8 @@ export const ProductsPage: React.FC = () => {
             className="absolute inset-0 bg-slate-900/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
           />
 
-          <div className="fixed inset-y-0 right-0 pl-10 max-w-full flex">
-            <div className="w-screen max-w-2xl lg:max-w-3xl bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250">
+          <div className="fixed inset-y-0 right-0 pl-0 sm:pl-10 max-w-full flex">
+            <div className="w-screen max-w-full sm:max-w-2xl lg:max-w-3xl bg-white shadow-2xl flex flex-col border-l border-slate-200 animate-in slide-in-from-right duration-250">
               {/* Drawer Top Banner */}
               <div className="p-6 sm:p-7 border-b border-slate-200 bg-slate-50/70">
                 <div className="flex items-start justify-between gap-4">

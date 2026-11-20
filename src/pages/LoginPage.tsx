@@ -49,8 +49,8 @@ export const LoginPage: React.FC = () => {
     <div className="min-h-screen w-full bg-[#CBD5E1] flex items-center justify-center p-4 sm:p-6 lg:p-10 font-sans text-slate-800">
       {/* FLOATING SPLIT CARD */}
       <div className="w-full max-w-6xl bg-white rounded-3xl shadow-[0_30px_70px_-15px_rgba(15,23,42,0.25)] border border-slate-300/80 overflow-hidden flex flex-col lg:grid lg:grid-cols-12 min-h-[660px]">
-        {/* LEFT COLUMN: warehouse photo + internal portal info */}
-        <div className="relative lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-14 flex flex-col justify-between overflow-hidden min-h-[300px] lg:min-h-full">
+        {/* LEFT COLUMN: warehouse photo + internal portal info (Desktop only) */}
+        <div className="hidden lg:flex lg:col-span-7 bg-[#0E131B] p-8 sm:p-12 lg:p-14 flex-col justify-between relative overflow-hidden min-h-[660px]">
           <div className="absolute inset-0 z-0 pointer-events-none">
             <img
               src="/images/warehouse-login-hero.jpg"
@@ -99,7 +99,7 @@ export const LoginPage: React.FC = () => {
             RIGHT COLUMN: Clean White Form (~45% width)
             - Spacious, large text, confident inputs
            ======================================================== */}
-        <div className="lg:col-span-5 bg-white p-10 sm:p-14 flex flex-col justify-between">
+        <div className="w-full lg:col-span-5 bg-white p-6 sm:p-10 lg:p-14 flex flex-col justify-between">
           {/* Top Logo (Mobile only) */}
           <div className="flex justify-between items-center pb-2">
             <div className="lg:hidden">

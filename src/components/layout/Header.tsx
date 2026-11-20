@@ -13,6 +13,7 @@ import {
   LogOut,
   Camera,
   Loader2,
+  Menu,
 } from 'lucide-react';
 import { useAuthStore } from '../../stores/auth.store';
 import { UserAvatar } from '../common/UserAvatar';
@@ -26,7 +27,11 @@ const ROLE_LABELS: Record<string, string> = {
   STAFF: 'Nhân viên kho',
 };
 
-export const Header: React.FC = () => {
+interface HeaderProps {
+  onOpenMobileSidebar?: () => void;
+}
+
+export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
   const { user, logout, updateUser } = useAuthStore();
   const [showQuickAdd, setShowQuickAdd] = useState(false);
   const [selectedBranch, setSelectedBranch] = useState('Kho Tổng Hà Nội');
@@ -70,17 +75,27 @@ export const Header: React.FC = () => {
   };
 
   return (
-    <header className="h-16 sm:h-[68px] px-6 sm:px-8 flex items-center justify-between border-b border-slate-200 bg-white sticky top-0 z-10 shadow-2xs">
-      {/* LEFT: Quick Action + History */}
-      <div className="flex items-center gap-3">
+    <header className="h-16 sm:h-[68px] px-3 sm:px-6 lg:px-8 flex items-center justify-between border-b border-slate-200 bg-white sticky top-0 z-10 shadow-2xs">
+      {/* LEFT: Mobile Menu Button + Quick Action + History */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Mobile Hamburger Toggle Button */}
+        <button
+          type="button"
+          onClick={onOpenMobileSidebar}
+          className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+          title="Mở menu điều hướng"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
+
         {/* Quick Add Button (+) with Popover Menu */}
         <div className="relative">
           <button
             onClick={() => setShowQuickAdd(!showQuickAdd)}
             title="Thao tác nhanh"
-            className="w-9 h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
+            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
           >
-            <Plus className="w-5 h-5 stroke-[2.5]" />
+            <Plus className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
           </button>
 
           {showQuickAdd && (
@@ -126,23 +141,24 @@ export const Header: React.FC = () => {
         <Link
           to="/audit-logs"
           title="Lịch sử thao tác"
-          className="p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
+          className="p-1.5 sm:p-2 text-slate-400 hover:text-slate-700 rounded-xl hover:bg-slate-100 transition-colors"
         >
-          <History className="w-5 h-5" />
+          <History className="w-4 h-4 sm:w-5 sm:h-5" />
         </Link>
       </div>
 
       {/* RIGHT: Branch Switcher + Actions + Profile */}
-      <div className="flex items-center gap-3.5">
+      <div className="flex items-center gap-1.5 sm:gap-3.5">
         {/* Branch / Warehouse Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowBranchMenu(!showBranchMenu)}
-            className="flex items-center gap-2 px-3.5 py-2 rounded-xl text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+            className="flex items-center gap-1.5 sm:gap-2 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
           >
-            <Building2 className="w-4 h-4 text-slate-500" />
-            <span>{selectedBranch}</span>
-            <ChevronDown className="w-3.5 h-3.5 text-slate-400" />
+            <Building2 className="w-4 h-4 text-slate-500 shrink-0" />
+            <span className="hidden md:inline">{selectedBranch}</span>
+            <span className="md:hidden max-w-[80px] sm:max-w-[120px] truncate">{selectedBranch.replace('Kho ', '')}</span>
+            <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
           </button>
 
           {showBranchMenu && (
@@ -179,15 +195,15 @@ export const Header: React.FC = () => {
         </div>
 
         {/* Divider */}
-        <div className="w-[1px] h-6 bg-slate-200" />
+        <div className="w-[1px] h-5 sm:h-6 bg-slate-200 hidden xs:block" />
 
         {/* Realtime Notification Bell */}
         <NotificationDropdown />
 
-        {/* Help */}
+        {/* Help (hidden on mobile) */}
         <button
           title="Trợ giúp"
-          className="p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+          className="hidden md:flex p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
         >
           <HelpCircle className="w-5 h-5" />
         </button>

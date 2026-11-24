@@ -67,14 +67,14 @@ const formatShortNumber = (num: number): string => {
 };
 
 const CHART_COLORS = [
-  '#EE3D43', // Red (Brand)
-  '#2563EB', // Blue
-  '#10B981', // Emerald
-  '#F59E0B', // Amber
-  '#8B5CF6', // Purple
-  '#EC4899', // Pink
-  '#06B6D4', // Cyan
-  '#6366F1', // Indigo
+  '#35584e',
+  '#71877f',
+  '#b77c58',
+  '#8297a0',
+  '#a69d79',
+  '#527b72',
+  '#9b6f67',
+  '#66738a',
 ];
 
 export const Dashboard: React.FC = () => {
@@ -168,21 +168,22 @@ export const Dashboard: React.FC = () => {
   }, [categories]);
 
   return (
-    <div className="p-3 sm:p-6 lg:p-8 max-w-[1600px] w-full mx-auto space-y-6 text-slate-800">
-      {/* ========================================================
-          1. CLEAN PAGE HEADER (Không còn banner đen to)
-         ======================================================== */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200">
+    <div className="dashboard-page mx-auto w-full min-w-0 max-w-[1600px] space-y-5 p-3 text-slate-800 sm:space-y-6 sm:p-6 lg:p-8">
+      <div className="flex flex-col justify-between gap-4 border-b border-slate-300 pb-5 sm:flex-row sm:items-center">
         <div>
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-red-600 text-white flex items-center justify-center shadow-xs">
-              <Activity className="w-4 h-4" />
+          <div className="mb-2 flex items-center gap-2 text-[10px] font-bold uppercase tracking-[0.18em] text-slate-500">
+            <span className="h-1.5 w-1.5 bg-[#55766b]" />
+            IMS · Quản lý kho
+          </div>
+          <div className="flex min-w-0 items-center gap-3">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center border border-slate-300 bg-slate-200/70 text-slate-700">
+              <Activity className="h-4 w-4" />
             </div>
-            <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+            <h1 className="text-xl font-extrabold tracking-tight text-slate-950 sm:text-2xl lg:text-[28px]">
               Tổng quan điều hành kho
             </h1>
           </div>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 mt-1">
+          <p className="mt-2 text-xs font-medium leading-5 text-slate-600 sm:text-sm">
             Số liệu tồn kho, biến động xuất nhập và trạng thái kho hàng thời gian thực
           </p>
         </div>
@@ -195,7 +196,7 @@ export const Dashboard: React.FC = () => {
               showToast.success('Đã cập nhật dữ liệu mới nhất!');
             }}
             disabled={loading}
-            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 text-slate-700 text-xs sm:text-sm font-semibold border border-slate-200 shadow-2xs transition-all cursor-pointer flex items-center gap-2"
+            className="flex cursor-pointer items-center gap-2 border border-slate-300 bg-white px-3.5 py-2 text-xs font-bold text-slate-700 transition-colors hover:bg-slate-100 sm:text-sm"
             title="Làm mới dữ liệu từ server"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-slate-900' : 'text-slate-500'}`} />
@@ -204,7 +205,7 @@ export const Dashboard: React.FC = () => {
 
           <Link
             to="/stock-transactions?action=import"
-            className="px-4 py-2 rounded-xl bg-[#EE3D43] hover:bg-[#D9343A] text-white text-xs sm:text-sm font-bold shadow-xs transition-all flex items-center gap-2 cursor-pointer"
+            className="flex cursor-pointer items-center gap-2 border border-[#263c36] bg-[#263c36] px-4 py-2 text-xs font-bold text-white transition-colors hover:bg-[#1d302b] sm:text-sm"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Tạo phiếu mới</span>
@@ -215,32 +216,32 @@ export const Dashboard: React.FC = () => {
       {/* ========================================================
           2. CORE KPI CARDS (4 CARDS)
          ======================================================== */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid min-w-0 grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 xl:grid-cols-4">
         {/* Card 1: Tổng giá trị lưu kho */}
         <Link
           to="/warehouses"
-          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full group hover:border-emerald-300 transition-all cursor-pointer block"
+          className="card-elevated dashboard-kpi-card group block flex h-full cursor-pointer flex-col justify-between p-4 transition-colors hover:border-[#9eb6aa] sm:p-5"
           title="Xem chi tiết các kho hàng & giá trị lưu trữ"
         >
           <div>
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-emerald-700 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 group-hover:text-[#35584e] transition-colors">
                 Tổng giá trị tồn kho
               </span>
-              <div className="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200/80 ring-4 ring-emerald-500/10 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <div className="dashboard-kpi-icon flex h-10 w-10 shrink-0 items-center justify-center border border-[#d6e0da] bg-[#edf2ef] text-[#42685b] transition-transform group-hover:scale-105">
                 <Coins className="w-5 h-5" />
               </div>
             </div>
-            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-emerald-700 transition-colors">
+            <div className="mt-4 flex flex-wrap items-baseline gap-1.5">
+              <span className="font-mono text-2xl font-extrabold tracking-tight text-slate-950 transition-colors group-hover:text-[#35584e] sm:text-[28px]">
                 {formatNumberVN(stats?.total_inventory_value || 0)}
               </span>
-              <span className="text-xs font-bold text-slate-500 uppercase">VNĐ</span>
+              <span className="text-xs font-bold uppercase text-slate-500">VND</span>
             </div>
           </div>
-          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-200 pt-3.5 text-xs">
             <span className="text-slate-500 font-medium">Kho bãi lưu trữ</span>
-            <span className="inline-flex items-center gap-1.5 font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/60 shadow-xs group-hover:bg-emerald-100 transition-colors">
+            <span className="inline-flex items-center gap-1.5 border border-[#d6e0da] bg-[#edf2ef] px-2 py-1 font-bold text-[#35584e] transition-colors group-hover:bg-[#e2ebe5]">
               <Building2 className="w-3.5 h-3.5" />
               {stats?.total_warehouses || 0} kho hàng
               <ChevronRight className="w-3.5 h-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
@@ -251,28 +252,28 @@ export const Dashboard: React.FC = () => {
         {/* Card 2: Hàng hóa lưu kho */}
         <Link
           to="/products"
-          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full group hover:border-blue-300 transition-all cursor-pointer block"
+          className="card-elevated dashboard-kpi-card group block flex h-full cursor-pointer flex-col justify-between p-4 transition-colors hover:border-slate-400 sm:p-5"
           title="Xem toàn bộ danh mục sản phẩm & mã SKU"
         >
           <div>
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-blue-700 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 group-hover:text-slate-800 transition-colors">
                 Tổng số lượng hàng
               </span>
-              <div className="w-11 h-11 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center border border-blue-200/80 ring-4 ring-blue-500/10 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <div className="dashboard-kpi-icon flex h-10 w-10 shrink-0 items-center justify-center border border-slate-200 bg-slate-100 text-slate-600 transition-transform group-hover:scale-105">
                 <Package className="w-5 h-5" />
               </div>
             </div>
-            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-blue-700 transition-colors">
+            <div className="mt-4 flex flex-wrap items-baseline gap-1.5">
+              <span className="font-mono text-2xl font-extrabold tracking-tight text-slate-950 transition-colors group-hover:text-slate-700 sm:text-[28px]">
                 {formatNumberVN(stats?.total_inventory_quantity || 0)}
               </span>
               <span className="text-xs font-bold text-slate-500">sản phẩm</span>
             </div>
           </div>
-          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-200 pt-3.5 text-xs">
             <span className="text-slate-500 font-medium">Danh mục quản lý</span>
-            <span className="inline-flex items-center gap-1.5 font-bold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-200/60 shadow-xs group-hover:bg-blue-100 transition-colors">
+            <span className="inline-flex items-center gap-1.5 border border-slate-200 bg-slate-100 px-2 py-1 font-bold text-slate-700 transition-colors group-hover:bg-slate-200">
               <Layers className="w-3.5 h-3.5" />
               {stats?.total_products || 0} mã SKU
               <ChevronRight className="w-3.5 h-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
@@ -283,28 +284,28 @@ export const Dashboard: React.FC = () => {
         {/* Card 3: Giao dịch trong tháng */}
         <Link
           to="/stock-transactions"
-          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full group hover:border-indigo-300 transition-all cursor-pointer block"
+          className="card-elevated dashboard-kpi-card group block flex h-full cursor-pointer flex-col justify-between p-4 transition-colors hover:border-[#aabbb5] sm:p-5"
           title="Mở sổ cái lịch sử giao dịch xuất / nhập kho"
         >
           <div>
             <div className="flex items-center justify-between gap-3">
-              <span className="text-xs font-bold text-slate-500 uppercase tracking-wider group-hover:text-indigo-700 transition-colors">
+              <span className="text-[11px] font-bold uppercase tracking-[0.1em] text-slate-500 group-hover:text-[#35584e] transition-colors">
                 Giao dịch xuất / nhập
               </span>
-              <div className="w-11 h-11 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center border border-indigo-200/80 ring-4 ring-indigo-500/10 shrink-0 shadow-xs group-hover:scale-105 transition-transform">
+              <div className="dashboard-kpi-icon flex h-10 w-10 shrink-0 items-center justify-center border border-[#d6e0da] bg-[#edf2ef] text-[#42685b] transition-transform group-hover:scale-105">
                 <ArrowLeftRight className="w-5 h-5" />
               </div>
             </div>
-            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight font-mono group-hover:text-indigo-700 transition-colors">
+            <div className="mt-4 flex flex-wrap items-baseline gap-1.5">
+              <span className="font-mono text-2xl font-extrabold tracking-tight text-slate-950 transition-colors group-hover:text-[#35584e] sm:text-[28px]">
                 {formatNumberVN(stats?.transactions_this_month || 0)}
               </span>
               <span className="text-xs font-bold text-slate-500">phiếu tháng này</span>
             </div>
           </div>
-          <div className="mt-4 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs">
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-slate-200 pt-3.5 text-xs">
             <span className="text-slate-500 font-medium">Phát sinh hôm nay</span>
-            <span className="inline-flex items-center gap-1.5 font-bold text-indigo-700 bg-indigo-50 px-2.5 py-1 rounded-lg border border-indigo-200/60 shadow-xs group-hover:bg-indigo-100 transition-colors">
+            <span className="inline-flex items-center gap-1.5 border border-[#d6e0da] bg-[#edf2ef] px-2 py-1 font-bold text-[#35584e] transition-colors group-hover:bg-[#e2ebe5]">
               <Clock className="w-3.5 h-3.5" />
               {stats?.transactions_today || 0} phiếu mới
               <ChevronRight className="w-3.5 h-3.5 ml-0.5 group-hover:translate-x-0.5 transition-transform" />
@@ -315,7 +316,7 @@ export const Dashboard: React.FC = () => {
         {/* Card 4: Cảnh báo tồn kho */}
         <Link
           to="/products"
-          className="card-elevated p-5 sm:p-6 flex flex-col justify-between h-full border-rose-200/90 dark:border-rose-900/50 group hover:border-rose-400 dark:hover:border-rose-700 bg-white dark:bg-[#161b22] transition-all cursor-pointer block"
+          className="card-elevated dashboard-kpi-card group block flex h-full cursor-pointer flex-col justify-between border-rose-300 bg-white p-4 transition-colors hover:border-rose-500 dark:border-rose-900/50 dark:bg-[#161b22] dark:hover:border-rose-700 sm:p-5"
           title="Xem danh sách các sản phẩm đang hết hàng hoặc dưới ngưỡng tối thiểu"
         >
           <div>
@@ -323,18 +324,18 @@ export const Dashboard: React.FC = () => {
               <span className="text-xs font-bold text-rose-700 dark:text-rose-400 uppercase tracking-wider">
                 Cảnh báo tồn kho
               </span>
-              <div className="w-11 h-11 rounded-xl bg-rose-50 dark:bg-rose-950/40 text-rose-600 dark:text-rose-400 flex items-center justify-center border border-rose-200/80 dark:border-rose-900/60 ring-4 ring-rose-500/10 shrink-0 shadow-xs animate-pulse group-hover:scale-105 transition-transform">
+              <div className="dashboard-kpi-icon dashboard-kpi-icon--alert flex h-10 w-10 shrink-0 items-center justify-center border border-rose-200 bg-rose-50 text-rose-700 transition-transform group-hover:scale-105 dark:border-rose-900/60 dark:bg-rose-950/40 dark:text-rose-400">
                 <AlertTriangle className="w-5 h-5" />
               </div>
             </div>
-            <div className="mt-3.5 flex items-baseline gap-1.5 flex-wrap">
-              <span className="text-2xl sm:text-3xl font-extrabold text-rose-600 dark:text-rose-400 tracking-tight font-mono">
+            <div className="mt-4 flex flex-wrap items-baseline gap-1.5">
+              <span className="font-mono text-2xl font-extrabold tracking-tight text-rose-700 dark:text-rose-400 sm:text-[28px]">
                 {formatNumberVN((stats?.low_stock_count || 0) + (stats?.out_of_stock_count || 0))}
               </span>
               <span className="text-xs font-bold text-rose-600 dark:text-rose-400">mặt hàng</span>
             </div>
           </div>
-          <div className="mt-4 pt-3.5 border-t border-rose-100 dark:border-[#30363d] flex items-center justify-between text-xs gap-2">
+          <div className="mt-4 flex items-center justify-between gap-2 border-t border-rose-200 pt-3.5 text-xs dark:border-[#30363d]">
             <span className="inline-flex items-center gap-1 font-bold text-rose-700 dark:text-rose-300 bg-rose-100/90 dark:bg-rose-950/60 px-2.5 py-1 rounded-lg border border-rose-200 dark:border-rose-900/50 shadow-xs group-hover:bg-rose-200 dark:group-hover:bg-rose-900/80 transition-colors">
               {stats?.out_of_stock_count || 0} hết hàng
             </span>
@@ -355,7 +356,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <BarChart3 className="w-5 h-5 text-red-600" />
+                <BarChart3 className="w-5 h-5 text-[#49685d]" />
                 <span>Biến động Xuất - Nhập kho (Stock Movement)</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -401,23 +402,23 @@ export const Dashboard: React.FC = () => {
                 <AreaChart data={formattedMovementData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
                   <defs>
                     <linearGradient id="importGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#10B981" stopOpacity={0.55} />
-                      <stop offset="50%" stopColor="#10B981" stopOpacity={0.15} />
-                      <stop offset="100%" stopColor="#10B981" stopOpacity={0.0} />
+                      <stop offset="0%" stopColor="#527b6b" stopOpacity={0.34} />
+                      <stop offset="50%" stopColor="#527b6b" stopOpacity={0.12} />
+                      <stop offset="100%" stopColor="#527b6b" stopOpacity={0.0} />
                     </linearGradient>
                     <linearGradient id="exportGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#EE3D43" stopOpacity={0.55} />
-                      <stop offset="50%" stopColor="#EE3D43" stopOpacity={0.15} />
-                      <stop offset="100%" stopColor="#EE3D43" stopOpacity={0.0} />
+                      <stop offset="0%" stopColor="#b77c58" stopOpacity={0.3} />
+                      <stop offset="50%" stopColor="#b77c58" stopOpacity={0.1} />
+                      <stop offset="100%" stopColor="#b77c58" stopOpacity={0.0} />
                     </linearGradient>
                   </defs>
-                  <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false} />
+                  <CartesianGrid strokeDasharray="3 3"                   stroke="#e5e9e7" vertical={false} />
                   <XAxis
                     dataKey="date"
                     stroke="#94A3B8"
                     fontSize={11}
                     tickLine={false}
-                    axisLine={{ stroke: '#E2E8F0' }}
+                    axisLine={{ stroke: '#d8dfdc' }}
                   />
                   <YAxis
                     stroke="#94A3B8"
@@ -455,26 +456,26 @@ export const Dashboard: React.FC = () => {
                   <Area
                     type="monotone"
                     dataKey="Nhập kho"
-                    stroke="#10B981"
+                    stroke="#527b6b"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#importGrad)"
                     isAnimationActive={true}
                     animationDuration={1500}
                     animationEasing="ease-out"
-                    activeDot={{ r: 6, fill: '#10B981', stroke: '#ffffff', strokeWidth: 2.5 }}
+                    activeDot={{ r: 5, fill: '#527b6b', stroke: '#ffffff', strokeWidth: 2 }}
                   />
                   <Area
                     type="monotone"
                     dataKey="Xuất kho"
-                    stroke="#EE3D43"
+                    stroke="#b77c58"
                     strokeWidth={3}
                     fillOpacity={1}
                     fill="url(#exportGrad)"
                     isAnimationActive={true}
                     animationDuration={1900}
                     animationEasing="ease-out"
-                    activeDot={{ r: 6, fill: '#EE3D43', stroke: '#ffffff', strokeWidth: 2.5 }}
+                    activeDot={{ r: 5, fill: '#b77c58', stroke: '#ffffff', strokeWidth: 2 }}
                   />
                 </AreaChart>
               </ResponsiveContainer>
@@ -484,10 +485,10 @@ export const Dashboard: React.FC = () => {
           <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <div className="flex items-center gap-4">
               <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" /> Nhập kho
+                <span className="w-2.5 h-2.5 rounded-full bg-[#527b6b]" /> Nhập kho
               </span>
               <span className="flex items-center gap-1.5 font-semibold text-slate-700">
-                <span className="w-2.5 h-2.5 rounded-full bg-red-500" /> Xuất kho
+                <span className="w-2.5 h-2.5 rounded-full bg-[#b77c58]" /> Xuất kho
               </span>
             </div>
             <span className="font-medium text-slate-400">Chu kỳ: {movementPeriod === '7d' ? '7 ngày' : '30 ngày'}</span>
@@ -499,7 +500,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <PieIcon className="w-5 h-5 text-red-600" />
+                <PieIcon className="w-5 h-5 text-[#49685d]" />
                 <span>Cơ cấu danh mục</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -508,7 +509,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <Link
               to="/categories"
-              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
+              className="text-xs font-semibold text-[#49685d] hover:text-[#263c36] flex items-center gap-0.5"
             >
               <span>Chi tiết</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -599,7 +600,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-red-600" />
+                <Building2 className="w-5 h-5 text-[#49685d]" />
                 <span>Phân bổ số lượng lưu kho theo chi nhánh (Kho bãi)</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -608,7 +609,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <Link
               to="/warehouses"
-              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
+              className="text-xs font-semibold text-[#49685d] hover:text-[#263c36] flex items-center gap-0.5"
             >
               <span>Xem kho</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -668,8 +669,8 @@ export const Dashboard: React.FC = () => {
                   />
                   <defs>
                     <linearGradient id="barGradient" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#EE3D43" stopOpacity={0.95} />
-                      <stop offset="100%" stopColor="#FF6B6B" stopOpacity={0.75} />
+                      <stop offset="0%" stopColor="#45675b" stopOpacity={0.92} />
+                      <stop offset="100%" stopColor="#7e9a8d" stopOpacity={0.78} />
                     </linearGradient>
                   </defs>
                   <Bar
@@ -705,7 +706,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <Link
               to="/products"
-              className="text-xs font-semibold text-rose-600 hover:text-rose-700 flex items-center gap-0.5"
+              className="text-xs font-semibold text-rose-700 hover:text-rose-800 flex items-center gap-0.5"
             >
               <span>Xem tất cả</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -764,7 +765,7 @@ export const Dashboard: React.FC = () => {
           <div className="pt-3 border-t border-slate-100 text-center">
             <Link
               to="/stock-transactions?action=import"
-              className="inline-flex items-center gap-1.5 text-xs font-bold text-red-600 hover:text-red-700"
+              className="inline-flex items-center gap-1.5 text-xs font-bold text-[#49685d] hover:text-[#263c36]"
             >
               <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
               <span>Khởi tạo phiếu nhập hàng bổ sung</span>
@@ -782,7 +783,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <TrendingUp className="w-5 h-5 text-red-600" />
+                <TrendingUp className="w-5 h-5 text-[#49685d]" />
                 <span>Top sản phẩm xuất kho nhiều nhất</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -791,7 +792,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <Link
               to="/products"
-              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
+              className="text-xs font-semibold text-[#49685d] hover:text-[#263c36] flex items-center gap-0.5"
             >
               <span>Xem danh mục</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -843,7 +844,7 @@ export const Dashboard: React.FC = () => {
                       <td className="px-3 py-2.5 text-right font-bold text-slate-900">
                         {prod.total_quantity.toLocaleString('vi-VN')} {prod.unit_name}
                       </td>
-                      <td className="px-3 py-2.5 text-right font-bold text-red-600 font-mono">
+                      <td className="px-3 py-2.5 text-right font-bold text-[#49685d] font-mono">
                         {formatVND(prod.total_value)}
                       </td>
                     </tr>
@@ -859,7 +860,7 @@ export const Dashboard: React.FC = () => {
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <div>
               <h2 className="text-base sm:text-lg font-bold text-slate-900 tracking-tight flex items-center gap-2">
-                <Clock className="w-5 h-5 text-red-600" />
+                <Clock className="w-5 h-5 text-[#49685d]" />
                 <span>Giao dịch xuất nhập gần nhất</span>
               </h2>
               <p className="text-xs text-slate-500 mt-0.5">
@@ -868,7 +869,7 @@ export const Dashboard: React.FC = () => {
             </div>
             <Link
               to="/stock-transactions"
-              className="text-xs font-semibold text-red-600 hover:text-red-700 flex items-center gap-0.5"
+              className="text-xs font-semibold text-[#49685d] hover:text-[#263c36] flex items-center gap-0.5"
             >
               <span>Xem tất cả</span>
               <ChevronRight className="w-3.5 h-3.5" />
@@ -935,7 +936,7 @@ export const Dashboard: React.FC = () => {
           <div className="pt-2 border-t border-slate-100 text-center">
             <Link
               to="/stock-transactions"
-              className="text-xs font-bold text-slate-700 hover:text-red-600 transition-colors"
+              className="text-xs font-bold text-slate-700 hover:text-[#49685d] transition-colors"
             >
               Mở toàn bộ sổ cái xuất nhập kho →
             </Link>

@@ -223,3 +223,55 @@ html.dark .shadow-2xl,
 html.dark .shadow-xl {
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.12), 0 20px 40px -15px rgba(0, 0, 0, 0.8) !important;
 }
+
+.dashboard-page {
+  background-color: #f0f3f1;
+}
+
+.dashboard-page .card-elevated,
+.dashboard-page .card-elevated-static {
+  border: 1px solid #d5ddda;
+  border-radius: 4px;
+  box-shadow: none;
+}
+
+.dashboard-page .card-elevated:hover,
+.dashboard-page .card-elevated-static:hover {
+  box-shadow: none;
+  transform: none;
+}
+
+.dashboard-page .dashboard-kpi-card {
+  min-width: 0;
+  background-color: #fbfcfb;
+}
+
+.dashboard-page .dashboard-kpi-icon {
+  border-radius: 3px;
+}
+
+.dashboard-page h2 {
+  line-height: 1.35;
+}
+
+.dashboard-page .recharts-cartesian-grid-horizontal line {
+  stroke: #e5e9e7;
+}
+
+html.dark .dashboard-page {
+  background-color: #0e1513;
+}
+
+html.dark .dashboard-page .card-elevated,
+html.dark .dashboard-page .card-elevated-static,
+html.dark .dashboard-page .dashboard-kpi-card {
+  border-color: #34443e !important;
+  background-color: #17211d !important;
+  box-shadow: none !important;
+}
+
+html.dark .dashboard-page .dashboard-kpi-icon:not(.dashboard-kpi-icon--alert) {
+  border-color: #34443e;
+  background-color: #22312b;
+  color: #b7d0c4;
+}

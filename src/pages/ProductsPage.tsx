@@ -426,9 +426,9 @@ export const ProductsPage: React.FC = () => {
       </div>
 
       {/* TOOLBAR: SEARCH & FILTERS */}
-      <div className="shrink-0 bg-white p-3 sm:p-3.5 rounded-2xl border border-slate-200 shadow-2xs flex flex-wrap items-center justify-between gap-3 min-h-[58px]">
+      <div className="products-toolbar shrink-0 bg-white p-3 sm:p-3.5 border border-slate-200 flex flex-col sm:flex-row sm:flex-wrap sm:items-center sm:justify-between gap-3 min-h-[58px]">
         {/* Left: Search input */}
-        <div className="relative flex-1 min-w-[180px] sm:min-w-[260px] max-w-sm">
+        <div className="relative w-full flex-1 min-w-0 sm:min-w-[240px] max-w-sm">
           <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
@@ -438,7 +438,7 @@ export const ProductsPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm tên, SKU, barcode..."
-            className="w-full pl-9 sm:pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-9 sm:pl-10 pr-8 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm text-slate-800 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#527565]/20 focus:border-[#527565] focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -451,7 +451,7 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* Middle: Clean Filter Tabs */}
-        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-xl text-xs font-medium text-slate-600 overflow-x-auto no-scrollbar max-w-full">
+        <div className="flex items-center gap-1 bg-slate-100 p-1 rounded-sm text-xs font-medium text-slate-600 overflow-x-auto no-scrollbar max-w-full w-full sm:w-auto">
           <button
             onClick={() => {
               setStockStatusFilter('all');
@@ -459,7 +459,7 @@ export const ProductsPage: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-lg transition-all duration-150 active:scale-95 cursor-pointer ${
               stockStatusFilter === 'all'
-                ? 'bg-white text-slate-900 shadow-xs'
+                ? 'bg-white text-[#294238] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -472,7 +472,7 @@ export const ProductsPage: React.FC = () => {
             }}
             className={`px-3 py-1.5 rounded-lg transition-all duration-150 active:scale-95 cursor-pointer ${
               stockStatusFilter === 'in_stock'
-                ? 'bg-white text-slate-900 shadow-xs'
+                ? 'bg-white text-[#294238] shadow-xs'
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -507,9 +507,9 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* Right: Dropdowns */}
-        <div className="flex items-center gap-2.5">
+        <div className="grid w-full grid-cols-2 gap-2 sm:flex sm:w-auto sm:items-center sm:gap-2">
           {/* Category Dropdown */}
-          <div className="relative">
+          <div className="relative min-w-0">
             <Filter className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
               value={selectedCategory}
@@ -517,7 +517,7 @@ export const ProductsPage: React.FC = () => {
                 setSelectedCategory(e.target.value);
                 setPage(1);
               }}
-              className="pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
+              className="w-full min-w-0 pl-8 pr-2 sm:pr-4 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:border-[#527565] transition-all cursor-pointer"
             >
               <option value="">Tất cả danh mục</option>
               {categories.map((c) => (
@@ -535,7 +535,7 @@ export const ProductsPage: React.FC = () => {
               setSelectedUnit(e.target.value);
               setPage(1);
             }}
-            className="px-3 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
+            className="w-full min-w-0 px-2 sm:px-3 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:border-[#527565] transition-all cursor-pointer"
           >
             <option value="">Tất cả đơn vị</option>
             {units.map((u) => (
@@ -546,12 +546,12 @@ export const ProductsPage: React.FC = () => {
           </select>
 
           {/* Sort Dropdown */}
-          <div className="relative">
+          <div className="relative col-span-2 min-w-0 sm:col-span-1">
             <SlidersHorizontal className="w-3.5 h-3.5 absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="pl-8 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-700 focus:outline-none focus:border-slate-400 transition-all cursor-pointer"
+              className="w-full min-w-0 pl-8 pr-2 sm:pr-4 py-2 bg-slate-50 border border-slate-300 rounded-sm text-xs sm:text-sm font-medium text-slate-700 focus:outline-none focus:border-[#527565] transition-all cursor-pointer"
             >
               <option value="newest">Mới nhất</option>
               <option value="stock_desc">Tồn kho nhiều nhất</option>

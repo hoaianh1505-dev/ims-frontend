@@ -379,23 +379,23 @@ export const ProductsPage: React.FC = () => {
   };
 
   return (
-    <div className="flex-1 flex flex-col min-h-0 px-3 sm:px-6 lg:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
+    <div className="products-page min-w-0 flex-1 flex flex-col min-h-0 px-3 sm:px-6 lg:px-8 py-4 max-w-[1560px] w-full mx-auto space-y-3.5">
 
       {/* PAGE HEADER */}
-      <div className="shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-100 min-h-[52px]">
+      <div className="products-page-header shrink-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200 min-h-[52px]">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
+          <h1 className="text-2xl sm:text-[28px] font-bold text-slate-900 tracking-tight">
             Danh mục hàng hóa
           </h1>
-          <p className="text-sm font-medium text-slate-500 mt-0.5">
+          <p className="text-sm text-slate-600 mt-1">
             Quản lý toàn bộ danh sách sản phẩm, giá bán, mã vạch và tồn kho thời gian thực
           </p>
         </div>
 
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => fetchProducts()}
-            className="p-2.5 text-slate-500 hover:text-slate-800 bg-white border border-slate-200 rounded-xl hover:bg-slate-50 transition-colors shadow-2xs cursor-pointer"
+            className="p-2.5 text-slate-600 hover:text-slate-900 bg-white border border-slate-300 rounded-sm hover:bg-slate-50 transition-colors cursor-pointer"
             title="Làm mới dữ liệu từ server"
           >
             <RefreshCw className={`w-4 h-4 ${loading ? 'animate-spin text-slate-700' : ''}`} />
@@ -406,16 +406,16 @@ export const ProductsPage: React.FC = () => {
               <button
                 onClick={handleExportExcel}
                 disabled={exportingExcel}
-                className="hidden sm:inline-flex items-center gap-2 px-3.5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-bold shadow-2xs transition-colors cursor-pointer disabled:opacity-50"
+                className="inline-flex items-center gap-2 px-2.5 sm:px-3.5 py-2.5 bg-white border border-slate-300 hover:bg-slate-50 text-slate-700 rounded-sm text-sm font-semibold transition-colors cursor-pointer disabled:opacity-50"
                 title="Xuất danh sách tồn kho ra file Excel (.xlsx)"
               >
-                <FileDown className="w-4 h-4 text-emerald-600" />
+                <FileDown className="w-4 h-4 text-[#527565]" />
                 <span>{exportingExcel ? 'Đang xuất...' : 'Xuất Excel'}</span>
               </button>
 
               <button
                 onClick={openCreateModal}
-                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors cursor-pointer"
+                className="inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-2 sm:py-2.5 bg-[#294238] hover:bg-[#20372e] text-white rounded-sm text-xs sm:text-sm font-semibold transition-colors cursor-pointer"
               >
                 <Plus className="w-4 h-4 stroke-[2.5]" />
                 <span>Thêm sản phẩm</span>

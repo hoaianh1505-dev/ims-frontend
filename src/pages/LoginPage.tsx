@@ -289,7 +289,7 @@ export const LoginPage: React.FC = () => {
             ) : (
               <form onSubmit={handleForgotSubmit} className="space-y-4 pt-1">
                 <div>
-                  <label className="block text-sm font-bold text-slate-700 mb-1.5">
+                  <label className="mb-1.5 block text-sm font-bold text-slate-700">
                     Nhập tên tài khoản hoặc email của bạn
                   </label>
                   <input
@@ -298,23 +298,23 @@ export const LoginPage: React.FC = () => {
                     value={forgotEmail}
                     onChange={(e) => setForgotEmail(e.target.value)}
                     placeholder="Nhập tên tài khoản hoặc email của bạn..."
-                    className="w-full px-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm text-slate-900 focus:outline-none focus:border-[#EE3D43] focus:bg-white"
+                    className="w-full rounded-[3px] border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-900 focus:border-[#e54840] focus:bg-white focus:outline-none"
                   />
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold cursor-pointer transition-colors shadow-xs"
+                  className="w-full cursor-pointer rounded-[3px] bg-[#e54840] py-3 text-sm font-bold text-white transition-colors hover:bg-[#c83d35]"
                 >
                   Gửi yêu cầu tới Quản trị viên
                 </button>
               </form>
             )}
 
-            <div className="pt-2 text-right">
+            <div className="pt-1 text-right">
               <button
                 type="button"
                 onClick={() => setShowForgotModal(false)}
-                className="text-sm font-semibold text-slate-500 hover:text-slate-800 cursor-pointer"
+                className="cursor-pointer text-sm font-bold text-slate-500 hover:text-slate-800"
               >
                 Đóng
               </button>

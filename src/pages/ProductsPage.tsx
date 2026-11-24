@@ -564,8 +564,8 @@ export const ProductsPage: React.FC = () => {
       </div>
 
       {/* ENLARGED DATA TABLE */}
-      <div className="flex-1 min-h-[480px] bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-        <div className="flex-1 min-h-0 overflow-auto">
+      <div className="products-table-shell flex-1 min-h-[480px] bg-white border border-slate-200 flex flex-col overflow-hidden">
+        <div className="products-table-scroll flex-1 min-h-0 min-w-0 overflow-auto">
           {loading && products.length === 0 ? (
             <div className="py-24 flex flex-col items-center justify-center gap-3 text-slate-400 h-full">
               <Loader2 className="w-7 h-7 animate-spin text-slate-600" />
@@ -583,14 +583,14 @@ export const ProductsPage: React.FC = () => {
             <>
               {/* DESKTOP TABLE VIEW (Màn hình máy tính) */}
               <div className="hidden md:block">
-                <table className="w-full text-left border-collapse text-sm">
+                <table className="products-table w-full min-w-[680px] text-left border-collapse text-sm">
                   <thead>
                     <tr className="sticky top-0 bg-slate-50 z-10 border-b border-slate-200 text-slate-500 font-semibold uppercase tracking-wider text-xs select-none shadow-2xs">
-                      <th className="py-2.5 px-4">Sản phẩm / Quy cách</th>
-                      <th className="py-2.5 px-4 w-44">Danh mục</th>
-                      <th className="py-2.5 px-4 w-44 text-right">Giá bán niêm yết</th>
-                      <th className="py-2.5 px-4 w-40 text-center">Tồn kho khả dụng</th>
-                      <th className="py-2.5 px-4 w-28 text-right whitespace-nowrap">Thao tác</th>
+                      <th className="py-3 px-2 lg:px-4">Sản phẩm / Quy cách</th>
+                      <th className="py-3 px-2 lg:px-4 w-32 lg:w-36">Danh mục</th>
+                      <th className="py-3 px-2 lg:px-4 w-36 lg:w-40 text-right">Giá bán niêm yết</th>
+                      <th className="py-3 px-2 lg:px-4 w-32 lg:w-36 text-center">Tồn kho khả dụng</th>
+                      <th className="py-3 px-2 lg:px-4 w-20 lg:w-24 text-right whitespace-nowrap">Thao tác</th>
                     </tr>
                   </thead>
                   <tbody key={`${currentPage}-${selectedCategory}-${stockStatusFilter}-${sortBy}`} className="divide-y divide-slate-100 text-slate-700 animate-tab-enter">
@@ -607,7 +607,7 @@ export const ProductsPage: React.FC = () => {
                         <tr
                           key={p.id}
                           onClick={() => setActiveDrawerProduct(p)}
-                          className="hover:bg-slate-50/80 transition-colors group cursor-pointer"
+                          className="hover:bg-[#f1f5f2] transition-colors group cursor-pointer"
                         >
                           {/* Name, SKU & Unit */}
                           <td className="py-2.5 px-4">
@@ -633,7 +633,7 @@ export const ProductsPage: React.FC = () => {
                                 </div>
                               )}
                               <div className="min-w-0">
-                                <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors line-clamp-1 text-sm leading-snug">
+                                <div className="font-medium text-slate-800 group-hover:text-[#35584e] transition-colors line-clamp-1 text-sm leading-snug">
                                   {p.name}
                                 </div>
                                 <div className="flex items-center gap-2 mt-0.5 text-xs text-slate-400">
@@ -691,13 +691,13 @@ export const ProductsPage: React.FC = () => {
 
                           {/* Actions */}
                           <td
-                            className="py-2.5 px-4 text-right whitespace-nowrap"
+                            className="py-2.5 px-2 text-right whitespace-nowrap"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <div className="inline-flex items-center justify-end gap-1.5">
+                            <div className="inline-flex items-center justify-end gap-0">
                               <button
                                 onClick={() => setActiveDrawerProduct(p)}
-                                className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                                className="p-0.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                                 title="Xem chi tiết"
                               >
                                 <Eye className="w-4 h-4" />
@@ -706,7 +706,7 @@ export const ProductsPage: React.FC = () => {
                               {isManagerOrAdmin && (
                                 <button
                                   onClick={() => openEditModal(p)}
-                                  className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
+                                  className="p-0.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer"
                                   title="Chỉnh sửa sản phẩm"
                                 >
                                   <Edit3 className="w-4 h-4" />
@@ -716,7 +716,7 @@ export const ProductsPage: React.FC = () => {
                               {isAdmin && (
                                 <button
                                   onClick={() => setDeleteTarget(p)}
-                                  className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
+                                  className="p-0.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-colors cursor-pointer"
                                   title="Xóa sản phẩm"
                                 >
                                   <Trash2 className="w-4 h-4" />
@@ -732,7 +732,7 @@ export const ProductsPage: React.FC = () => {
               </div>
 
               {/* MOBILE CARD VIEW (Dành riêng cho điện thoại - Tinh gọn, rõ ràng, 0% tràn viền) */}
-              <div className="md:hidden divide-y divide-slate-100 animate-tab-enter">
+              <div className="products-mobile-list md:hidden divide-y divide-slate-200 animate-tab-enter">
                 {paginatedProducts.map((p) => {
                   const sell = Number(p.selling_price || 0);
                   const stock = p.current_stock ?? 0;
@@ -745,7 +745,7 @@ export const ProductsPage: React.FC = () => {
                     <div
                       key={`mobile-${p.id}`}
                       onClick={() => setActiveDrawerProduct(p)}
-                      className="p-3 sm:p-4 hover:bg-slate-50/80 transition-colors flex items-center gap-3 cursor-pointer"
+                      className="products-mobile-row p-3 sm:p-4 hover:bg-slate-50/80 transition-colors flex items-center gap-3 cursor-pointer"
                     >
                       {/* Thumbnail */}
                       {primaryImg ? (
@@ -808,7 +808,7 @@ export const ProductsPage: React.FC = () => {
         </div>
 
         {/* Compact Pagination Bar */}
-        <div className="px-5 py-2.5 border-t border-slate-200/80 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-500">
+        <div className="products-pagination px-3 sm:px-5 py-2.5 border-t border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-600">
           <div className="flex items-center gap-3">
             <span>
               Hiển thị <span className="font-semibold text-slate-800">{paginatedProducts.length}</span> / {totalItems} sản phẩm

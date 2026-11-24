@@ -73,7 +73,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           title={`Tính năng yêu cầu quyền ${requiredRoleLabel || 'Admin'}`}
           className={`w-full flex items-center ${
             isCollapsed ? 'justify-center px-2 py-3' : 'justify-between px-3.5 py-2.5'
-          } rounded-xl text-xs font-medium text-slate-500 cursor-not-allowed select-none opacity-40`}
+          } rounded-[3px] text-xs font-medium text-slate-500 cursor-not-allowed select-none opacity-40`}
         >
           <div className="flex items-center gap-3">
             <span className="text-slate-500 shrink-0">{icon}</span>
@@ -92,10 +92,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
         className={({ isActive }) =>
           `w-full relative group flex items-center ${
             isCollapsed ? 'justify-center px-2 py-3' : 'justify-between px-3.5 py-2.5'
-          } rounded-xl transition-all ${
+          } rounded-[3px] transition-colors ${
             isActive
-              ? 'bg-[#EE3D43] text-white font-bold shadow-xs'
-              : 'text-slate-300 hover:bg-white/10 hover:text-white font-medium'
+              ? 'bg-[#344e45] text-white font-bold before:absolute before:inset-y-2 before:left-0 before:w-0.5 before:bg-[#a8c0b4]'
+              : 'text-slate-300 hover:bg-white/[0.07] hover:text-white font-medium'
           }`
         }
       >

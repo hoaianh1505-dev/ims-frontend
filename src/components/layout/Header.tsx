@@ -105,25 +105,31 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
   };
 
   return (
-    <header className="h-16 sm:h-[68px] px-3 sm:px-6 lg:px-8 flex items-center justify-between border-b border-slate-200 bg-white sticky top-0 z-10 shadow-2xs">
+    <header className="sticky top-0 z-10 flex h-16 items-center justify-between border-b border-slate-300 bg-[#f7f8f7] px-3 sm:h-[68px] sm:px-5 lg:px-8">
       {/* LEFT: Mobile Menu Button + Quick Action + History */}
-      <div className="flex items-center gap-2 sm:gap-3">
+      <div className="flex min-w-0 items-center gap-2 sm:gap-3">
         {/* Mobile Hamburger Toggle Button */}
         <button
           type="button"
           onClick={onOpenMobileSidebar}
-          className="lg:hidden p-2 text-slate-600 hover:text-slate-900 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
+          className="cursor-pointer p-2 text-slate-600 transition-colors hover:bg-slate-200 hover:text-slate-950 lg:hidden"
           title="Mở menu điều hướng"
         >
           <Menu className="w-5 h-5" />
         </button>
+        <span
+          className="select-none text-xs font-black uppercase tracking-[0.12em] text-slate-800 lg:hidden"
+          title="IMS — Quản lý kho (Inventory Management)"
+        >
+          IMS
+        </span>
 
         {/* Quick Add Button (+) with Popover Menu */}
         <div className="relative">
           <button
             onClick={() => setShowQuickAdd(!showQuickAdd)}
             title="Thao tác nhanh"
-            className="w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#EE3D43] hover:bg-[#D9343A] text-white flex items-center justify-center transition-all active:scale-95 shadow-sm cursor-pointer"
+            className="flex h-8 w-8 cursor-pointer items-center justify-center border border-[#263c36] bg-[#263c36] text-white transition-colors hover:bg-[#1d302b] active:scale-95 sm:h-9 sm:w-9"
           >
             <Plus className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.5]" />
           </button>
@@ -134,7 +140,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                 className="fixed inset-0 z-20"
                 onClick={() => setShowQuickAdd(false)}
               />
-              <div className="absolute left-0 top-11 z-30 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 animate-in fade-in zoom-in-95 duration-100 text-sm">
+              <div className="absolute left-0 top-11 z-30 w-56 border border-slate-300 bg-white py-2 text-sm shadow-lg animate-in fade-in zoom-in-95 duration-100">
                 <div className="px-4 py-1.5 font-bold text-xs text-slate-400 uppercase tracking-wider">
                   Tạo nhanh
                 </div>
@@ -178,16 +184,16 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
       </div>
 
       {/* RIGHT: Branch Switcher + Actions + Profile */}
-      <div className="flex items-center gap-1.5 sm:gap-3.5">
+      <div className="flex shrink-0 items-center gap-1 sm:gap-2.5 lg:gap-3.5">
         {/* Branch / Warehouse Dropdown */}
         <div className="relative">
           <button
             onClick={() => setShowBranchMenu(!showBranchMenu)}
-            className="flex items-center gap-1.5 sm:gap-2 px-2 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs sm:text-sm font-semibold text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer border border-transparent hover:border-slate-200"
+            className="flex cursor-pointer items-center gap-1 border border-transparent px-1.5 py-1.5 text-[10px] font-bold text-slate-700 transition-colors hover:border-slate-300 hover:bg-slate-100 sm:gap-2 sm:px-3 sm:py-2 sm:text-sm"
             title={`Chi nhánh: ${selectedBranch}`}
           >
-            <Building2 className="w-4 h-4 text-slate-500 shrink-0" />
-            <span className="hidden sm:inline">{selectedBranch}</span>
+            <Building2 className="h-4 w-4 shrink-0 text-slate-500" />
+            <span>{selectedBranch}</span>
             <ChevronDown className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-slate-400 shrink-0" />
           </button>
 
@@ -197,7 +203,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                 className="fixed inset-0 z-20"
                 onClick={() => setShowBranchMenu(false)}
               />
-              <div className="absolute right-0 top-11 z-30 w-56 bg-white rounded-2xl shadow-xl border border-slate-200 py-2 text-sm animate-in fade-in zoom-in-95 duration-100">
+              <div className="absolute right-0 top-11 z-30 w-56 border border-slate-300 bg-white py-2 text-sm shadow-lg animate-in fade-in zoom-in-95 duration-100">
                 <div className="px-4 py-1.5 text-xs font-bold text-slate-400 uppercase tracking-wider">
                   Chọn chi nhánh kho
                 </div>
@@ -210,7 +216,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                     }}
                     className={`w-full text-left px-4 py-2.5 font-medium transition-colors ${
                       selectedBranch === branch
-                        ? 'bg-rose-50 text-[#EE3D43] font-bold'
+                        ? 'bg-[#eaf0ed] text-[#35584e] font-bold'
                         : 'text-slate-700 hover:bg-slate-50'
                     }`}
                   >
@@ -274,7 +280,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
           {showProfileMenu && (
             <>
               <div className="fixed inset-0 z-20" onClick={() => setShowProfileMenu(false)} />
-              <div className="absolute right-0 top-12 z-30 w-64 bg-white dark:bg-[#161b22] rounded-2xl shadow-xl border border-slate-200 dark:border-[#333d4b] py-1.5 animate-in fade-in zoom-in-95 duration-100 text-sm overflow-hidden">
+              <div className="absolute right-0 top-12 z-30 w-64 overflow-hidden border border-slate-300 bg-white py-1.5 text-sm shadow-lg animate-in fade-in zoom-in-95 duration-100 dark:border-[#333d4b] dark:bg-[#161b22]">
                 <div className="px-4 py-3 border-b border-slate-100 dark:border-[#262f3d] flex items-center gap-3 bg-slate-50/70 dark:bg-[#1c222b]">
                   <div className="relative group shrink-0">
                     <UserAvatar

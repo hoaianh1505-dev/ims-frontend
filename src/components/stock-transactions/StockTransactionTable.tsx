@@ -216,7 +216,7 @@ export const StockTransactionTable: React.FC<StockTransactionTableProps> = ({
               >
                 {/* Reference No & Timestamp */}
                 <td className="py-2.5 px-4 whitespace-nowrap">
-                  <div className="font-mono font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#EE3D43] transition-colors text-xs">
+                  <div className="font-mono font-bold text-slate-800 dark:text-slate-100 group-hover:text-[#294238] transition-colors text-xs">
                     {tx.reference_no || tx.id.slice(0, 8).toUpperCase()}
                   </div>
                   <div className="text-xs text-slate-400 mt-0.5">

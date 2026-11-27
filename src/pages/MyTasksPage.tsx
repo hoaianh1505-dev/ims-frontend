@@ -120,7 +120,7 @@ export const MyTasksPage: React.FC = () => {
 
           <Link
             to="/stock-transactions"
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Tạo phiếu mới</span>

@@ -143,7 +143,7 @@ export const AuditLogsPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm kiếm người dùng, IP, ghi chú..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#294238]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button

@@ -9,11 +9,11 @@ export default {
     extend: {
       colors: {
         brand: {
-          dark: '#143D30',        // Xanh rêu đậm nhất cho text/hover
-          primary: '#1A4D3E',     // Xanh rêu chủ đạo (nút, thanh biểu đồ, icon active)
-          hover: '#133E32',
-          light: '#EAF3EE',      // Xanh bạc hà nhạt (nền active menu, card Cần chú ý)
-          border: '#D1E5DC',     // Viền xanh nhạt
+          dark: '#1d302b',        // Xanh rêu đậm nhất cho text/hover
+          primary: '#294238',     // Xanh rêu chủ đạo (nút, thanh biểu đồ, icon active)
+          hover: '#20372e',
+          light: '#edf2ef',      // Xanh rêu nhạt (nền active menu, badge)
+          border: '#d6e0da',     // Viền xanh nhạt
           bg: '#F8F9FA',         // Nền xám nhạt toàn trang
         },
       },

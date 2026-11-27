@@ -208,8 +208,8 @@ html.dark textarea {
 html.dark input:focus,
 html.dark select:focus,
 html.dark textarea:focus {
-  border-color: #EE3D43 !important;
-  box-shadow: 0 0 0 2px rgba(238, 61, 67, 0.25) !important;
+  border-color: #527565 !important;
+  box-shadow: 0 0 0 2px rgba(82, 117, 101, 0.3) !important;
 }
 
 /* Clear bright gradient backgrounds in dark mode */
@@ -361,4 +361,19 @@ html.dark .products-page .products-mobile-row:hover {
 html.dark .products-page .products-pagination {
   border-color: #34443e !important;
   background-color: #17211d !important;
+}
+
+/* ========================================================
+   Đồng bộ cạnh nhọn (sharp corners) cho toàn bộ nút bấm
+   ======================================================== */
+button:not([role="switch"]),
+a[class*="px-"][class*="py-"] {
+  border-radius: 2px !important;
+}
+
+/* Giữ nút chọn ảnh thumbnail, input & select sắc nét đồng bộ */
+input:not([type="checkbox"]):not([type="radio"]),
+select,
+textarea {
+  border-radius: 2px !important;
 }

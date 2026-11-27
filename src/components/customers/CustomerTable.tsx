@@ -93,7 +93,7 @@ export const CustomerTable: React.FC<CustomerTableProps> = ({
               {/* Customer Name & Code */}
               <td className="py-2.5 px-4">
                 <div>
-                  <div className="font-semibold text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                  <div className="font-semibold text-slate-800 group-hover:text-[#294238] transition-colors text-sm line-clamp-1 leading-snug">
                     {c.name}
                   </div>
                   {c.code && (

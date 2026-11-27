@@ -363,7 +363,7 @@ export const PurchaseOrdersPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#EE3D43] to-rose-500 text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#294238] to-rose-500 text-white flex items-center justify-center shadow-xs">
               <ShoppingCart className="w-5 h-5" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -387,7 +387,7 @@ export const PurchaseOrdersPage: React.FC = () => {
 
           <button
             onClick={() => setIsCreateModalOpen(true)}
-            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+            className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Tạo đơn đặt hàng (PO)</span>
@@ -409,7 +409,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                 setPage(1);
               }}
               placeholder="Tìm theo mã đơn PO, ghi chú..."
-              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all"
+              className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#294238]/20 focus:border-[#294238] transition-all"
             />
           </div>
 
@@ -420,7 +420,7 @@ export const PurchaseOrdersPage: React.FC = () => {
               setStatusFilter(e.target.value as any);
               setPage(1);
             }}
-            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 transition-all cursor-pointer"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#294238]/20 transition-all cursor-pointer"
           >
             <option value="ALL">Tất cả trạng thái</option>
             <option value="DRAFT">Bản nháp</option>
@@ -438,7 +438,7 @@ export const PurchaseOrdersPage: React.FC = () => {
               setWarehouseFilter(e.target.value);
               setPage(1);
             }}
-            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 transition-all cursor-pointer"
+            className="px-3 py-2 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-700 focus:outline-none focus:ring-2 focus:ring-[#294238]/20 transition-all cursor-pointer"
           >
             <option value="">Tất cả kho nhận</option>
             {warehouses.map((w) => (
@@ -474,7 +474,7 @@ export const PurchaseOrdersPage: React.FC = () => {
               {loading ? (
                 <tr>
                   <td colSpan={8} className="text-center py-12 text-slate-500 font-medium">
-                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#EE3D43]" />
+                    <Loader2 className="w-6 h-6 animate-spin mx-auto mb-2 text-[#294238]" />
                     Đang nạp danh sách đơn đặt hàng...
                   </td>
                 </tr>
@@ -496,7 +496,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                       onClick={() => setActiveOrder(po)}
                       className="hover:bg-slate-50/80 transition-colors cursor-pointer group"
                     >
-                      <td className="px-4 py-3.5 font-mono font-bold text-slate-900 group-hover:text-[#EE3D43] transition-colors">
+                      <td className="px-4 py-3.5 font-mono font-bold text-slate-900 group-hover:text-[#294238] transition-colors">
                         {po.code}
                       </td>
                       <td className="px-4 py-3.5 font-semibold text-slate-800">
@@ -624,7 +624,7 @@ export const PurchaseOrdersPage: React.FC = () => {
           <div className="bg-white rounded-2xl shadow-2xl border border-slate-200 w-full max-w-3xl max-h-[90vh] flex flex-col overflow-hidden">
             <div className="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 rounded-xl bg-[#EE3D43] text-white flex items-center justify-center">
+                <div className="w-8 h-8 rounded-xl bg-[#294238] text-white flex items-center justify-center">
                   <ShoppingCart className="w-4 h-4" />
                 </div>
                 <div>
@@ -721,7 +721,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                     <button
                       type="button"
                       onClick={handleAddItemRow}
-                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#EE3D43] hover:underline cursor-pointer"
+                      className="inline-flex items-center gap-1.5 text-xs font-bold text-[#294238] hover:underline cursor-pointer"
                     >
                       <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
                       <span>Thêm dòng sản phẩm</span>
@@ -807,7 +807,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                           <td colSpan={3} className="p-2.5 text-right uppercase">
                             Tổng giá trị đơn:
                           </td>
-                          <td className="p-2.5 text-right font-mono text-[#EE3D43] text-sm">
+                          <td className="p-2.5 text-right font-mono text-[#294238] text-sm">
                             {formatCurrency(formTotalAmount)}
                           </td>
                           <td />
@@ -833,7 +833,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={actionLoading}
-                    className="px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
+                    className="px-5 py-2 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-xs font-bold shadow-xs transition-colors cursor-pointer disabled:opacity-50"
                   >
                     {actionLoading ? 'Đang tạo đơn...' : 'Tạo đơn đặt hàng'}
                   </button>
@@ -954,7 +954,7 @@ export const PurchaseOrdersPage: React.FC = () => {
                         <td colSpan={3} className="p-2.5 text-right uppercase">
                           Tổng cộng:
                         </td>
-                        <td className="p-2.5 text-right font-mono text-[#EE3D43] text-sm">
+                        <td className="p-2.5 text-right font-mono text-[#294238] text-sm">
                           {formatCurrency(Number(activeOrder.total_amount || 0))}
                         </td>
                       </tr>

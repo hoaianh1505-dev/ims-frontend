@@ -187,7 +187,7 @@ export const ProfilePage: React.FC = () => {
       {/* Page Title & Subtitle */}
       <div>
         <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight flex items-center gap-2.5">
-          <User className="w-6 h-6 text-[#EE3D43]" />
+          <User className="w-6 h-6 text-[#294238]" />
           Hồ sơ cá nhân
         </h1>
         <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">
@@ -226,7 +226,7 @@ export const ProfilePage: React.FC = () => {
               type="button"
               onClick={() => fileInputRef.current?.click()}
               disabled={isUploadingAvatar}
-              className="absolute -bottom-2 -right-2 p-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
+              className="absolute -bottom-2 -right-2 p-2 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl shadow-md transition-transform hover:scale-110 cursor-pointer disabled:opacity-50"
               title="Đổi ảnh đại diện"
             >
               <Camera className="w-4 h-4" />
@@ -281,7 +281,7 @@ export const ProfilePage: React.FC = () => {
         {/* Left Column: Account Details (7 Cols) */}
         <div className="lg:col-span-7 bg-white dark:bg-[#161b22] rounded-2xl border border-slate-200 dark:border-[#384252] shadow-sm p-6 sm:p-7">
           <div className="flex items-center gap-2.5 pb-4 border-b border-slate-100 dark:border-[#262f3d] mb-6">
-            <div className="p-2 bg-rose-50 dark:bg-rose-500/10 text-[#EE3D43] rounded-xl">
+            <div className="p-2 bg-rose-50 dark:bg-rose-500/10 text-[#294238] rounded-xl">
               <User className="w-5 h-5" />
             </div>
             <div>
@@ -322,7 +322,7 @@ export const ProfilePage: React.FC = () => {
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Nhập họ và tên..."
-                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
+                  className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 transition-all text-sm"
                 />
               </div>
             </div>
@@ -339,7 +339,7 @@ export const ProfilePage: React.FC = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     placeholder="email@example.com"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -355,7 +355,7 @@ export const ProfilePage: React.FC = () => {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="0901 234 567"
-                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 transition-all text-sm"
                   />
                 </div>
               </div>
@@ -365,7 +365,7 @@ export const ProfilePage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isUpdatingProfile}
-                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white font-medium rounded-xl shadow-xs transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[#294238] hover:bg-[#20372e] text-white font-medium rounded-xl shadow-xs transition-all hover:shadow cursor-pointer disabled:opacity-50 text-sm"
               >
                 {isUpdatingProfile ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
@@ -408,7 +408,7 @@ export const ProfilePage: React.FC = () => {
                     value={currentPassword}
                     onChange={(e) => setCurrentPassword(e.target.value)}
                     placeholder="Mật khẩu hiện tại..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
+                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 text-sm"
                   />
                   <button
                     type="button"
@@ -432,7 +432,7 @@ export const ProfilePage: React.FC = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Tối thiểu 6 ký tự..."
-                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
+                    className="w-full pl-10 pr-10 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 text-sm"
                   />
                   <button
                     type="button"
@@ -456,7 +456,7 @@ export const ProfilePage: React.FC = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="Nhập lại mật khẩu mới..."
-                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#EE3D43] focus:ring-2 focus:ring-[#EE3D43]/20 text-sm"
+                    className="w-full pl-10 pr-4 py-2.5 bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#384252] rounded-xl text-slate-900 dark:text-slate-100 font-medium focus:outline-none focus:border-[#294238] focus:ring-2 focus:ring-[#294238]/20 text-sm"
                   />
                 </div>
               </div>

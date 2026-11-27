@@ -49,7 +49,7 @@ class GlobalErrorBoundary extends Component<Props, State> {
       return (
         <div className="min-h-screen bg-slate-50 dark:bg-[#0b0f17] flex items-center justify-center p-6 text-slate-800 dark:text-slate-200">
           <div className="max-w-md w-full bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[#384252] rounded-3xl p-7 text-center space-y-5 shadow-xl animate-in fade-in zoom-in-95 duration-200">
-            <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 text-[#EE3D43] flex items-center justify-center mx-auto shadow-xs">
+            <div className="w-14 h-14 rounded-2xl bg-rose-50 dark:bg-rose-500/10 border border-rose-200 dark:border-rose-500/20 text-[#294238] flex items-center justify-center mx-auto shadow-xs">
               <AlertTriangle className="w-7 h-7" />
             </div>
 
@@ -80,7 +80,7 @@ class GlobalErrorBoundary extends Component<Props, State> {
                   this.setState({ hasError: false, error: null });
                   window.location.reload();
                 }}
-                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
+                className="inline-flex items-center justify-center gap-2 px-5 py-2.5 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-xs sm:text-sm font-semibold shadow-xs transition-colors cursor-pointer"
               >
                 <RefreshCw className="w-4 h-4" />
                 <span>Tải lại trang</span>

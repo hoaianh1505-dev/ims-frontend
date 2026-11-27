@@ -67,7 +67,7 @@ export const SupplierTable: React.FC<SupplierTableProps> = ({
             {/* Supplier Name & Code */}
             <td className="py-2.5 px-4">
               <div>
-                <div className="font-semibold text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                <div className="font-semibold text-slate-800 group-hover:text-[#294238] transition-colors text-sm line-clamp-1 leading-snug">
                   {s.name}
                 </div>
                 {s.code && (

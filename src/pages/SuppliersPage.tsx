@@ -125,7 +125,7 @@ export const SuppliersPage: React.FC = () => {
         {isManagerOrAdmin && (
           <button
             onClick={handleOpenCreate}
-            className="flex items-center gap-1.5 px-4 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
+            className="flex items-center gap-1.5 px-4 py-2 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-xs font-bold transition-all shadow-sm active:scale-95 cursor-pointer"
           >
             <Plus className="w-4 h-4 stroke-[2.5]" />
             <span>Thêm nhà cung cấp</span>
@@ -144,7 +144,7 @@ export const SuppliersPage: React.FC = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
               placeholder="Tìm theo tên đối tác, mã NCC, SĐT..."
-              className="w-full pl-9 pr-3.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all shadow-2xs"
+              className="w-full pl-9 pr-3.5 py-1.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#294238]/20 focus:border-[#294238] transition-all shadow-2xs"
             />
           </div>
 
@@ -217,7 +217,7 @@ export const SuppliersPage: React.FC = () => {
                 setLimit(Number(e.target.value));
                 setPage(1);
               }}
-              className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#EE3D43] cursor-pointer"
+              className="px-2 py-1 bg-white border border-slate-200 rounded-lg text-xs font-semibold text-slate-700 focus:outline-none focus:ring-1 focus:ring-[#294238] cursor-pointer"
             >
               <option value={10}>10</option>
               <option value={20}>20</option>

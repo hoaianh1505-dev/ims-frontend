@@ -249,7 +249,7 @@ export const StockTransactionsPage: React.FC = () => {
           <div className="relative">
             <button
               onClick={() => setCreateMenuOpen((prev) => !prev)}
-              className="inline-flex items-center gap-2 px-4 py-2 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl font-bold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
+              className="inline-flex items-center gap-2 px-4 py-2 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl font-bold text-xs transition-all cursor-pointer shadow-xs active:scale-95"
               title="Mở danh mục tạo phiếu mới"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
@@ -292,7 +292,7 @@ export const StockTransactionsPage: React.FC = () => {
                       }}
                       className="w-full flex items-center gap-3 px-3 py-2 text-xs rounded-lg text-left hover:bg-slate-50 dark:hover:bg-white/5 text-slate-800 dark:text-slate-100 cursor-pointer transition-colors"
                     >
-                      <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#EE3D43] flex items-center justify-center shrink-0">
+                      <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-red-950/40 text-[#294238] flex items-center justify-center shrink-0">
                         <ArrowUpRight className="w-4 h-4 stroke-[2.5]" />
                       </div>
                       <div>

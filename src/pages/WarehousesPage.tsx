@@ -332,7 +332,7 @@ export const WarehousesPage: React.FC = () => {
           {isAdmin && (
             <button
               onClick={openCreateWarehouseModal}
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-sm font-bold shadow-xs transition-colors cursor-pointer"
             >
               <Plus className="w-4 h-4 stroke-[2.5]" />
               <span>Thêm kho hàng</span>
@@ -354,7 +354,7 @@ export const WarehousesPage: React.FC = () => {
               setPage(1);
             }}
             placeholder="Tìm theo tên kho, mã kho hoặc địa chỉ..."
-            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/15 focus:border-slate-300 focus:bg-white transition-all"
+            className="w-full pl-10 pr-8 py-2 bg-slate-50 border border-slate-200 rounded-xl text-sm font-medium text-slate-800 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-[#294238]/15 focus:border-slate-300 focus:bg-white transition-all"
           />
           {search && (
             <button
@@ -448,7 +448,7 @@ export const WarehousesPage: React.FC = () => {
                     {/* Warehouse Info */}
                     <td className="py-2.5 px-4">
                       <div>
-                        <div className="font-medium text-slate-800 group-hover:text-[#EE3D43] transition-colors text-sm line-clamp-1 leading-snug">
+                        <div className="font-medium text-slate-800 group-hover:text-[#294238] transition-colors text-sm line-clamp-1 leading-snug">
                           {wh.name}
                         </div>
                         <span className="font-mono text-xs text-slate-500 bg-slate-100 px-1.5 py-0.5 rounded border border-slate-200/80 inline-block mt-0.5">
@@ -471,7 +471,7 @@ export const WarehousesPage: React.FC = () => {
                     <td className="py-2.5 px-4 text-slate-700 whitespace-nowrap">
                       {wh.manager ? (
                         <div className="flex items-center gap-2">
-                          <UserCheck className="w-4 h-4 text-[#EE3D43] shrink-0" />
+                          <UserCheck className="w-4 h-4 text-[#294238] shrink-0" />
                           <div>
                             <div className="font-medium text-slate-800 text-sm">
                               {wh.manager.display_name || wh.manager.username}

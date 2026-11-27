@@ -313,7 +313,7 @@ export const Header: React.FC<HeaderProps> = ({ onOpenMobileSidebar }) => {
                       type="button"
                       disabled={uploadingAvatar}
                       onClick={() => avatarInputRef.current?.click()}
-                      className="text-[11px] font-semibold text-[#EE3D43] hover:underline mt-0.5 inline-flex items-center gap-1 cursor-pointer"
+                      className="text-[11px] font-semibold text-[#294238] hover:underline mt-0.5 inline-flex items-center gap-1 cursor-pointer"
                     >
                       {uploadingAvatar ? (
                         <>

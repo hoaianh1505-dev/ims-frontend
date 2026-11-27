@@ -147,7 +147,7 @@ export const CustomerDetailDrawer: React.FC<CustomerDetailDrawerProps> = ({
                   navigate(`/stock-transactions?action=export&customer_id=${customer.id}`);
                 }
               }}
-              className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#EE3D43] hover:bg-[#D9343A] text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="flex items-center justify-center gap-2 py-2.5 px-3 bg-[#294238] hover:bg-[#20372e] text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               <ArrowUpRight className="w-4 h-4" />
               <span>Tạo phiếu xuất kho</span>
@@ -199,7 +199,7 @@ export const CustomerDetailDrawer: React.FC<CustomerDetailDrawerProps> = ({
                 {customer.phone ? (
                   <a
                     href={`tel:${customer.phone}`}
-                    className="font-mono font-bold text-slate-800 hover:text-[#EE3D43] flex items-center gap-1.5"
+                    className="font-mono font-bold text-slate-800 hover:text-[#294238] flex items-center gap-1.5"
                   >
                     <Phone className="w-3.5 h-3.5 text-slate-400" />
                     <span>{customer.phone}</span>
@@ -214,7 +214,7 @@ export const CustomerDetailDrawer: React.FC<CustomerDetailDrawerProps> = ({
                 {customer.email ? (
                   <a
                     href={`mailto:${customer.email}`}
-                    className="text-slate-800 hover:text-[#EE3D43] flex items-center gap-1.5 truncate max-w-[220px]"
+                    className="text-slate-800 hover:text-[#294238] flex items-center gap-1.5 truncate max-w-[220px]"
                   >
                     <Mail className="w-3.5 h-3.5 text-slate-400" />
                     <span className="truncate">{customer.email}</span>

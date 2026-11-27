@@ -186,7 +186,7 @@ export const AIAssistantWidget: React.FC = () => {
           }`}
         >
           {isBullet && (
-            <span className="w-2 h-2 rounded-full bg-[#EE3D43] mt-1.5 shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-[#294238] mt-1.5 shrink-0" />
           )}
           <p className="flex-1">
             {parts.map((part, pIdx) => {
@@ -201,7 +201,7 @@ export const AIAssistantWidget: React.FC = () => {
                 return (
                   <code
                     key={pIdx}
-                    className="bg-slate-100 text-[#EE3D43] px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-slate-200"
+                    className="bg-slate-100 text-[#294238] px-1.5 py-0.5 rounded text-xs font-mono font-bold border border-slate-200"
                   >
                     {part.slice(1, -1)}
                   </code>
@@ -228,7 +228,7 @@ export const AIAssistantWidget: React.FC = () => {
           <div className="bg-[#1B2129] text-white p-3.5 px-4 flex items-center justify-between border-b border-[#262E38] shrink-0 select-none">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#EE3D43] to-rose-400 flex items-center justify-center text-white shadow-xs">
+                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#294238] to-rose-400 flex items-center justify-center text-white shadow-xs">
                   <Bot className="w-4.5 h-4.5" />
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#1B2129]" />
@@ -273,7 +273,7 @@ export const AIAssistantWidget: React.FC = () => {
                   type="button"
                   onClick={() => handleSendMessage(qp.prompt)}
                   disabled={loading}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] hover:border-rose-300 dark:hover:border-rose-500 text-slate-800 dark:text-slate-200 hover:text-[#EE3D43] text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] hover:border-rose-300 dark:hover:border-rose-500 text-slate-800 dark:text-slate-200 hover:text-[#294238] text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
                 >
                   {qp.icon}
                   <span>{qp.label}</span>
@@ -293,7 +293,7 @@ export const AIAssistantWidget: React.FC = () => {
                     <div
                       className={`max-w-[88%] rounded-2xl px-4 py-3 text-sm shadow-xs ${
                         isUser
-                          ? 'bg-[#EE3D43] text-white rounded-br-xs font-medium'
+                          ? 'bg-[#294238] text-white rounded-br-xs font-medium'
                           : 'bg-white dark:bg-[#161b22] border border-slate-200/90 dark:border-[#30363d] text-slate-900 dark:text-slate-100 rounded-bl-xs'
                       }`}
                     >
@@ -333,7 +333,7 @@ export const AIAssistantWidget: React.FC = () => {
               {/* Loading Indicator */}
               {loading && (
                 <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300 bg-white dark:bg-[#161b22] border border-slate-200 dark:border-[#30363d] rounded-2xl px-4 py-3 w-fit shadow-xs font-medium">
-                  <Loader2 className="w-4 h-4 text-[#EE3D43] animate-spin" />
+                  <Loader2 className="w-4 h-4 text-[#294238] animate-spin" />
                   <span>Đang truy vấn số liệu thực tế...</span>
                 </div>
               )}
@@ -352,13 +352,13 @@ export const AIAssistantWidget: React.FC = () => {
                   onKeyDown={handleKeyDown}
                   placeholder="Hỏi trợ lý (ví dụ: Mặt hàng nào tồn kho nhiều nhất?)..."
                   disabled={loading}
-                  className="flex-1 bg-slate-100 dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#EE3D43]/20 focus:border-[#EE3D43] transition-all font-medium"
+                  className="flex-1 bg-slate-100 dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] rounded-xl px-4 py-2.5 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-[#294238]/20 focus:border-[#294238] transition-all font-medium"
                 />
                 <button
                   type="button"
                   onClick={() => handleSendMessage()}
                   disabled={!input.trim() || loading}
-                  className="w-10 h-10 rounded-xl bg-[#EE3D43] hover:bg-[#d63439] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
+                  className="w-10 h-10 rounded-xl bg-[#294238] hover:bg-[#d63439] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
                   title="Gửi câu hỏi"
                 >
                   <Send className="w-4 h-4" />
@@ -382,7 +382,7 @@ export const AIAssistantWidget: React.FC = () => {
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="relative group p-3.5 sm:p-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#EE3D43] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/25"
+          className="relative group p-3.5 sm:p-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#294238] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/25"
           title={isOpen ? 'Đóng Trợ lý kho AI' : 'Mở Trợ lý kho AI'}
         >
           {isOpen ? (

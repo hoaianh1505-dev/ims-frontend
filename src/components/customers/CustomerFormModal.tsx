@@ -270,7 +270,7 @@ export const CustomerFormModal: React.FC<CustomerFormModalProps> = ({
               id="is_active"
               checked={isActive}
               onChange={(e) => setIsActive(e.target.checked)}
-              className="w-4 h-4 rounded text-[#EE3D43] focus:ring-[#EE3D43] border-slate-300"
+              className="w-4 h-4 rounded text-[#294238] focus:ring-[#294238] border-slate-300"
             />
             <label htmlFor="is_active" className="text-xs font-medium text-slate-700 cursor-pointer">
               Đang hợp tác giao dịch (cho phép chọn khi tạo phiếu xuất kho)
@@ -290,7 +290,7 @@ export const CustomerFormModal: React.FC<CustomerFormModalProps> = ({
             <button
               type="submit"
               disabled={submitting}
-              className="inline-flex items-center gap-2 px-5 py-2 bg-[#EE3D43] hover:bg-[#D9343A] disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
+              className="inline-flex items-center gap-2 px-5 py-2 bg-[#294238] hover:bg-[#20372e] disabled:opacity-60 text-white rounded-xl text-xs font-bold transition-all shadow-sm cursor-pointer"
             >
               {submitting && <Loader2 className="w-4 h-4 animate-spin" />}
               <span>{isEditing ? 'Lưu thay đổi' : 'Tạo khách hàng'}</span>

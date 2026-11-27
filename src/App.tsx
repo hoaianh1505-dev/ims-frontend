@@ -144,13 +144,18 @@ export default function App() {
     <GlobalErrorBoundary>
       <BrowserRouter>
         <Toaster position="top-right" duration={3500} />
-        <Suspense fallback={<PageLoader />}>
-          <Routes>
+        <Routes>
           {/* Public Route */}
           <Route
             path="/login"
             element={
-              isAuthenticated ? <Navigate to="/" replace /> : <LoginPage />
+              isAuthenticated ? (
+                <Navigate to="/" replace />
+              ) : (
+                <Suspense fallback={<PageLoader />}>
+                  <LoginPage />
+                </Suspense>
+              )
             }
           />
 
@@ -210,7 +215,6 @@ export default function App() {
           {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
-        </Suspense>
       </BrowserRouter>
     </GlobalErrorBoundary>
   );

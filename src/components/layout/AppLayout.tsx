@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, Suspense } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
+import { Loader2 } from 'lucide-react';
 import { Sidebar } from './Sidebar';
 import { Header } from './Header';
 import { AIAssistantWidget } from '../assistant/AIAssistantWidget';
@@ -39,7 +40,16 @@ export const AppLayout: React.FC = () => {
 
         <main className="flex-1 flex flex-col min-h-0 overflow-y-auto">
           <div key={location.pathname} className="flex-1 flex flex-col min-h-0 animate-page-enter">
-            <Outlet />
+            <Suspense
+              fallback={
+                <div className="flex-1 flex items-center justify-center min-h-[300px] text-slate-500 gap-2 text-xs font-medium">
+                  <Loader2 className="w-5 h-5 animate-spin text-[#294238]" />
+                  <span>Đang tải nội dung...</span>
+                </div>
+              }
+            >
+              <Outlet />
+            </Suspense>
           </div>
         </main>
       </div>

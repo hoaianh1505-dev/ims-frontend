@@ -572,13 +572,15 @@ export const Dashboard: React.FC = () => {
               </ResponsiveContainer>
             )}
             {/* Center label */}
-            <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-              <span className="text-xs text-slate-400 font-semibold">Tổng số</span>
-              <span className="text-lg font-black text-slate-800 font-mono">
-                {formattedCategoryData.length}
-              </span>
-              <span className="text-[10px] text-slate-400">ngành hàng</span>
-            </div>
+            {formattedCategoryData.length > 0 && (
+              <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+                <span className="text-xs text-slate-400 font-semibold">Tổng số</span>
+                <span className="text-lg font-black text-slate-800 font-mono">
+                  {formattedCategoryData.length}
+                </span>
+                <span className="text-[10px] text-slate-400">ngành hàng</span>
+              </div>
+            )}
           </div>
 
           {/* Legend List */}

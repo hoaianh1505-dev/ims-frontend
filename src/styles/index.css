@@ -164,21 +164,21 @@ html.dark .bg-white {
   color: #e6edf3 !important;
 }
 
-/* Text colors */
+/* Text colors - dịu mắt, không chói trắng gắt */
 html.dark .text-slate-950,
 html.dark .text-slate-900,
 html.dark .text-slate-800,
 html.dark .text-slate-700 {
-  color: #f1f5f9 !important;
+  color: #dce4e0 !important;
 }
 
 html.dark .text-slate-600,
 html.dark .text-slate-500 {
-  color: #cbd5e1 !important;
+  color: #9aaea5 !important;
 }
 
 html.dark .text-slate-400 {
-  color: #94a3b8 !important;
+  color: #778b82 !important;
 }
 
 /* Moss green brand text on dark surfaces -> bright readable sage */
@@ -383,9 +383,30 @@ html.dark .dashboard-page .dashboard-kpi-card {
 }
 
 html.dark .dashboard-page .dashboard-kpi-icon:not(.dashboard-kpi-icon--alert) {
-  border-color: #34443e;
-  background-color: #22312b;
-  color: #b7d0c4;
+  border-color: #2f4039;
+  background-color: #1e2c26;
+  color: #9dc0b0;
+}
+
+/* Chống chói biểu đồ trong Dark Mode (bỏ viền trắng lát Donut & dịu lưới ngang) */
+html.dark .recharts-pie-sector path,
+html.dark .recharts-sector {
+  stroke: #17211d !important;
+  stroke-width: 2px !important;
+}
+
+html.dark .recharts-cartesian-grid-horizontal line,
+html.dark .recharts-cartesian-grid-vertical line {
+  stroke: #26352f !important;
+}
+
+html.dark .recharts-cartesian-axis-line,
+html.dark .recharts-cartesian-axis-tick-line {
+  stroke: #2c3d36 !important;
+}
+
+html.dark .recharts-cartesian-axis-tick-value {
+  fill: #7f948b !important;
 }
 
 .products-page {

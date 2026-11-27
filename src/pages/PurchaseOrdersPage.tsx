@@ -363,7 +363,7 @@ export const PurchaseOrdersPage: React.FC = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-slate-200">
         <div>
           <div className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#294238] to-rose-500 text-white flex items-center justify-center shadow-xs">
+            <div className="w-9 h-9 rounded-[3px] bg-[#294238] text-white flex items-center justify-center shadow-xs">
               <ShoppingCart className="w-5 h-5" />
             </div>
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">

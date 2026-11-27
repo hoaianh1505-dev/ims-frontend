@@ -478,7 +478,7 @@ html.dark .products-page .products-pagination {
 /* ========================================================
    Đồng bộ cạnh nhọn (sharp corners) cho toàn bộ nút bấm
    ======================================================== */
-button:not([role="switch"]),
+button:not([role="switch"]):not([data-round="true"]),
 a[class*="px-"][class*="py-"] {
   border-radius: 2px !important;
 }

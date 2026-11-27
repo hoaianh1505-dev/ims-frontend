@@ -228,7 +228,7 @@ export const AIAssistantWidget: React.FC = () => {
           <div className="bg-[#1B2129] text-white p-3.5 px-4 flex items-center justify-between border-b border-[#262E38] shrink-0 select-none">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-8 h-8 rounded-xl bg-gradient-to-tr from-[#294238] to-rose-400 flex items-center justify-center text-white shadow-xs">
+                <div className="w-8 h-8 rounded-full bg-[#294238] border border-[#467360] flex items-center justify-center text-white shadow-xs">
                   <Bot className="w-4.5 h-4.5" />
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 bg-emerald-500 rounded-full border-2 border-[#1B2129]" />
@@ -273,7 +273,7 @@ export const AIAssistantWidget: React.FC = () => {
                   type="button"
                   onClick={() => handleSendMessage(qp.prompt)}
                   disabled={loading}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] hover:border-rose-300 dark:hover:border-rose-500 text-slate-800 dark:text-slate-200 hover:text-[#294238] text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm bg-white dark:bg-[#21262d] border border-slate-300 dark:border-[#30363d] hover:border-[#527565] text-slate-800 dark:text-slate-200 hover:text-[#294238] text-xs font-semibold whitespace-nowrap shadow-2xs transition-all cursor-pointer shrink-0 disabled:opacity-50"
                 >
                   {qp.icon}
                   <span>{qp.label}</span>
@@ -358,7 +358,7 @@ export const AIAssistantWidget: React.FC = () => {
                   type="button"
                   onClick={() => handleSendMessage()}
                   disabled={!input.trim() || loading}
-                  className="w-10 h-10 rounded-xl bg-[#294238] hover:bg-[#d63439] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
+                  className="w-10 h-10 rounded-sm bg-[#294238] hover:bg-[#20372e] disabled:bg-slate-200 dark:disabled:bg-slate-800 text-white disabled:text-slate-400 flex items-center justify-center transition-all cursor-pointer disabled:cursor-not-allowed shrink-0 shadow-xs"
                   title="Gửi câu hỏi"
                 >
                   <Send className="w-4 h-4" />
@@ -381,8 +381,9 @@ export const AIAssistantWidget: React.FC = () => {
       <div className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 select-none">
         <button
           type="button"
+          data-round="true"
           onClick={() => setIsOpen(!isOpen)}
-          className="relative group p-3.5 sm:p-4 rounded-2xl shadow-xl transition-all duration-200 cursor-pointer flex items-center justify-center bg-gradient-to-r from-[#294238] to-[#d63439] text-white hover:scale-105 active:scale-95 shadow-red-500/25"
+          className="relative group w-14 h-14 rounded-full shadow-lg transition-all duration-200 cursor-pointer flex items-center justify-center bg-[#294238] hover:bg-[#20372e] border border-[#467360]/60 text-white hover:scale-105 active:scale-95"
           title={isOpen ? 'Đóng Trợ lý kho AI' : 'Mở Trợ lý kho AI'}
         >
           {isOpen ? (

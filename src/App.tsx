@@ -1,26 +1,57 @@
-import { Component, ErrorInfo, ReactNode } from 'react';
+import { Component, ErrorInfo, ReactNode, Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'sonner';
-import { AlertTriangle, RefreshCw, Home } from 'lucide-react';
+import { AlertTriangle, RefreshCw, Home, Loader2 } from 'lucide-react';
 import { useAuthStore } from './stores/auth.store';
-import {
-  LoginPage,
-  DashboardPage,
-  CategoriesPage,
-  ProductsPage,
-  WarehousesPage,
-  UsersPage,
-  SuppliersPage,
-  CustomersPage,
-  StockTransactionsPage,
-  ProfilePage,
-  AuditLogsPage,
-  MyTasksPage,
-  PurchaseOrdersPage,
-  StocktakingPage,
-} from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
+
+// Route-level Code Splitting để giảm kích thước bundle tải lần đầu
+const LoginPage = lazy(() => import('./pages/LoginPage').then((m) => ({ default: m.LoginPage })));
+const DashboardPage = lazy(() =>
+  import('./pages/DashboardPage').then((m) => ({ default: m.DashboardPage })),
+);
+const CategoriesPage = lazy(() =>
+  import('./pages/CategoriesPage').then((m) => ({ default: m.CategoriesPage })),
+);
+const ProductsPage = lazy(() =>
+  import('./pages/ProductsPage').then((m) => ({ default: m.ProductsPage })),
+);
+const WarehousesPage = lazy(() =>
+  import('./pages/WarehousesPage').then((m) => ({ default: m.WarehousesPage })),
+);
+const UsersPage = lazy(() => import('./pages/UsersPage').then((m) => ({ default: m.UsersPage })));
+const SuppliersPage = lazy(() =>
+  import('./pages/SuppliersPage').then((m) => ({ default: m.SuppliersPage })),
+);
+const CustomersPage = lazy(() =>
+  import('./pages/CustomersPage').then((m) => ({ default: m.CustomersPage })),
+);
+const StockTransactionsPage = lazy(() =>
+  import('./pages/StockTransactionsPage').then((m) => ({ default: m.StockTransactionsPage })),
+);
+const ProfilePage = lazy(() =>
+  import('./pages/ProfilePage').then((m) => ({ default: m.ProfilePage })),
+);
+const AuditLogsPage = lazy(() =>
+  import('./pages/AuditLogsPage').then((m) => ({ default: m.AuditLogsPage })),
+);
+const MyTasksPage = lazy(() =>
+  import('./pages/MyTasksPage').then((m) => ({ default: m.MyTasksPage })),
+);
+const PurchaseOrdersPage = lazy(() =>
+  import('./pages/PurchaseOrdersPage').then((m) => ({ default: m.PurchaseOrdersPage })),
+);
+const StocktakingPage = lazy(() =>
+  import('./pages/StocktakingPage').then((m) => ({ default: m.StocktakingPage })),
+);
+
+const PageLoader = () => (
+  <div className="flex-1 flex items-center justify-center min-h-[300px] text-slate-500 gap-2 text-xs font-medium">
+    <Loader2 className="w-5 h-5 animate-spin text-[#294238]" />
+    <span>Đang tải trang...</span>
+  </div>
+);
 
 // Error Boundary chống trắng màn toàn hệ thống
 interface Props {
@@ -113,7 +144,8 @@ export default function App() {
     <GlobalErrorBoundary>
       <BrowserRouter>
         <Toaster position="top-right" duration={3500} />
-        <Routes>
+        <Suspense fallback={<PageLoader />}>
+          <Routes>
           {/* Public Route */}
           <Route
             path="/login"
@@ -178,6 +210,7 @@ export default function App() {
           {/* Fallback route */}
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </Suspense>
       </BrowserRouter>
     </GlobalErrorBoundary>
   );

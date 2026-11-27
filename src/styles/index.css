@@ -133,52 +133,53 @@ html.dark {
 }
 
 html.dark body {
-  background-color: #0b0f17 !important;
-  color: #f0f6fc !important;
+  background-color: #131820 !important;
+  color: #d8e1eb !important;
 }
 
 /* Background canvas */
 html.dark .bg-\[\#EDF0F5\],
 html.dark .bg-\[\#F8F9FA\],
 html.dark .bg-brand-bg {
-  background-color: #0b0f17 !important;
+  background-color: #131820 !important;
 }
 
 /* Header & Sidebar */
 html.dark header {
-  background-color: #161b22 !important;
-  border-color: #384252 !important;
+  background-color: #181f28 !important;
+  border-color: #2b3544 !important;
 }
 
 html.dark aside {
-  border-color: #384252 !important;
+  background-color: #161c24 !important;
+  border-color: #2b3544 !important;
 }
 
-/* Cards & Elevated Containers with distinct borders and depth */
+/* Cards & Elevated Containers with soft contrast (no harsh black/white glare) */
 html.dark .card-elevated,
 html.dark .card-elevated-static,
 html.dark .bg-white {
-  background-color: #161b22 !important;
-  border-color: #384252 !important;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08), 0 4px 16px -2px rgba(0, 0, 0, 0.4) !important;
-  color: #e6edf3 !important;
+  background-color: #1b222c !important;
+  border-color: #2b3544 !important;
+  box-shadow: none !important;
+  color: #d8e1eb !important;
 }
 
-/* Text colors - dịu mắt, không chói trắng gắt */
+/* Text colors - tông dịu mắt kiểu GitHub Dark Dimmed */
 html.dark .text-slate-950,
 html.dark .text-slate-900,
 html.dark .text-slate-800,
 html.dark .text-slate-700 {
-  color: #dce4e0 !important;
+  color: #d8e1eb !important;
 }
 
 html.dark .text-slate-600,
 html.dark .text-slate-500 {
-  color: #9aaea5 !important;
+  color: #93a3b5 !important;
 }
 
 html.dark .text-slate-400 {
-  color: #778b82 !important;
+  color: #748599 !important;
 }
 
 /* Moss green brand text on dark surfaces -> bright readable sage */
@@ -371,42 +372,42 @@ html.dark .shadow-xl {
 }
 
 html.dark .dashboard-page {
-  background-color: #0e1513;
+  background-color: #131820;
 }
 
 html.dark .dashboard-page .card-elevated,
 html.dark .dashboard-page .card-elevated-static,
 html.dark .dashboard-page .dashboard-kpi-card {
-  border-color: #34443e !important;
-  background-color: #17211d !important;
+  border-color: #2b3544 !important;
+  background-color: #1b222c !important;
   box-shadow: none !important;
 }
 
 html.dark .dashboard-page .dashboard-kpi-icon:not(.dashboard-kpi-icon--alert) {
-  border-color: #2f4039;
-  background-color: #1e2c26;
-  color: #9dc0b0;
+  border-color: #32443d;
+  background-color: #212e2a;
+  color: #96bda9;
 }
 
 /* Chống chói biểu đồ trong Dark Mode (bỏ viền trắng lát Donut & dịu lưới ngang) */
 html.dark .recharts-pie-sector path,
 html.dark .recharts-sector {
-  stroke: #17211d !important;
+  stroke: #1b222c !important;
   stroke-width: 2px !important;
 }
 
 html.dark .recharts-cartesian-grid-horizontal line,
 html.dark .recharts-cartesian-grid-vertical line {
-  stroke: #26352f !important;
+  stroke: #26303e !important;
 }
 
 html.dark .recharts-cartesian-axis-line,
 html.dark .recharts-cartesian-axis-tick-line {
-  stroke: #2c3d36 !important;
+  stroke: #2b3544 !important;
 }
 
 html.dark .recharts-cartesian-axis-tick-value {
-  fill: #7f948b !important;
+  fill: #7f91a6 !important;
 }
 
 .products-page {
@@ -472,28 +473,28 @@ html.dark .recharts-cartesian-axis-tick-value {
 }
 
 html.dark .products-page {
-  background-color: #0e1513;
+  background-color: #131820;
 }
 
 html.dark .products-page .products-toolbar,
 html.dark .products-page .products-table-shell,
 html.dark .products-page .products-mobile-list {
-  border-color: #34443e !important;
-  background-color: #17211d !important;
+  border-color: #2b3544 !important;
+  background-color: #1b222c !important;
 }
 
 html.dark .products-page .products-table thead {
-  background-color: #202e28 !important;
+  background-color: #222b37 !important;
 }
 
 html.dark .products-page .products-table tbody tr:hover,
 html.dark .products-page .products-mobile-row:hover {
-  background-color: #22312b !important;
+  background-color: #232d3a !important;
 }
 
 html.dark .products-page .products-pagination {
-  border-color: #34443e !important;
-  background-color: #17211d !important;
+  border-color: #2b3544 !important;
+  background-color: #1b222c !important;
 }
 
 /* ========================================================

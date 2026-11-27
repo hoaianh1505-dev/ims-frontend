@@ -68,6 +68,23 @@ export interface RecentTransaction {
   created_at: string;
 }
 
+export interface RecentActivityItem {
+  id: string;
+  action: string;
+  entity_type: string;
+  entity_id?: string | null;
+  description?: string | null;
+  ip_address?: string | null;
+  created_at: string;
+  user?: {
+    id: string;
+    username: string;
+    display_name?: string;
+    role?: string;
+    avatar?: string | null;
+  } | null;
+}
+
 export const dashboardService = {
   getStats: async (warehouse_id?: string): Promise<DashboardStats> => {
     const res = await apiClient.get<any>('/dashboard/stats', {
@@ -113,6 +130,13 @@ export const dashboardService = {
   getRecentTransactions: async (warehouse_id?: string): Promise<RecentTransaction[]> => {
     const res = await apiClient.get<any>('/dashboard/recent-transactions', {
       params: warehouse_id ? { warehouse_id } : undefined,
+    });
+    return res.data?.data || res.data || [];
+  },
+
+  getRecentActivity: async (limit = 8): Promise<RecentActivityItem[]> => {
+    const res = await apiClient.get<any>('/dashboard/recent-activity', {
+      params: { limit },
     });
     return res.data?.data || res.data || [];
   },

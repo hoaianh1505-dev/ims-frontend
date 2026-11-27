@@ -1,5 +1,12 @@
-import { apiClient } from './api.client';
+import { apiClient, apiCache } from './api.client';
 import { Product, FilterProductParams } from '../types/product.types';
+
+export interface ProductImportResult {
+  total_rows: number;
+  imported_count: number;
+  failed_count: number;
+  errors: Array<{ row: number; sku?: string; message: string }>;
+}
 
 export const productsService = {
   async getAll(params?: FilterProductParams) {
@@ -67,6 +74,34 @@ export const productsService = {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  },
+
+  async downloadImportTemplate(): Promise<void> {
+    const res = await apiClient.get('/export/templates/products', {
+      responseType: 'blob',
+    });
+    const blob = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Mau_Import_San_Pham.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
+
+  async importProductsExcel(file: File): Promise<ProductImportResult> {
+    const formData = new FormData();
+    formData.append('file', file);
+    const res = await apiClient.post<any>('/import/products', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    apiCache.invalidate('/products');
+    apiCache.invalidate('/dashboard');
+    return res.data?.data || res.data;
   },
 };
 

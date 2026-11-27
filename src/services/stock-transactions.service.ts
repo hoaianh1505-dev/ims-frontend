@@ -1,4 +1,4 @@
-import { apiClient } from './api.client';
+import { apiClient, apiCache } from './api.client';
 import {
   StockTransaction,
   ImportStockPayload,
@@ -93,6 +93,47 @@ export const stockTransactionsService = {
     link.click();
     document.body.removeChild(link);
     window.URL.revokeObjectURL(url);
+  },
+
+  async downloadImportTemplate(): Promise<void> {
+    const res = await apiClient.get('/export/templates/import-stock', {
+      responseType: 'blob',
+    });
+    const blob = new Blob([res.data], {
+      type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    });
+    const url = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'Mau_Import_Nhap_Kho.xlsx';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+  },
+
+  async importStockExcel(payload: {
+    file: File;
+    warehouse_id: string;
+    supplier_id?: string;
+    reference_no?: string;
+    note?: string;
+  }): Promise<StockTransaction> {
+    const formData = new FormData();
+    formData.append('file', payload.file);
+    formData.append('warehouse_id', payload.warehouse_id);
+    if (payload.supplier_id) formData.append('supplier_id', payload.supplier_id);
+    if (payload.reference_no?.trim()) formData.append('reference_no', payload.reference_no.trim());
+    if (payload.note?.trim()) formData.append('note', payload.note.trim());
+
+    const res = await apiClient.post<any>('/import/stock-transactions/import', formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    apiCache.invalidate('/stock-transactions');
+    apiCache.invalidate('/inventory');
+    apiCache.invalidate('/products');
+    apiCache.invalidate('/dashboard');
+    return res.data?.data || res.data;
   },
 };
 

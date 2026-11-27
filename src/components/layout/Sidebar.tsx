@@ -6,6 +6,7 @@ import {
   Layers,
   Building2,
   ArrowLeftRight,
+  ClipboardCheck,
   ShoppingCart,
   Truck,
   Users,
@@ -170,6 +171,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           <div className="space-y-1">
             {renderNavItem('/purchase-orders', 'Đơn đặt hàng (PO)', <ShoppingCart className="w-5 h-5 shrink-0" />, true)}
             {renderNavItem('/stock-transactions', 'Xử lý xuất / nhập', <ArrowLeftRight className="w-5 h-5 shrink-0" />, true)}
+            {renderNavItem('/stocktaking', 'Kiểm kê kho', <ClipboardCheck className="w-5 h-5 shrink-0" />, true)}
             {renderNavItem('/my-tasks', 'Phiếu của tôi', <FileText className="w-5 h-5 shrink-0" />, true)}
           </div>
         </div>

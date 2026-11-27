@@ -17,6 +17,7 @@ import {
   AuditLogsPage,
   MyTasksPage,
   PurchaseOrdersPage,
+  StocktakingPage,
 } from './pages';
 import { AppLayout } from './components/layout/AppLayout';
 import { ProtectedRoute } from './components/common/ProtectedRoute';
@@ -155,6 +156,9 @@ export default function App() {
               {/* 8. Đơn đặt hàng nhà cung cấp PO (Real data from PostgreSQL) */}
               <Route path="purchase-orders" element={<PurchaseOrdersPage />} />
               <Route path="purchase-order" element={<Navigate to="/purchase-orders" replace />} />
+
+              {/* 8b. Kiểm kê kho (Stocktaking) */}
+              <Route path="stocktaking" element={<StocktakingPage />} />
 
               {/* 9. Phiếu của tôi (Real data from PostgreSQL) */}
               <Route path="my-tasks" element={<MyTasksPage />} />

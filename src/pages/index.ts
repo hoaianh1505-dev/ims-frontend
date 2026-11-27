@@ -11,4 +11,5 @@ export { ProfilePage } from './ProfilePage';
 export { AuditLogsPage } from './AuditLogsPage';
 export { MyTasksPage } from './MyTasksPage';
 export { PurchaseOrdersPage } from './PurchaseOrdersPage';
+export { StocktakingPage } from './StocktakingPage';
 export { PlaceholderPage } from './PlaceholderPage';

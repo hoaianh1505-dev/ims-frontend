@@ -12,6 +12,7 @@ import {
   ArrowLeftRight,
   ClipboardCheck,
   FileDown,
+  FileUp,
 } from 'lucide-react';
 import {
   StockTransaction,
@@ -32,6 +33,7 @@ import { showToast } from '../utils/toast.util';
 import { StockTransactionTable } from '../components/stock-transactions/StockTransactionTable';
 import { StockTransactionFormModal } from '../components/stock-transactions/StockTransactionFormModal';
 import { StockTransactionDetailDrawer } from '../components/stock-transactions/StockTransactionDetailDrawer';
+import { StockImportExcelModal } from '../components/stock-transactions/StockImportExcelModal';
 
 export const StockTransactionsPage: React.FC = () => {
   const { user } = useAuthStore();
@@ -62,6 +64,7 @@ export const StockTransactionsPage: React.FC = () => {
   // Modal & Drawer state
   const [createMenuOpen, setCreateMenuOpen] = useState(false);
   const [isFormModalOpen, setIsFormModalOpen] = useState(false);
+  const [isImportExcelModalOpen, setIsImportExcelModalOpen] = useState(false);
   const [formInitialType, setFormInitialType] = useState<StockTransactionType>('IMPORT');
   const [formInitialSupplierId, setFormInitialSupplierId] = useState<string | undefined>(undefined);
   const [formInitialCustomerId, setFormInitialCustomerId] = useState<string | undefined>(undefined);
@@ -220,15 +223,26 @@ export const StockTransactionsPage: React.FC = () => {
         {/* Action Hub - Dropdown tạo phiếu tinh gọn */}
         <div className="flex items-center gap-2 flex-wrap">
           {isManagerOrAdmin && (
-            <button
-              onClick={handleExportExcel}
-              disabled={exportingExcel}
-              className="inline-flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161b22] hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#30363d] rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
-              title="Xuất danh sách ra file Excel"
-            >
-              <FileDown className="w-4 h-4 text-emerald-600" />
-              <span className="hidden sm:inline">Xuất Excel</span>
-            </button>
+            <>
+              <button
+                onClick={() => setIsImportExcelModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161b22] hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#30363d] rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-2xs"
+                title="Tạo phiếu nhập kho hàng loạt từ file Excel"
+              >
+                <FileUp className="w-4 h-4 text-emerald-600" />
+                <span className="hidden sm:inline">Nhập Excel</span>
+              </button>
+
+              <button
+                onClick={handleExportExcel}
+                disabled={exportingExcel}
+                className="inline-flex items-center gap-1.5 px-3 py-2 bg-white dark:bg-[#161b22] hover:bg-slate-50 dark:hover:bg-white/5 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-[#30363d] rounded-xl font-medium text-xs transition-colors cursor-pointer shadow-2xs disabled:opacity-50"
+                title="Xuất danh sách ra file Excel"
+              >
+                <FileDown className="w-4 h-4 text-emerald-600" />
+                <span className="hidden sm:inline">Xuất Excel</span>
+              </button>
+            </>
           )}
 
           {/* Unified Create Dropdown */}
@@ -451,6 +465,15 @@ export const StockTransactionsPage: React.FC = () => {
         products={products}
         isManagerOrAdmin={isManagerOrAdmin}
         onClose={() => setIsFormModalOpen(false)}
+        onSuccess={fetchTransactions}
+      />
+
+      {/* IMPORT STOCK FROM EXCEL MODAL */}
+      <StockImportExcelModal
+        isOpen={isImportExcelModalOpen}
+        warehouses={warehouses}
+        suppliers={suppliers}
+        onClose={() => setIsImportExcelModalOpen(false)}
         onSuccess={fetchTransactions}
       />
 
